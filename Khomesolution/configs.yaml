@@ -1,0 +1,9 @@
+batch_size: 64
+height: 50
+learning_rate: 0.001
+max_text_length: 5
+model_path: model.onnx
+train_epochs: 1000
+train_workers: 20
+vocab: 8beg7d5p2mcx4f3wn6y
+width: 200

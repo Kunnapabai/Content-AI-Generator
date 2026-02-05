@@ -1,0 +1,94 @@
+[
+  {
+    "name": "PHPSESSID",
+    "value": "5be2fced288128a69194e7caad3f2e90",
+    "domain": "flikover.com",
+    "path": "/",
+    "expires": -1,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "cf_clearance",
+    "value": "pSFv0YXxKVfNsIhgIfDeVg4Dq9p8SfNj4fc4NUh9.ig-1768298830-1.2.1.1-g_zw.q.mhQlpUpjPiBWZBc2QMxLD9jeZCRNnjKUrfa6qqIBSsWlmaD8XUENWMkaxqx2OL0H9mGkIe8cXCyiBh2oXG5qmFzrcdciGwyANQV9QwTQL4xcCNyVB7ze2iNQV1uGJP3fb3FhbhyTUOWSEOFSttt087A6i0VCFdXgZBtazQ9dOq1.jlFI6OkoNHWQJzjKMDXNFOXw5Y23jdN6JBiWI_bnicMqNjzDYYxHMcMA",
+    "domain": ".flikover.com",
+    "path": "/",
+    "expires": 1799834832.08464,
+    "httpOnly": true,
+    "secure": true,
+    "sameSite": "None",
+    "partitionKey": "https://flikover.com",
+    "_crHasCrossSiteAncestor": false
+  },
+  {
+    "name": "_fbp",
+    "value": "fb.1.1768298832127.159126021552760986",
+    "domain": ".flikover.com",
+    "path": "/",
+    "expires": 1776074840,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "timezone",
+    "value": "Nzg3ODY5MQ%3D%3D",
+    "domain": ".flikover.com",
+    "path": "/",
+    "expires": 1770890840.821322,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "timezone",
+    "value": "Nzg3ODY5MQ%3D%3D",
+    "domain": "flikover.com",
+    "path": "/",
+    "expires": 1770890840.821455,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "sessionx",
+    "value": "NTQ2NDU2NDUyM2F6QGdtYWlsLmNvbQ%3D%3D",
+    "domain": ".flikover.com",
+    "path": "/",
+    "expires": 1770890840.821522,
+    "httpOnly": false,
+    "secure": true,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "_ga",
+    "value": "GA1.2.1502863818.1768298841",
+    "domain": ".flikover.com",
+    "path": "/",
+    "expires": 1802858864.846886,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "_gid",
+    "value": "GA1.2.1695826227.1768298841",
+    "domain": ".flikover.com",
+    "path": "/",
+    "expires": 1768385264,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  },
+  {
+    "name": "_ga_3XPSQ158BV",
+    "value": "GS2.2.s1768298841$o1$g1$t1768298864$j37$l0$h0",
+    "domain": ".flikover.com",
+    "path": "/",
+    "expires": 1802858864.915461,
+    "httpOnly": false,
+    "secure": false,
+    "sameSite": "Lax"
+  }
+]

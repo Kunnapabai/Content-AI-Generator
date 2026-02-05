@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sort:*)",
+      "WebFetch(domain:docs.dataforseo.com)",
+      "WebFetch(domain:dataforseo.com)",
+      "WebSearch"
+    ]
+  }
+}

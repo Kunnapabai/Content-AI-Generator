@@ -1,0 +1,19 @@
+{"timestamp": "2026-02-05T12:36:30.702470", "event": "started", "total_keywords": 2, "max_concurrency": 10, "model": "x-ai/grok-4-fast", "dry_run": false}
+{"timestamp": "2026-02-05T12:36:30.703482", "event": "chunk_started", "chunk_start": 0, "chunk_end": 2, "chunk_size": 2}
+{"timestamp": "2026-02-05T12:44:09.076702", "event": "started", "total_keywords": 2, "max_concurrency": 10, "model": "x-ai/grok-4-fast", "dry_run": false}
+{"timestamp": "2026-02-05T12:44:09.078209", "event": "chunk_started", "chunk_start": 0, "chunk_end": 2, "chunk_size": 2}
+{"timestamp": "2026-02-05T12:50:16.704041", "event": "started", "total_keywords": 2, "max_concurrency": 10, "model": "x-ai/grok-4-fast", "dry_run": false}
+{"timestamp": "2026-02-05T12:50:16.704041", "event": "chunk_started", "chunk_start": 0, "chunk_end": 2, "chunk_size": 2}
+{"timestamp": "2026-02-05T12:50:32.229375", "event": "success", "keyword": "หลังคาโรงรถ", "quality_score": 1.0, "tokens_used": 4890}
+{"timestamp": "2026-02-05T12:50:37.780418", "event": "yaml_parse_error", "keyword": "หน้าต่างกันเสียง", "error": "mapping values are not allowed here\n  in \"<unicode string>\", line 168, column 20:\n        title: WINDSOR : ห้องกันเสียง เก็บเสียง ลดเสียง ... \n                       ^"}
+{"timestamp": "2026-02-05T12:50:37.782471", "event": "chunk_completed", "chunk_end": 2, "success": 1, "failed": 1, "skipped": 0}
+{"timestamp": "2026-02-05T12:50:37.784007", "event": "completed", "total": 2, "success": 1, "failed": 1, "skipped": 0, "total_tokens": 10540}
+{"timestamp": "2026-02-05T13:03:10.784671", "event": "started", "total_keywords": 2, "max_concurrency": 10, "model": "x-ai/grok-4-fast", "dry_run": false}
+{"timestamp": "2026-02-05T13:03:10.784671", "event": "chunk_started", "chunk_start": 0, "chunk_end": 2, "chunk_size": 2}
+{"timestamp": "2026-02-05T13:03:29.328710", "event": "processing_error", "keyword": "หน้าต่างกันเสียง", "error": "YAML parsing failed after all strategies"}
+{"timestamp": "2026-02-05T13:03:29.329769", "event": "chunk_completed", "chunk_end": 2, "success": 0, "failed": 1, "skipped": 1}
+{"timestamp": "2026-02-05T13:03:29.329769", "event": "completed", "total": 2, "success": 0, "failed": 1, "skipped": 1, "total_tokens": 6604}
+{"timestamp": "2026-02-05T13:16:18.072265", "event": "started", "total_keywords": 2, "max_concurrency": 10, "model": "x-ai/grok-4-fast", "dry_run": false}
+{"timestamp": "2026-02-05T13:16:18.072265", "event": "chunk_started", "chunk_start": 0, "chunk_end": 2, "chunk_size": 2}
+{"timestamp": "2026-02-05T13:16:18.073295", "event": "chunk_completed", "chunk_end": 2, "success": 0, "failed": 0, "skipped": 2}
+{"timestamp": "2026-02-05T13:16:18.074485", "event": "completed", "total": 2, "success": 0, "failed": 0, "skipped": 2, "total_tokens": 0}
