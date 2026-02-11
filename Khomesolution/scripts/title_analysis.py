@@ -1,15 +1,10 @@
-"""
-Phase 2.1: SERP Semantic Analysis
-AI-powered SERP pattern extraction using Grok-4 Fast via OpenRouter API.
-Builds Knowledge Graphs, Entity Signals, and Title Generation blueprints.
-"""
-
 import asyncio
 import yaml
 import json
 import os
 import argparse
 import logging
+import time
 from datetime import datetime
 from pathlib import Path
 from aiohttp import ClientSession, ClientTimeout
@@ -17,7 +12,7 @@ from typing import List, Dict, Optional, Any
 
 # --- Configuration ---
 OPENROUTER_API_KEY = "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"
-MODEL = "x-ai/grok-4-fast"
+MODEL = "x-ai/grok-4"
 MAX_CONCURRENCY = 10
 TEMPERATURE = 0.2
 MAX_TOKENS = 8000
@@ -35,46 +30,197 @@ LOG_FILE = "llm_analysis.log"
 RATE_LIMIT_RPM = 60
 RATE_LIMIT_TPM = 60000
 
-# Predicate types for Knowledge Graph
+# Predicate types for Knowledge Graph (TITLE-FOCUSED LEAN)
 VALID_PREDICATES = [
-    "is_a", "has_benefit", "has_drawback", "compared_with", "used_for",
-    "made_of", "located_in", "part_of", "requires", "causes",
-    "prevents", "costs", "lasts", "measures", "contains"
+    "is_a", "aka", "related_to", "has_attribute", "has_quantity",
+    "has_duration", "has_cost", "has_benefit", "has_risk", "requires",
+    "time_to_result", "compared_with", "alternative_to", "suitable_for",
+    "defined_as", "available_at"
 ]
 
-# --- System Prompt Template ---
-SYSTEM_PROMPT = """You are a Semantic SEO expert specializing in SERP analysis and Knowledge Graph construction.
+# --- System Prompt Template (TITLE-FOCUSED LEAN) ---
+SYSTEM_PROMPT = """You are a **SERP Pattern + Knowledge Graph Extractor (TITLE-FOCUSED LEAN)**. Your ONLY job is to analyze the SERP snapshot payloads provided by the calling script and emit the structured YAML described below. Use ONLY the supplied JSON inputs; never fabricate facts or fetch external data.
 
-Your task is to analyze SERP data and produce a comprehensive 12-section YAML output.
+## INPUT CONTRACT
+The caller provides two JSON blobs per keyword:
+1. `competitions.json` – SERP top results (titles, snippets, URLs).
+2. `keywords.json` – related searches, People-Also-Ask entries, auxiliary entities.
 
-## Output Requirements
+Assume both payloads are valid JSON strings embedded directly in the user prompt. If any critical section is missing or empty, still honour the schema (use null/empty lists) and set low confidence accordingly.
 
-You MUST output strictly valid YAML with exactly these 12 sections:
+## LEAN COMPUTE CONSTRAINTS
+- **Entities:** ≤ 8 highest-salience.
+- **Knowledge graph:** ≤ 12 nodes, ≤ 18 edges.
+- **Dominant title patterns:** Top 2 only; summarize with regex-like descriptors.
+- **Opportunity gaps:** Top 3 only.
+- **Evidence arrays:** Reference the smallest necessary set of 0-based indexes (results[], people_also_ask[], related_keywords[]).
+- **Confidence values:** 0–1; use ≤0.4 (or null) if not clearly supported.
 
-1. **meta**: Query metadata including language detection
-2. **intent**: Primary intent classification and micro-intents
-3. **ymyl**: Your Money Your Life classification with confidence score
-4. **lexical_signals**: Overused, distinctive, and temporal tokens from titles
-5. **pattern_signals**: Dominant title patterns and angles observed
-6. **entity_signals**: Up to 8 high-salience entities with type and synonyms
-7. **knowledge_graph**: Up to 12 nodes and 18 edges with predicate relationships
-8. **competitor_matrix**: Top results with pattern classification and risk flags
-9. **paa_and_related**: People Also Ask questions and related keywords mapped
-10. **consensus_signals**: Must-cover concepts and dominant tone
-11. **opportunity_gaps**: Top 3 content gaps with confidence scores
-12. **title_generation_signals**: Required/avoid tokens, format, and angle recommendations
+## EVIDENCE & CONFIDENCE
+Every non-trivial fact must include an `evidence` object pointing to the supporting indexes. Confidence should reflect actual SERP support; never default to 1.0 without justification.
 
-## Constraints
+## PREDICATE SET
+For the knowledge graph, you may use ONLY:
+is_a, aka, related_to, has_attribute, has_quantity, has_duration, has_cost, has_benefit, has_risk, requires, time_to_result, compared_with, alternative_to, suitable_for, defined_as, available_at
 
-- Knowledge Graph: Maximum 12 nodes, 18 edges
-- Valid predicates: is_a, has_benefit, has_drawback, compared_with, used_for, made_of, located_in, part_of, requires, causes, prevents, costs, lasts, measures, contains
-- Entity signals: Maximum 8 entities
-- All confidence scores: 0.0 to 1.0
-- Include quality_score field (0.0-1.0) at the end
+## OUTPUT SCHEMA (compact YAML)
+Return exactly one YAML document with the following structure:
 
-## Output Format
+meta:
+  query: "{{keyword}}"
+  country: "{{country|null}}"
+  language_detected:
+    iso: xx
+    script: Latin|Thai|Cyrillic|…
+    confidence: 0-1
 
-Output ONLY valid YAML. Do not include markdown code fences or any other text.
+intent:
+  primary: informational|navigational|commercial_investigation|transactional|mixed
+  micro_intents: [definition, how_to, tutorial, examples, template, comparison, review, faq, pricing, alternatives]
+  freshness_demand: none|low|medium|high
+  geo_specificity: none|global
+  confidence: 0-1
+  evidence:
+    results: [0]
+    paa: [0]
+    related: [0]
+
+ymyl:
+  is_ymyl: true|false
+  categories: [none, safety, civic, finance]
+  confidence: 0-1
+  evidence:
+    results: [0]
+    paa: [0]
+
+lexical_signals:
+  overused_tokens: [string]
+  distinctive_tokens: [string]
+  temporal_tokens: [string]
+  evidence:
+    results: [0]
+    paa: [0]
+    related: [0]
+
+pattern_signals:
+  dominant_title_patterns:
+    - class: definition|how_to|tutorial|guide|examples|template|comparison|paper|code|repo|review|news|video|faq|other
+      regex_like: "^What is"
+      share: 0-1
+      evidence:
+        results: [0]
+  angles_observed:
+    - angle: examples|templates|code|benchmarks|comparison|step_by_step|limitations|safety|use_cases|pricing|availability|expert_review|none
+      support_rate: 0-1
+      evidence:
+        results: [0]
+        paa: [0]
+        related: [0]
+  freshness_cues:
+    contains_year_rate: 0-1
+    update_words: [string]
+    evidence:
+      results: [0]
+  brand_signals:
+    brand_presence_rate: 0-1
+    typical_brand_position: suffix|prefix|mixed|unknown
+    common_separators: [" — ", " | ", ":"]
+    evidence:
+      results: [0]
+  rewrite_risk_watchouts: [overlong, boilerplate, mixed_language, outdated_year, brand_prefix_too_long]
+
+entity_signals:
+  entities:
+    - surface: string
+      normalized: string
+      type: model|framework|benchmark|paper|library|dataset|technique|brand|topic|other
+      count_in_titles: 0
+      count_in_descriptions: 0
+      salience: 0-1
+      synonyms_variants: [string]
+      evidence:
+        results: [0]
+
+knowledge_graph:
+  nodes:
+    - id: n001
+      canonical: string
+      type: model|framework|benchmark|paper|library|dataset|technique|attribute|benefit|risk|duration|quantity|cost|audience|topic|other
+      language_forms: [surface form 1, surface form 2]
+      confidence: 0-1
+      evidence:
+        results: [0]
+        paa: [0]
+        related: [0]
+  edges:
+    - subject_id: nXXX
+      predicate: is_a|aka|related_to|has_attribute|has_quantity|has_duration|has_cost|has_benefit|has_risk|requires|time_to_result|compared_with|alternative_to|suitable_for|available_at|defined_as
+      object_id: nYYY
+      object_literal: null
+      confidence: 0-1
+      evidence:
+        results: [0]
+        paa: [0]
+        related: [0]
+  central_concepts: [canonical]
+
+competitor_matrix:
+  - rank: 1
+    title: string
+    title_length_chars: 0
+    contains_year: false
+    pattern_class: definition|how_to|tutorial|guide|examples|template|comparison|paper|code|repo|review|news|video|faq|other
+    brand_suffix_likely: false
+    risk_flags: [none]
+    evidence:
+      results: [0]
+
+paa_and_related:
+  people_also_ask:
+    - question: string
+      topic: definition|comparison|how_to|examples|template|code|use_cases|evaluation|limitations|safety|pricing|other
+      evidence_index: 0
+  related_keywords:
+    - term: string
+      topic: definition|comparison|examples|template|code|benchmark|model|framework|library|dataset|other
+      evidence_index: 0
+
+consensus_signals:
+  must_cover_concepts:
+    - concept: string
+      support_rate: 0-1
+      evidence:
+        results: [0]
+        paa: [0]
+        related: [0]
+  common_patterns: [definition, how_to, tutorial, guide, examples, template, comparison, paper, review, faq, other]
+  dominant_tone: neutral|authoritative|reassuring|cautionary|mixed
+
+opportunity_gaps:
+  - gap: string
+    why_it_matters: string
+    current_coverage: none|light|moderate|heavy
+    suggested_handles: [examples, template, code, benchmarks, alternatives, limitations, expertise_signal, availability]
+    confidence: 0-1
+    evidence:
+      results: [0]
+      paa: [0]
+      related: [0]
+
+title_generation_signals:
+  language: "{{detected language/script}}"
+  required_tokens: [string]
+  optional_tokens: [examples, template, code, benchmark, guide, tutorial, comparison]
+  avoid_tokens: ["ultimate guide", "complete guide", "definitive", "must-have", "secret"]
+  preferred_format: definition|how_to|tutorial|guide|examples|template|comparison|paper|code|review|faq|mixed
+  pattern_shortlist: [definition, how_to, tutorial, examples, template, comparison, paper]
+  angle_candidates: [examples, prompt_templates, code_included, benchmarks, step_by_step, alternatives, limitations, beginner_focus, expert_tested, availability]
+  brand_suffix_recommendation: short|omit|unknown
+  freshness_marker_recommendation: include_year|omit_year|unknown
+  token_order_hint: "entity_first → action/angle → (model/framework) → (year if recommended) → (brand suffix if recommended)"
+  rewrite_risk_watchouts: [overlong, boilerplate, mixed_language, outdated_year, brand_prefix_too_long]
+
+Return nothing else. Output ONLY valid YAML. Do not include markdown code fences or any other text.
 
 ## YAML String Quoting Rules (IMPORTANT)
 
@@ -88,18 +234,20 @@ Example:
   title: "หน้าต่างกันเสียง: คู่มือเลือกซื้อ 2024"
   NOT: หน้าต่างกันเสียง: คู่มือเลือกซื้อ 2024"""
 
-USER_PROMPT_TEMPLATE = """Analyze the following SERP data for the keyword: "{keyword}"
+USER_PROMPT_TEMPLATE = """Analyze the following SERP snapshot for keyword: "{keyword}"
 
-## Competitor Titles and Snippets (Top Organic Results):
+## competitions.json — SERP Top Results (titles, snippets, URLs):
 {competitors_data}
 
-## Related Keywords:
+## keywords.json — Related Searches & People-Also-Ask:
+
+### Related Keywords:
 {related_keywords}
 
-## People Also Ask Questions:
+### People Also Ask Questions:
 {paa_questions}
 
-Generate the complete 12-section YAML analysis following the schema requirements."""
+Emit the compact YAML document per the schema. Return nothing else."""
 
 
 def setup_logging():
@@ -154,27 +302,93 @@ def load_keywords(keywords_file: str) -> List[str]:
         return [line.strip() for line in f if line.strip() and not line.startswith('#')]
 
 
-def load_serp_data(keyword: str) -> Dict[str, Any]:
-    """Load dual SERP JSON inputs for a keyword."""
+def scan_keywords_from_output_dir(output_dir: str = OUTPUT_DIR) -> List[str]:
+    """Scan subdirectories in OUTPUT_DIR to get keywords.
+
+    Each subdirectory name is treated as a keyword.
+    Only includes directories that have the required input files.
+    """
+    output_path = Path(output_dir)
+    if not output_path.exists():
+        return []
+
+    keywords = []
+    for item in output_path.iterdir():
+        if item.is_dir():
+            keyword = item.name
+            # Check if directory has required input files (competitions.json or keywords.json)
+            comp_file = item / f"{keyword}-competitions.json"
+            kw_file = item / f"{keyword}-keywords.json"
+
+            if comp_file.exists() or kw_file.exists():
+                keywords.append(keyword)
+
+    # Sort for consistent ordering
+    return sorted(keywords)
+
+
+def load_serp_data(keyword: str, verbose: bool = False) -> Dict[str, Any]:
+    """Load dual SERP JSON inputs for a keyword.
+
+    Returns dict with 'competitions', 'keywords', and 'debug' info.
+    """
     keyword_dir = Path(OUTPUT_DIR) / keyword
+    debug_info = {
+        "keyword_dir": str(keyword_dir.absolute()),
+        "comp_path": None,
+        "comp_status": None,
+        "kw_path": None,
+        "kw_status": None
+    }
 
     # Load competitions.json
     comp_path = keyword_dir / f"{keyword}-competitions.json"
+    debug_info["comp_path"] = str(comp_path.absolute())
     competitions = {}
+
     if comp_path.exists():
-        with open(comp_path, 'r', encoding='utf-8') as f:
-            competitions = json.load(f)
+        try:
+            with open(comp_path, 'r', encoding='utf-8') as f:
+                competitions = json.load(f)
+            debug_info["comp_status"] = "loaded"
+            if verbose:
+                print(f"  [INPUT] Loaded: {comp_path.absolute()}")
+        except json.JSONDecodeError as e:
+            debug_info["comp_status"] = f"json_error: {str(e)[:50]}"
+            if verbose:
+                print(f"  [ERROR] JSON decode error in: {comp_path.absolute()}")
+                print(f"          {e}")
+    else:
+        debug_info["comp_status"] = "not_found"
+        if verbose:
+            print(f"  [MISSING] File not found: {comp_path.absolute()}")
 
     # Load keywords.json
     kw_path = keyword_dir / f"{keyword}-keywords.json"
+    debug_info["kw_path"] = str(kw_path.absolute())
     keywords_data = {}
+
     if kw_path.exists():
-        with open(kw_path, 'r', encoding='utf-8') as f:
-            keywords_data = json.load(f)
+        try:
+            with open(kw_path, 'r', encoding='utf-8') as f:
+                keywords_data = json.load(f)
+            debug_info["kw_status"] = "loaded"
+            if verbose:
+                print(f"  [INPUT] Loaded: {kw_path.absolute()}")
+        except json.JSONDecodeError as e:
+            debug_info["kw_status"] = f"json_error: {str(e)[:50]}"
+            if verbose:
+                print(f"  [ERROR] JSON decode error in: {kw_path.absolute()}")
+                print(f"          {e}")
+    else:
+        debug_info["kw_status"] = "not_found"
+        if verbose:
+            print(f"  [MISSING] File not found: {kw_path.absolute()}")
 
     return {
         "competitions": competitions,
-        "keywords": keywords_data
+        "keywords": keywords_data,
+        "debug": debug_info
     }
 
 
@@ -491,11 +705,35 @@ def validate_yaml_schema(data: Dict) -> tuple[bool, List[str]]:
         if len(edges) > 18:
             errors.append(f"Knowledge graph has {len(edges)} edges (max 18)")
 
-    # Validate entity_signals constraint
+        # Validate predicate values
+        for edge in edges:
+            pred = edge.get("predicate", "")
+            if pred and pred not in VALID_PREDICATES:
+                errors.append(f"Invalid predicate: {pred}")
+
+    # Validate entity_signals constraint (new schema: entities nested under entities key)
     if "entity_signals" in data:
         entities = data["entity_signals"]
-        if isinstance(entities, list) and len(entities) > 8:
+        if isinstance(entities, dict):
+            entity_list = entities.get("entities", [])
+            if isinstance(entity_list, list) and len(entity_list) > 8:
+                errors.append(f"Entity signals has {len(entity_list)} entities (max 8)")
+        elif isinstance(entities, list) and len(entities) > 8:
             errors.append(f"Entity signals has {len(entities)} entities (max 8)")
+
+    # Validate opportunity_gaps constraint (max 3)
+    if "opportunity_gaps" in data:
+        gaps = data["opportunity_gaps"]
+        if isinstance(gaps, list) and len(gaps) > 3:
+            errors.append(f"Opportunity gaps has {len(gaps)} entries (max 3)")
+
+    # Validate dominant_title_patterns constraint (max 2)
+    if "pattern_signals" in data:
+        ps = data["pattern_signals"]
+        if isinstance(ps, dict):
+            patterns = ps.get("dominant_title_patterns", [])
+            if isinstance(patterns, list) and len(patterns) > 2:
+                errors.append(f"Dominant title patterns has {len(patterns)} entries (max 2)")
 
     return len(errors) == 0, errors
 
@@ -521,12 +759,24 @@ def calculate_quality_score(data: Dict) -> float:
         kg = data["knowledge_graph"]
         if kg.get("nodes") and kg.get("edges"):
             score += 0.5
+        if kg.get("central_concepts"):
+            score += 0.25
 
-    # Bonus for entity signals quality
+    # Bonus for entity signals quality (new schema: entities nested)
     if "entity_signals" in data and data["entity_signals"]:
-        score += 0.5
+        es = data["entity_signals"]
+        if isinstance(es, dict) and es.get("entities"):
+            score += 0.5
+        elif isinstance(es, list) and es:
+            score += 0.5
 
-    return min(score / (max_score + 1.0), 1.0)
+    # Bonus for evidence coverage
+    if "pattern_signals" in data:
+        ps = data["pattern_signals"]
+        if isinstance(ps, dict) and ps.get("angles_observed"):
+            score += 0.25
+
+    return min(score / (max_score + 1.5), 1.0)
 
 
 class RateLimiter:
@@ -540,11 +790,11 @@ class RateLimiter:
 
     async def acquire(self):
         async with self.lock:
-            now = asyncio.get_event_loop().time()
+            now = time.time()
             wait_time = self.last_call + self.interval - now
             if wait_time > 0:
                 await asyncio.sleep(wait_time)
-            self.last_call = asyncio.get_event_loop().time()
+            self.last_call = time.time()
 
 
 class SERPAnalyzer:
@@ -651,29 +901,44 @@ class SERPAnalyzer:
 
     async def analyze_keyword(self, session: ClientSession, keyword: str) -> bool:
         """Analyze a single keyword."""
+        verbose = getattr(self.args, 'verbose', False)
+
         try:
             async with self.semaphore:
-                # Check if already completed
-                if keyword in self.checkpoint["completed"]:
-                    self.stats["skipped"] += 1
-                    return True
+                if verbose:
+                    print(f"\n[PROCESSING] Keyword: {keyword}")
 
-                # Check if output exists (incremental mode)
+                # Check if output file already exists on disk (skip unless --force is set)
                 output_path = Path(OUTPUT_DIR) / keyword / f"{keyword}-serp-analysis.yaml"
-                if self.args.incremental and output_path.exists():
+                if verbose:
+                    print(f"  [OUTPUT] Target: {output_path.absolute()}")
+
+                if not self.args.force and output_path.exists():
+                    print(f"  [SKIP] Output already exists: {output_path.absolute()}")
                     self.stats["skipped"] += 1
-                    log_json(self.logger, "skipped", {"keyword": keyword, "reason": "exists"})
+                    log_json(self.logger, "skipped", {"keyword": keyword, "reason": "output_exists"})
                     return True
 
-                # Load SERP data
-                serp_data = load_serp_data(keyword)
+                # Load SERP data with verbose output
+                serp_data = load_serp_data(keyword, verbose=verbose)
+                debug = serp_data.get("debug", {})
+
                 if not serp_data["competitions"] and not serp_data["keywords"]:
+                    # Print specific reasons for missing data
+                    print(f"  [SKIP] No input data found for: {keyword}")
+                    print(f"         Keyword dir: {debug.get('keyword_dir', 'N/A')}")
+                    print(f"         competitions.json: {debug.get('comp_status', 'N/A')}")
+                    print(f"           Path: {debug.get('comp_path', 'N/A')}")
+                    print(f"         keywords.json: {debug.get('kw_status', 'N/A')}")
+                    print(f"           Path: {debug.get('kw_path', 'N/A')}")
+
                     log_json(self.logger, "skipped", {
                         "keyword": keyword,
-                    "reason": "no_serp_data"
-                })
-                self.stats["skipped"] += 1
-                return False
+                        "reason": "no_serp_data",
+                        "debug": debug
+                    })
+                    self.stats["skipped"] += 1
+                    return False
 
             # Dry run mode - just estimate
             if self.args.dry_run:
@@ -774,12 +1039,32 @@ class SERPAnalyzer:
 
     async def run(self):
         """Run the analysis pipeline."""
-        # Load keywords
-        keywords = load_keywords(self.args.keywords_file)
+        # Load keywords - scan from output directory or load from file
+        if self.args.scan_output:
+            keywords = scan_keywords_from_output_dir(OUTPUT_DIR)
+            print(f"Scanned {len(keywords)} keywords from {OUTPUT_DIR}/")
+            if not keywords:
+                print(f"Error: No keyword directories found in {OUTPUT_DIR}/")
+                print("  Expected structure: output/research/{keyword}/{keyword}-competitions.json")
+                return
+        else:
+            keywords_path = Path(self.args.keywords_file)
+            if not keywords_path.exists():
+                print(f"Error: Keywords file not found: {self.args.keywords_file}")
+                print("  Use --scan-output to scan from output directory instead")
+                return
+            keywords = load_keywords(self.args.keywords_file)
+
         self.stats["total"] = len(keywords)
 
-        # Resume from checkpoint if specified
-        if self.args.resume_from:
+        # Reset checkpoint if --force is set
+        if self.args.force:
+            self.checkpoint = {"completed": [], "failed": [], "last_index": 0}
+            print("Force mode: ignoring checkpoint and overwriting existing outputs")
+            log_json(self.logger, "force_mode", {"action": "checkpoint_reset"})
+
+        # Resume from checkpoint if specified (ignored if --force)
+        if self.args.resume_from and not self.args.force:
             try:
                 start_index = int(self.args.resume_from)
                 keywords = keywords[start_index:]
@@ -791,7 +1076,9 @@ class SERPAnalyzer:
             "total_keywords": len(keywords),
             "max_concurrency": self.args.max_concurrency,
             "model": MODEL,
-            "dry_run": self.args.dry_run
+            "dry_run": self.args.dry_run,
+            "force": self.args.force,
+            "source": "scan_output" if self.args.scan_output else "keywords_file"
         })
 
         timeout = ClientTimeout(total=self.args.timeout)
@@ -907,6 +1194,21 @@ def parse_args():
     parser.add_argument(
         "--resume-from",
         help="Resume from checkpoint index"
+    )
+    parser.add_argument(
+        "--scan-output",
+        action="store_true",
+        help="Scan OUTPUT_DIR subdirectories for keywords instead of using keywords file"
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Ignore checkpoint file and overwrite existing outputs"
+    )
+    parser.add_argument(
+        "--verbose", "-v",
+        action="store_true",
+        help="Enable verbose output for debugging"
     )
 
     return parser.parse_args()
