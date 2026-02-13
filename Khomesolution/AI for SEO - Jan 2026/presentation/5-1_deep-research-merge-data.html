@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 5.1: Markdown Token Optimizer | Privato Content</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --primary: #8b5cf6;
+            --primary-glow: rgba(139, 92, 246, 0.4);
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --optimize: #8b5cf6;
+            --compress: #06b6d4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #312e81, transparent 40%),
+                        radial-gradient(circle at bottom left, #1e1b4b, transparent 40%),
+                        linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 100px;
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #a78bfa;
+            margin-bottom: 32px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+        }
+
+        .header h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Stats Banner */
+        .stats-banner {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 48px;
+            animation: fadeIn 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Objectives Section */
+        .objectives-container {
+            margin-top: 32px;
+            max-width: 800px;
+        }
+
+        .objectives-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .objective-item:last-child {
+            border-bottom: none;
+        }
+
+        .objective-bullet {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #a78bfa;
+            margin-top: 2px;
+        }
+
+        .objective-content {
+            flex: 1;
+        }
+
+        .objective-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.5;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .command-section {
+            margin-bottom: 80px;
+            animation: fadeIn 1s ease 0.15s forwards;
+            opacity: 0;
+        }
+
+        .command-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .command-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .command-card h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* Flow Section */
+        .flow-section {
+            margin: 0 0 100px;
+            animation: fadeIn 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .flow-wrapper {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .flow-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px 32px;
+            text-align: center;
+            width: 220px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+        }
+
+        .flow-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.4);
+        }
+
+        .flow-box:hover::before {
+            opacity: 1;
+        }
+
+        .icon-wrapper {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            position: relative;
+        }
+
+        .flow-box.input .icon-wrapper {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.1));
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .flow-box.scan .icon-wrapper {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(8, 145, 178, 0.1));
+            color: #22d3ee;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .flow-box.optimize .icon-wrapper {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.1));
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .flow-box.compress .icon-wrapper {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .flow-box.output .icon-wrapper {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.1));
+            color: #f472b6;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .flow-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .flow-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            align-self: center;
+        }
+
+        /* Optimization Techniques Grid */
+        .techniques-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 60px;
+            font-size: 18px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .techniques-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .technique-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 32px 28px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .technique-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .technique-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(139, 92, 246, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .technique-card:hover::before {
+            opacity: 1;
+        }
+
+        .technique-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.1));
+            color: #a78bfa;
+        }
+
+        .technique-card h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .technique-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .reduction-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 12px;
+        }
+
+        /* Command Execution Section */
+        .command-exec-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.35s forwards;
+            opacity: 0;
+        }
+
+        .code-window {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .window-header {
+            background: #0f172a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 16px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #22c55e; }
+
+        .file-name {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-content {
+            padding: 24px;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .ln { color: #475569; margin-right: 16px; user-select: none; }
+        .cmt { color: #64748b; font-style: italic; }
+        .cmd { color: #a78bfa; }
+        .flag { color: #22d3ee; }
+        .str { color: #fbbf24; }
+        .num { color: #f472b6; }
+        .success { color: #34d399; }
+        .arrow { color: #475569; }
+
+        /* Before/After Comparison */
+        .comparison-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .comparison-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+            text-align: center;
+        }
+
+        .comparison-card.before {
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .comparison-card.after {
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .comparison-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .comparison-card.before .comparison-label { color: #f87171; }
+        .comparison-card.after .comparison-label { color: #34d399; }
+
+        .comparison-value {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .comparison-card.before .comparison-value { color: #f87171; }
+        .comparison-card.after .comparison-value { color: #34d399; }
+
+        .comparison-unit {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .comparison-arrow {
+            font-size: 32px;
+            color: var(--primary);
+        }
+
+        .savings-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .savings-value {
+            font-size: 72px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .savings-label {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-top: 12px;
+        }
+
+        /* Output Structure */
+        .output-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.45s forwards;
+            opacity: 0;
+        }
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .output-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .output-card h4 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tree-view {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .tree-view .folder { color: #fbbf24; }
+        .tree-view .file { color: #86efac; }
+        .tree-view .optimized { color: #a78bfa; }
+        .tree-view .branch { color: #475569; }
+
+        /* Benefits */
+        .benefits-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.5s forwards;
+            opacity: 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 24px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.3s;
+        }
+
+        .benefit-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-size: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .benefit-text h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .benefit-text p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 120px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 60px;
+        }
+
+        .next-phase {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .next-phase:hover {
+            color: var(--primary);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+            .techniques-grid { grid-template-columns: repeat(2, 1fr); }
+            .output-grid { grid-template-columns: 1fr; }
+            .flow-wrapper { flex-direction: column; align-items: center; }
+            .flow-arrow { transform: rotate(90deg); margin: 8px 0; }
+            .comparison-grid { grid-template-columns: 1fr; gap: 24px; }
+            .comparison-arrow { transform: rotate(90deg); }
+        }
+
+        @media (max-width: 768px) {
+            .techniques-grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 42px; }
+            .benefits-grid { grid-template-columns: 1fr; }
+            .stats-banner { flex-direction: column; gap: 32px; }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 0;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 80px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .modal-icon.input { background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.2)); color: #fbbf24; }
+        .modal-icon.scan { background: linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(8, 145, 178, 0.2)); color: #22d3ee; }
+        .modal-icon.optimize { background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(124, 58, 237, 0.2)); color: #a78bfa; }
+        .modal-icon.compress { background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2)); color: #34d399; }
+        .modal-icon.output { background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.2)); color: #f472b6; }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px 28px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sample-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sample-code {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .modal-footer {
+            padding: 16px 28px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-footer i {
+            color: #a78bfa;
+            font-size: 14px;
+        }
+
+        .modal-footer span {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Clickable flow boxes */
+        .flow-box.clickable {
+            cursor: pointer;
+        }
+
+        .flow-box.clickable::after {
+            content: 'Click to view sample';
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .flow-box.clickable:hover::after {
+            opacity: 1;
+        }
+
+        .diff-block {
+            margin-bottom: 16px;
+        }
+
+        .diff-removed {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .diff-added {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 3px solid #10b981;
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 0 6px 6px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="phase-badge">
+                <i class="fa-solid fa-compress"></i>
+                Phase 5.1
+            </div>
+            <h1>Markdown Token Optimizer</h1>
+            <p>Intelligent compression engine that reduces research document tokens by 45-55% while preserving semantic meaning and citation integrity for LLM processing.</p>
+
+            <div class="stats-banner">
+                <div class="stat-item">
+                    <div class="stat-value">45-55%</div>
+                    <div class="stat-label">Token Reduction</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">100%</div>
+                    <div class="stat-label">Meaning Preserved</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">~50K</div>
+                    <div class="stat-label">Avg Tokens Saved</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Objectives -->
+        <section class="command-section">
+            <div class="command-card">
+                <div class="command-label">
+                    <i class="fa-solid fa-bullseye"></i>
+                    Strategic Direction
+                </div>
+                <h2>Core Objectives</h2>
+                <div class="objectives-container">
+                    <ul class="objectives-list">
+                        <li class="objective-item">
+                            <div class="objective-bullet">1</div>
+                            <div class="objective-content">
+                                <h4><strong>Reduce Token Count</strong> for cost-effective LLM processing</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">2</div>
+                            <div class="objective-content">
+                                <h4><strong>Preserve Semantic Integrity</strong> of research content and citations</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">3</div>
+                            <div class="objective-content">
+                                <h4><strong>Maintain Readability</strong> for human review and validation</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">4</div>
+                            <div class="objective-content">
+                                <h4><strong>Enable Batch Processing</strong> across all research documents</h4>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Flow -->
+        <section class="flow-section">
+            <div class="flow-wrapper">
+                <div class="flow-box input clickable" onclick="openModal('modal-input')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <h3>Raw Research</h3>
+                    <p>Verbose markdown files from deep research phase.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box scan clickable" onclick="openModal('modal-scan')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                    </div>
+                    <h3>Pattern Scan</h3>
+                    <p>Identify redundant patterns and verbose sections.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box optimize clickable" onclick="openModal('modal-optimize')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3>Optimize</h3>
+                    <p>Apply compression rules while preserving meaning.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box compress clickable" onclick="openModal('modal-compress')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-compress-arrows-alt"></i>
+                    </div>
+                    <h3>Validate</h3>
+                    <p>Ensure citations and structure remain intact.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box output clickable" onclick="openModal('modal-output')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-file-circle-check"></i>
+                    </div>
+                    <h3>Optimized MD</h3>
+                    <p>Lean documents ready for article generation.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Optimization Techniques -->
+        <section class="techniques-section">
+            <h2 class="section-title">Optimization Techniques</h2>
+            <p class="section-subtitle">Multi-pass compression engine applying intelligent rules to maximize token reduction.</p>
+
+            <div class="techniques-grid">
+                <div class="technique-card">
+                    <div class="technique-icon">
+                        <i class="fa-solid fa-text-slash"></i>
+                    </div>
+                    <h4>Whitespace Normalization</h4>
+                    <p>Collapse excessive blank lines, trim trailing spaces, and standardize indentation to single spaces.</p>
+                    <span class="reduction-badge">~8% reduction</span>
+                </div>
+
+                <div class="technique-card">
+                    <div class="technique-icon">
+                        <i class="fa-solid fa-filter"></i>
+                    </div>
+                    <h4>Filler Word Removal</h4>
+                    <p>Strip "basically", "essentially", "in order to", "it is important to note" and similar padding.</p>
+                    <span class="reduction-badge">~12% reduction</span>
+                </div>
+
+                <div class="technique-card">
+                    <div class="technique-icon">
+                        <i class="fa-solid fa-clone"></i>
+                    </div>
+                    <h4>Deduplication</h4>
+                    <p>Detect and merge duplicate paragraphs, repeated citations, and redundant bullet points.</p>
+                    <span class="reduction-badge">~15% reduction</span>
+                </div>
+
+                <div class="technique-card">
+                    <div class="technique-icon">
+                        <i class="fa-solid fa-heading"></i>
+                    </div>
+                    <h4>Header Consolidation</h4>
+                    <p>Flatten excessive nesting, remove empty sections, and merge adjacent similar headers.</p>
+                    <span class="reduction-badge">~5% reduction</span>
+                </div>
+
+                <div class="technique-card">
+                    <div class="technique-icon">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                    <h4>URL Shortening</h4>
+                    <p>Convert verbose URLs to reference-style links with numbered citations at document end.</p>
+                    <span class="reduction-badge">~10% reduction</span>
+                </div>
+
+                <div class="technique-card">
+                    <div class="technique-icon">
+                        <i class="fa-solid fa-quote-left"></i>
+                    </div>
+                    <h4>Citation Normalization</h4>
+                    <p>Standardize citation format, remove duplicate sources, and consolidate inline references.</p>
+                    <span class="reduction-badge">~5% reduction</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Command Execution -->
+        <section class="command-exec-section">
+            <h2 class="section-title">Execution Command</h2>
+            <p class="section-subtitle">Single command to process all research documents in the pipeline.</p>
+
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    </div>
+                    <span class="file-name"><i class="fa-solid fa-terminal"></i> terminal</span>
+                </div>
+                <div class="window-content">
+                    <div><span class="ln"> 1</span><span class="cmt"># Privato Content - Markdown Token Optimizer</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="cmd">uv run</span> <span class="str">scripts/markdown_optimizer.py</span> <span class="flag">--all</span></div>
+                    <div><span class="ln"> 4</span></div>
+                    <div><span class="ln"> 5</span><span class="cmt"># Processing output:</span></div>
+                    <div><span class="ln"> 6</span><span class="arrow">├──</span> <span class="success">Scanning</span> data/deep-research/*.md</div>
+                    <div><span class="ln"> 7</span><span class="arrow">├──</span> <span class="success">Found</span> <span class="num">24</span> research documents</div>
+                    <div><span class="ln"> 8</span><span class="arrow">├──</span> <span class="success">Processing</span> กลูต้าไธโอน-คืออะไร.md</div>
+                    <div><span class="ln"> 9</span><span class="arrow">│   ├──</span> Before: <span class="num">48,234</span> tokens</div>
+                    <div><span class="ln">10</span><span class="arrow">│   ├──</span> After:  <span class="num">24,117</span> tokens</div>
+                    <div><span class="ln">11</span><span class="arrow">│   └──</span> Saved:  <span class="success">50.0%</span></div>
+                    <div><span class="ln">12</span><span class="arrow">├──</span> <span class="success">Processing</span> วิตามินซี-ผิวขาว.md</div>
+                    <div><span class="ln">13</span><span class="arrow">│   └──</span> Saved:  <span class="success">47.3%</span></div>
+                    <div><span class="ln">14</span><span class="arrow">├──</span> <span class="cmt">... processing remaining files ...</span></div>
+                    <div><span class="ln">15</span><span class="arrow">│</span></div>
+                    <div><span class="ln">16</span><span class="arrow">└──</span> <span class="success">Complete!</span> Total saved: <span class="num">1,247,832</span> tokens (<span class="success">48.7%</span>)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Before/After Comparison -->
+        <section class="comparison-section">
+            <h2 class="section-title">Token Reduction Impact</h2>
+            <p class="section-subtitle">Real-world compression results from production research documents.</p>
+
+            <div class="comparison-grid">
+                <div class="comparison-card before">
+                    <div class="comparison-label">Before Optimization</div>
+                    <div class="comparison-value">~100K</div>
+                    <div class="comparison-unit">Average tokens per document</div>
+                </div>
+
+                <div class="comparison-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="comparison-card after">
+                    <div class="comparison-label">After Optimization</div>
+                    <div class="comparison-value">~50K</div>
+                    <div class="comparison-unit">Average tokens per document</div>
+                </div>
+            </div>
+
+            <div class="savings-card">
+                <div class="savings-value">45-55%</div>
+                <div class="savings-label">Consistent token reduction while maintaining 100% semantic integrity</div>
+            </div>
+        </section>
+
+        <!-- Output Structure -->
+        <section class="output-section">
+            <h2 class="section-title">Output Structure</h2>
+            <p class="section-subtitle">Optimized files maintain original directory structure with .optimized suffix.</p>
+
+            <div class="output-grid">
+                <div class="output-card">
+                    <h4><i class="fa-regular fa-folder-open"></i> Directory Structure</h4>
+                    <div class="tree-view">
+                        <div><span class="folder">data/deep-research/</span></div>
+                        <div><span class="branch">├── </span><span class="file">keyword-1.md</span> <span class="cmt">(original)</span></div>
+                        <div><span class="branch">├── </span><span class="optimized">keyword-1.optimized.md</span></div>
+                        <div><span class="branch">├── </span><span class="file">keyword-2.md</span> <span class="cmt">(original)</span></div>
+                        <div><span class="branch">├── </span><span class="optimized">keyword-2.optimized.md</span></div>
+                        <div><span class="branch">├── </span><span class="cmt">...</span></div>
+                        <div><span class="branch">└── </span><span class="folder">_optimization_report.json</span></div>
+                    </div>
+                </div>
+
+                <div class="output-card">
+                    <h4><i class="fa-solid fa-chart-simple"></i> Optimization Report</h4>
+                    <div class="tree-view">
+                        <div><span class="file">total_files_processed</span><span class="cmt">: 24</span></div>
+                        <div><span class="file">total_tokens_before</span><span class="cmt">: 2,560,432</span></div>
+                        <div><span class="file">total_tokens_after</span><span class="cmt">: 1,312,600</span></div>
+                        <div><span class="file">total_reduction</span><span class="cmt">: 48.7%</span></div>
+                        <div><span class="file">processing_time</span><span class="cmt">: 12.4s</span></div>
+                        <div><span class="file">citations_preserved</span><span class="cmt">: 847</span></div>
+                        <div><span class="file">semantic_score</span><span class="cmt">: 100%</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="benefits-section">
+            <h2 class="section-title">Operational Advantages</h2>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Cost Reduction</h4>
+                        <p>45-55% fewer tokens means significantly lower LLM API costs for article generation phase.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Citation Integrity</h4>
+                        <p>All source citations and references preserved in standardized format for proper attribution.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Faster Processing</h4>
+                        <p>Smaller documents process faster through the content generation pipeline with lower latency.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Original Backup</h4>
+                        <p>Source files remain untouched - optimized versions created as separate .optimized.md files.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="#" class="next-phase">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <span>Previous: Deep Research Processing</span>
+            </a>
+            <span style="margin: 0 24px; color: rgba(255,255,255,0.1);">|</span>
+            <a href="#" class="next-phase">
+                <span>Next: Article Generation</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <p style="margin-top: 16px; color: rgba(255,255,255,0.2); font-size: 12px;">&copy; 2025 Privato Content AI System</p>
+        </footer>
+    </div>
+
+    <!-- Modal 1: Raw Research Input -->
+    <div class="modal-overlay" id="modal-input" onclick="closeModal(event, 'modal-input')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon input"><i class="fa-solid fa-file-lines"></i></div>
+                    <div>
+                        <h3 class="modal-title">Raw Research Documents</h3>
+                        <p class="modal-subtitle">data/deep-research/*.md</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-input')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-regular fa-file-code"></i> Sample Input (Verbose)</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="str"># กลูต้าไธโอน คืออะไร - Deep Research</span></div>
+                    <div><span class="ln">2</span></div>
+                    <div><span class="ln">3</span><span class="cmt">## Introduction</span></div>
+                    <div><span class="ln">4</span></div>
+                    <div><span class="ln">5</span>It is important to note that Glutathione,</div>
+                    <div><span class="ln">6</span>which is essentially a tripeptide molecule,</div>
+                    <div><span class="ln">7</span>basically functions as one of the most</div>
+                    <div><span class="ln">8</span>important antioxidants in the human body.</div>
+                    <div><span class="ln">9</span></div>
+                    <div><span class="ln">10</span></div>
+                    <div><span class="ln">11</span></div>
+                    <div><span class="ln">12</span>In order to understand how glutathione works,</div>
+                    <div><span class="ln">13</span>it is necessary to examine its chemical structure...</div>
+                    <div><span class="ln">14</span></div>
+                    <div><span class="ln">15</span>[Source: https://www.ncbi.nlm.nih.gov/pmc/articles/</div>
+                    <div><span class="ln">16</span>PMC4684116/full-text-with-very-long-url-params]</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <span>Verbose content with filler words, excessive whitespace, and long URLs</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Pattern Scan -->
+    <div class="modal-overlay" id="modal-scan" onclick="closeModal(event, 'modal-scan')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon scan"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                    <div>
+                        <h3 class="modal-title">Pattern Detection</h3>
+                        <p class="modal-subtitle">Identifying optimization opportunities</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-scan')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-search"></i> Detected Patterns</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="cmt"># Pattern Analysis Report</span></div>
+                    <div><span class="ln">2</span></div>
+                    <div><span class="ln">3</span><span class="str">Filler phrases found:</span> <span class="num">47</span></div>
+                    <div><span class="ln">4</span>  - "it is important to note" × 12</div>
+                    <div><span class="ln">5</span>  - "essentially" × 8</div>
+                    <div><span class="ln">6</span>  - "basically" × 15</div>
+                    <div><span class="ln">7</span>  - "in order to" × 12</div>
+                    <div><span class="ln">8</span></div>
+                    <div><span class="ln">9</span><span class="str">Whitespace issues:</span> <span class="num">156</span></div>
+                    <div><span class="ln">10</span>  - Empty lines (3+) × 42</div>
+                    <div><span class="ln">11</span>  - Trailing spaces × 114</div>
+                    <div><span class="ln">12</span></div>
+                    <div><span class="ln">13</span><span class="str">Duplicate content:</span> <span class="num">8</span> blocks</div>
+                    <div><span class="ln">14</span><span class="str">Long URLs:</span> <span class="num">23</span> instances</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>Patterns matched against 50+ optimization rules</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Optimization -->
+    <div class="modal-overlay" id="modal-optimize" onclick="closeModal(event, 'modal-optimize')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon optimize"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div>
+                        <h3 class="modal-title">Optimization Rules</h3>
+                        <p class="modal-subtitle">Applying compression transformations</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-optimize')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-code-compare"></i> Before → After</div>
+
+                <div class="diff-block">
+                    <div class="diff-removed">It is important to note that Glutathione, which is essentially a tripeptide molecule, basically functions as one of the most important antioxidants in the human body.</div>
+                    <div class="diff-added">Glutathione, a tripeptide molecule, functions as a key antioxidant in the human body.</div>
+                </div>
+
+                <div class="diff-block">
+                    <div class="diff-removed">[Source: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4684116/full-text-with-very-long-url-params]</div>
+                    <div class="diff-added">[1] NCBI PMC4684116</div>
+                </div>
+
+                <div style="margin-top: 16px; padding: 12px; background: rgba(139, 92, 246, 0.1); border-radius: 8px;">
+                    <span style="font-size: 12px; color: #a78bfa;">Token reduction: 48 → 24 tokens (50% saved)</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-check-double"></i>
+                <span>Meaning preserved while removing redundant words</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Validation -->
+    <div class="modal-overlay" id="modal-compress" onclick="closeModal(event, 'modal-compress')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon compress"><i class="fa-solid fa-compress-arrows-alt"></i></div>
+                    <div>
+                        <h3 class="modal-title">Validation Check</h3>
+                        <p class="modal-subtitle">Ensuring document integrity</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-compress')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-shield-check"></i> Integrity Report</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="cmt"># Validation Results</span></div>
+                    <div><span class="ln">2</span></div>
+                    <div><span class="ln">3</span><span class="success">✓</span> Markdown syntax valid</div>
+                    <div><span class="ln">4</span><span class="success">✓</span> All headers preserved (12/12)</div>
+                    <div><span class="ln">5</span><span class="success">✓</span> Citations intact (23/23)</div>
+                    <div><span class="ln">6</span><span class="success">✓</span> Links functional (18/18)</div>
+                    <div><span class="ln">7</span><span class="success">✓</span> Code blocks unchanged (4/4)</div>
+                    <div><span class="ln">8</span><span class="success">✓</span> Lists structure preserved</div>
+                    <div><span class="ln">9</span></div>
+                    <div><span class="ln">10</span><span class="str">Semantic similarity:</span> <span class="num">99.7%</span></div>
+                    <div><span class="ln">11</span><span class="str">Readability score:</span> <span class="num">Improved</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-certificate"></i>
+                <span>Document passes all integrity checks before saving</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Output -->
+    <div class="modal-overlay" id="modal-output" onclick="closeModal(event, 'modal-output')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon output"><i class="fa-solid fa-file-circle-check"></i></div>
+                    <div>
+                        <h3 class="modal-title">Optimized Output</h3>
+                        <p class="modal-subtitle">Ready for article generation</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-output')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-regular fa-file-code"></i> Optimized Document</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="str"># กลูต้าไธโอน คืออะไร - Deep Research</span></div>
+                    <div><span class="ln">2</span></div>
+                    <div><span class="ln">3</span><span class="cmt">## Introduction</span></div>
+                    <div><span class="ln">4</span></div>
+                    <div><span class="ln">5</span>Glutathione, a tripeptide molecule, functions</div>
+                    <div><span class="ln">6</span>as a key antioxidant in the human body.</div>
+                    <div><span class="ln">7</span></div>
+                    <div><span class="ln">8</span>Understanding glutathione requires examining</div>
+                    <div><span class="ln">9</span>its chemical structure. [1]</div>
+                    <div><span class="ln">10</span></div>
+                    <div><span class="ln">11</span><span class="cmt">## References</span></div>
+                    <div><span class="ln">12</span>[1]: https://ncbi.nlm.nih.gov/PMC4684116</div>
+                </div>
+                <div style="margin-top: 16px; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 3px solid #10b981;">
+                    <span style="font-size: 12px; color: #34d399;">Output: data/deep-research/กลูต้าไธโอน-คืออะไร.optimized.md</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-rocket"></i>
+                <span>Ready for Phase 6: Article Generation Pipeline</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event, modalId) {
+            if (event.target === event.currentTarget || event.currentTarget.classList.contains('modal-close')) {
+                document.getElementById(modalId).classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>

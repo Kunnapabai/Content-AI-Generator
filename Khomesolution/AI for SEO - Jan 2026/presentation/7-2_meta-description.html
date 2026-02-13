@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 7.2: SEO Meta Description Generation | Privato Content</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --meta: #ec4899;
+            --ai: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, transparent 40%),
+                        radial-gradient(circle at bottom left, #312e81, transparent 40%),
+                        linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 100px;
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(236, 72, 153, 0.1);
+            border: 1px solid rgba(236, 72, 153, 0.3);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #f472b6;
+            margin-bottom: 32px;
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.1);
+        }
+
+        .header h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Objectives Styling */
+        .objectives-container {
+            margin-top: 32px;
+            max-width: 800px;
+        }
+
+        .objectives-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .objective-item:last-child {
+            border-bottom: none;
+        }
+
+        .objective-bullet {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: rgba(236, 72, 153, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #f472b6;
+            margin-top: 2px;
+        }
+
+        .objective-content {
+            flex: 1;
+        }
+
+        .objective-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.5;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .command-section {
+            margin-bottom: 80px;
+            animation: fadeIn 1s ease 0.15s forwards;
+            opacity: 0;
+        }
+
+        .command-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .command-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .command-card h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* Flow Section */
+        .flow-section {
+            margin: 0 0 100px;
+            animation: fadeIn 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .flow-wrapper {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .flow-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px 32px;
+            text-align: center;
+            width: 220px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+        }
+
+        .flow-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.4);
+        }
+
+        .flow-box:hover::before {
+            opacity: 1;
+        }
+
+        .icon-wrapper {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            position: relative;
+        }
+
+        .flow-box.input .icon-wrapper {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.1));
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .flow-box.content .icon-wrapper {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .flow-box.ai .icon-wrapper {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.1));
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .flow-box.validate .icon-wrapper {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.1));
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .flow-box.output .icon-wrapper {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.1));
+            color: #f472b6;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .flow-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .flow-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            align-self: center;
+        }
+
+        /* Parameters Grid */
+        .params-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 60px;
+            font-size: 18px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .param-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .param-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .param-flag {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 14px;
+            color: #67e8f9;
+            background: rgba(103, 232, 249, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .param-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .param-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Meta Description Best Practices */
+        .practices-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.35s forwards;
+            opacity: 0;
+        }
+
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .practice-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .practice-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(236, 72, 153, 0.3);
+        }
+
+        .practice-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #ec4899, #8b5cf6);
+        }
+
+        .practice-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(139, 92, 246, 0.1));
+            color: #f472b6;
+        }
+
+        .practice-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .practice-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* AI Model Section */
+        .ai-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .ai-card {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(30, 41, 59, 0.8) 100%);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 24px;
+            padding: 48px;
+            display: flex;
+            align-items: center;
+            gap: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .ai-visual {
+            width: 200px;
+            min-width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.2));
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 72px;
+            color: #a78bfa;
+            position: relative;
+        }
+
+        .ai-visual::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .ai-info h3 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .ai-info p {
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .ai-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .ai-tag {
+            font-size: 12px;
+            padding: 6px 14px;
+            border-radius: 100px;
+            background: rgba(139, 92, 246, 0.15);
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        /* Code Window */
+        .diagram-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.45s forwards;
+            opacity: 0;
+        }
+
+        .code-window {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .window-header {
+            background: #0f172a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 16px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #22c55e; }
+
+        .file-name {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-content {
+            padding: 24px;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .ln { color: #475569; margin-right: 16px; user-select: none; }
+        .cmt { color: #64748b; font-style: italic; }
+        .step { color: #f472b6; }
+        .arrow { color: #475569; }
+        .highlight { color: #fbbf24; }
+        .data { color: #86efac; }
+        .str { color: #67e8f9; }
+
+        /* Output Structure */
+        .output-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.5s forwards;
+            opacity: 0;
+        }
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .output-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .output-card h4 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tree-view {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .tree-view .folder { color: #fbbf24; }
+        .tree-view .file { color: #86efac; }
+        .tree-view .branch { color: #475569; }
+
+        /* Benefits */
+        .benefits-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.55s forwards;
+            opacity: 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 24px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.3s;
+        }
+
+        .benefit-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-size: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .benefit-text h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .benefit-text p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 120px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 60px;
+        }
+
+        .next-phase {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .next-phase:hover {
+            color: var(--primary);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+            .params-grid { grid-template-columns: repeat(2, 1fr); }
+            .practices-grid { grid-template-columns: 1fr; }
+            .output-grid { grid-template-columns: 1fr; }
+            .flow-wrapper { flex-direction: column; align-items: center; }
+            .flow-arrow { transform: rotate(90deg); margin: 8px 0; }
+            .ai-card { flex-direction: column; text-align: center; }
+            .ai-visual { margin: 0 auto; }
+        }
+
+        @media (max-width: 768px) {
+            .params-grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 42px; }
+            .benefits-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 0;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 80px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .modal-icon.input { background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(79, 70, 229, 0.2)); color: #818cf8; }
+        .modal-icon.content { background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2)); color: #34d399; }
+        .modal-icon.ai { background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(124, 58, 237, 0.2)); color: #a78bfa; }
+        .modal-icon.validate { background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.2)); color: #fbbf24; }
+        .modal-icon.output { background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.2)); color: #f472b6; }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px 28px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sample-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sample-code {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .sample-code .ln { color: #475569; margin-right: 12px; user-select: none; }
+        .sample-code .kw { color: #86efac; }
+        .sample-code .str { color: #fbbf24; }
+        .sample-code .num { color: #f472b6; }
+        .sample-code .cmt { color: #64748b; font-style: italic; }
+        .sample-code .key { color: #67e8f9; }
+        .sample-code .punct { color: #94a3b8; }
+
+        .modal-footer {
+            padding: 16px 28px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-footer i {
+            color: #f472b6;
+            font-size: 14px;
+        }
+
+        .modal-footer span {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Clickable flow boxes */
+        .flow-box.clickable {
+            cursor: pointer;
+        }
+
+        .flow-box.clickable::after {
+            content: 'Click to view sample';
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .flow-box.clickable:hover::after {
+            opacity: 1;
+        }
+
+        /* Meta Description Preview */
+        .meta-preview {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+
+        .meta-preview-title {
+            color: #1a0dab;
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            font-family: Arial, sans-serif;
+        }
+
+        .meta-preview-url {
+            color: #006621;
+            font-size: 13px;
+            margin-bottom: 4px;
+            font-family: Arial, sans-serif;
+        }
+
+        .meta-preview-desc {
+            color: #545454;
+            font-size: 14px;
+            line-height: 1.5;
+            font-family: Arial, sans-serif;
+        }
+
+        .char-counter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 8px;
+            border-left: 3px solid #10b981;
+        }
+
+        .char-counter.warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-left-color: #f59e0b;
+        }
+
+        .char-counter span {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .char-counter .count {
+            font-weight: 700;
+            color: #34d399;
+        }
+
+        .char-counter.warning .count {
+            color: #fbbf24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="phase-badge">
+                <i class="fa-solid fa-align-left"></i>
+                Phase 7.2
+            </div>
+            <h1>SEO Meta Description Generation</h1>
+            <p>AI-powered generation of compelling meta descriptions optimized for search engine visibility and click-through rates across all target keywords.</p>
+        </header>
+
+        <!-- Objectives -->
+        <section class="command-section">
+            <div class="command-card">
+                <div class="command-label">
+                    <i class="fa-solid fa-bullseye"></i>
+                    Strategic Direction
+                </div>
+                <h2>Core Objectives</h2>
+                <div class="objectives-container">
+                    <ul class="objectives-list">
+                        <!-- Objective 1 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">1</div>
+                            <div class="objective-content">
+                                <h4><strong>Generate Compelling Descriptions</strong> that entice users to click through from SERPs</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 2 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">2</div>
+                            <div class="objective-content">
+                                <h4><strong>Optimize Character Length</strong> within 150-160 character sweet spot</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 3 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">3</div>
+                            <div class="objective-content">
+                                <h4><strong>Include Target Keywords</strong> naturally for search relevance signals</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 4 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">4</div>
+                            <div class="objective-content">
+                                <h4><strong>Batch Process All Keywords</strong> for consistent quality at scale</h4>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Flow -->
+        <section class="flow-section">
+            <div class="flow-wrapper">
+                <div class="flow-box input clickable" onclick="openModal('modal-input')">
+                    <div class="icon-wrapper">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </div>
+                    <h3>Article Content</h3>
+                    <p>Generated articles from Phase 6 pipeline.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box content clickable" onclick="openModal('modal-content')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h3>Context Extraction</h3>
+                    <p>Parse key themes and target keywords.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box ai clickable" onclick="openModal('modal-ai')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3>AI Generation</h3>
+                    <p>LLM crafts optimized meta descriptions.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box validate clickable" onclick="openModal('modal-validate')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-spell-check"></i>
+                    </div>
+                    <h3>Validation</h3>
+                    <p>Check length and quality constraints.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box output clickable" onclick="openModal('modal-output')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-tags"></i>
+                    </div>
+                    <h3>Meta Output</h3>
+                    <p>SEO-ready descriptions for all keywords.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parameters -->
+        <section class="params-section">
+            <h2 class="section-title">Configuration Parameters</h2>
+            <p class="section-subtitle">Optimized settings for generating high-quality meta descriptions that drive clicks.</p>
+
+            <div class="params-grid">
+                <div class="param-card">
+                    <div class="param-flag">--all</div>
+                    <div class="param-value"><i class="fa-solid fa-check"></i></div>
+                    <div class="param-label">Process all keywords in batch mode</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">max_length</div>
+                    <div class="param-value">160</div>
+                    <div class="param-label">Maximum characters to prevent truncation</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">min_length</div>
+                    <div class="param-value">120</div>
+                    <div class="param-label">Minimum length for adequate context</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">language</div>
+                    <div class="param-value">TH</div>
+                    <div class="param-label">Thai language output optimization</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Best Practices -->
+        <section class="practices-section">
+            <h2 class="section-title">Meta Description Best Practices</h2>
+            <p class="section-subtitle">AI-enforced guidelines that maximize click-through rates and search visibility.</p>
+
+            <div class="practices-grid">
+                <div class="practice-card">
+                    <div class="practice-icon"><i class="fa-solid fa-ruler-horizontal"></i></div>
+                    <h3>Optimal Length</h3>
+                    <p>Keep descriptions between 150-160 characters. Google typically displays up to 155-160 characters before truncating with ellipsis.</p>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-icon"><i class="fa-solid fa-bullhorn"></i></div>
+                    <h3>Call-to-Action</h3>
+                    <p>Include action-oriented language that encourages clicks. Phrases like "Learn how..." or "Discover..." drive engagement.</p>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-icon"><i class="fa-solid fa-key"></i></div>
+                    <h3>Keyword Placement</h3>
+                    <p>Naturally incorporate target keywords near the beginning. Bolded in SERPs when matching search queries.</p>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-icon"><i class="fa-solid fa-fingerprint"></i></div>
+                    <h3>Unique Content</h3>
+                    <p>Each page needs a unique meta description. Duplicate descriptions dilute SEO signals and confuse users.</p>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-icon"><i class="fa-solid fa-heart"></i></div>
+                    <h3>Value Proposition</h3>
+                    <p>Clearly communicate what users will gain. Answer the implicit question: "Why should I click this result?"</p>
+                </div>
+                <div class="practice-card">
+                    <div class="practice-icon"><i class="fa-solid fa-ban"></i></div>
+                    <h3>Avoid Truncation</h3>
+                    <p>End descriptions at natural break points. Incomplete sentences create poor user experience in SERPs.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Model -->
+        <section class="ai-section">
+            <h2 class="section-title">AI Generation Engine</h2>
+            <p class="section-subtitle">Powered by advanced language models for consistent, high-quality output.</p>
+
+            <div class="ai-card">
+                <div class="ai-visual">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="ai-info">
+                    <h3>OpenRouter LLM Integration</h3>
+                    <p>Our meta description generator leverages state-of-the-art language models through OpenRouter API, ensuring contextually relevant and grammatically perfect descriptions in Thai language.</p>
+                    <div class="ai-features">
+                        <span class="ai-tag">Context-Aware</span>
+                        <span class="ai-tag">Thai Language Native</span>
+                        <span class="ai-tag">SEO Optimized</span>
+                        <span class="ai-tag">Batch Processing</span>
+                        <span class="ai-tag">Quality Validation</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Execution Flow -->
+        <section class="diagram-section">
+            <h2 class="section-title">Execution Flow</h2>
+            <p class="section-subtitle">Step-by-step breakdown of the meta description generation pipeline.</p>
+
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    </div>
+                    <span class="file-name"><i class="fa-solid fa-terminal"></i> meta-description-pipeline.txt</span>
+                </div>
+                <div class="window-content">
+                    <div><span class="ln"> 1</span><span class="cmt"># Privato Content - Meta Description Generation Pipeline</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="str">$ uv run -m bankcontent.meta_seo.meta_description --all</span></div>
+                    <div><span class="ln"> 4</span></div>
+                    <div><span class="ln"> 5</span><span class="step">Load Keywords</span> <span class="arrow">───────────────────────────────────────</span></div>
+                    <div><span class="ln"> 6</span>    <span class="arrow">│</span> <span class="data">Scan data/articles/ for generated content</span></div>
+                    <div><span class="ln"> 7</span>    <span class="arrow">▼</span></div>
+                    <div><span class="ln"> 8</span><span class="step">FOR EACH</span> <span class="highlight">keyword</span><span class="step">:</span></div>
+                    <div><span class="ln"> 9</span>    <span class="arrow">├──▶</span> <span class="step">Read Article</span></div>
+                    <div><span class="ln">10</span>    <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">Extract title, first paragraph, key points</span></div>
+                    <div><span class="ln">11</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">12</span>    <span class="arrow">├──▶</span> <span class="step">AI Generation</span></div>
+                    <div><span class="ln">13</span>    <span class="arrow">│</span>       <span class="arrow">├──▶</span> <span class="data">Send context to OpenRouter LLM</span></div>
+                    <div><span class="ln">14</span>    <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">Generate Thai meta description</span></div>
+                    <div><span class="ln">15</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">16</span>    <span class="arrow">├──▶</span> <span class="step">Validation</span></div>
+                    <div><span class="ln">17</span>    <span class="arrow">│</span>       <span class="arrow">├──▶</span> <span class="data">Check character count (120-160)</span></div>
+                    <div><span class="ln">18</span>    <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">Verify keyword inclusion</span></div>
+                    <div><span class="ln">19</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">20</span>    <span class="arrow">└──▶</span> <span class="step">Save Output</span></div>
+                    <div><span class="ln">21</span>            <span class="arrow">└──▶</span> <span class="data">Write to keyword metadata file</span></div>
+                    <div><span class="ln">22</span></div>
+                    <div><span class="ln">23</span><span class="step">Summary Report</span> <span class="arrow">──────────────────────────────────────</span></div>
+                    <div><span class="ln">24</span>    <span class="arrow">└──▶</span> <span class="data">Total generated, success rate, avg length</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Structure -->
+        <section class="output-section">
+            <h2 class="section-title">Output Structure</h2>
+            <p class="section-subtitle">Organized file hierarchy for seamless integration with publishing pipeline.</p>
+
+            <div class="output-grid">
+                <div class="output-card">
+                    <h4><i class="fa-regular fa-folder-open"></i> Directory Structure</h4>
+                    <div class="tree-view">
+                        <div><span class="folder">data/articles/</span></div>
+                        <div><span class="branch">├── </span><span class="folder">{keyword-1}/</span></div>
+                        <div><span class="branch">│   ├── </span><span class="file">article.md</span></div>
+                        <div><span class="branch">│   └── </span><span class="file">metadata.json</span> <span class="cmt">(+ meta_description)</span></div>
+                        <div><span class="branch">├── </span><span class="folder">{keyword-2}/</span></div>
+                        <div><span class="branch">│   └── </span><span class="cmt">...</span></div>
+                        <div><span class="branch">└── </span><span class="folder">_reports/</span></div>
+                        <div><span class="branch">    └── </span><span class="file">meta-descriptions-report.json</span></div>
+                    </div>
+                </div>
+
+                <div class="output-card">
+                    <h4><i class="fa-solid fa-code"></i> Metadata JSON Schema</h4>
+                    <div class="tree-view">
+                        <div><span class="file">keyword</span> <span class="cmt">- Target search term</span></div>
+                        <div><span class="file">title</span> <span class="cmt">- Article title</span></div>
+                        <div><span class="file">first_sentence</span> <span class="cmt">- From Phase 7.1</span></div>
+                        <div><span class="file">meta_description</span> <span class="cmt">- Generated description</span></div>
+                        <div><span class="file">char_count</span> <span class="cmt">- Description length</span></div>
+                        <div><span class="file">generated_at</span> <span class="cmt">- Timestamp</span></div>
+                        <div><span class="file">model_used</span> <span class="cmt">- LLM identifier</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="benefits-section">
+            <h2 class="section-title">Operational Advantages</h2>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Consistent Quality</h4>
+                        <p>AI ensures every description follows best practices with optimal length, keyword inclusion, and compelling CTAs.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Scalable Processing</h4>
+                        <p>Batch mode generates descriptions for hundreds of keywords in minutes, maintaining quality at any volume.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Thai Language Native</h4>
+                        <p>Optimized for Thai search queries with natural language patterns that resonate with local audiences.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>SERP Preview Ready</h4>
+                        <p>Validated output ensures descriptions display correctly in Google search results without truncation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="7.1_first-sentence.html" class="next-phase">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <span>Previous: First Sentence Generation</span>
+            </a>
+            <span style="margin: 0 24px; color: rgba(255,255,255,0.1);">|</span>
+            <a href="8_image-generation.html" class="next-phase">
+                <span>Next: Image Generation</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <p style="margin-top: 16px; color: rgba(255,255,255,0.2); font-size: 12px;">&copy; 2025 Privato Content AI System</p>
+        </footer>
+    </div>
+
+    <!-- Modal 1: Article Content Input -->
+    <div class="modal-overlay" id="modal-input" onclick="closeModal(event, 'modal-input')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon input"><i class="fa-regular fa-file-lines"></i></div>
+                    <div>
+                        <h3 class="modal-title">Article Content</h3>
+                        <p class="modal-subtitle">data/articles/{keyword}/article.md</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-input')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-regular fa-file-code"></i> Sample Article Header</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="cmt"># กลูต้าไธโอน คืออะไร? ทำความรู้จักสารต้านอนุมูลอิสระ</span></div>
+                    <div><span class="ln">2</span></div>
+                    <div><span class="ln">3</span><span class="kw">กลูต้าไธโอน (Glutathione) เป็นสารต้านอนุมูลอิสระ</span></div>
+                    <div><span class="ln">4</span><span class="kw">ที่ร่างกายสร้างขึ้นเองตามธรรมชาติ ประกอบด้วย</span></div>
+                    <div><span class="ln">5</span><span class="kw">กรดอะมิโน 3 ชนิด ได้แก่ กลูตาเมต ซิสเตอีน</span></div>
+                    <div><span class="ln">6</span><span class="kw">และไกลซีน มีบทบาทสำคัญในการปกป้องเซลล์...</span></div>
+                    <div><span class="ln">7</span></div>
+                    <div><span class="ln">8</span><span class="cmt">## ประโยชน์ของกลูต้าไธโอน</span></div>
+                    <div><span class="ln">9</span><span class="cmt">## วิธีการเสริมกลูต้าไธโอน</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>Article content provides context for generating relevant meta descriptions</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Context Extraction -->
+    <div class="modal-overlay" id="modal-content" onclick="closeModal(event, 'modal-content')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon content"><i class="fa-solid fa-brain"></i></div>
+                    <div>
+                        <h3 class="modal-title">Context Extraction</h3>
+                        <p class="modal-subtitle">Key elements parsed from article</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-content')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-code"></i> Extracted Context</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="punct">{</span></div>
+                    <div><span class="ln"> 2</span>  <span class="key">"keyword"</span><span class="punct">:</span> <span class="str">"กลูต้าไธโอน คืออะไร"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 3</span>  <span class="key">"title"</span><span class="punct">:</span> <span class="str">"กลูต้าไธโอน คืออะไร? ทำความรู้จักสารต้านอนุมูลอิสระ"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 4</span>  <span class="key">"main_topics"</span><span class="punct">:</span> <span class="punct">[</span></div>
+                    <div><span class="ln"> 5</span>    <span class="str">"สารต้านอนุมูลอิสระ"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 6</span>    <span class="str">"ประโยชน์ต่อผิว"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 7</span>    <span class="str">"วิธีเสริม"</span></div>
+                    <div><span class="ln"> 8</span>  <span class="punct">],</span></div>
+                    <div><span class="ln"> 9</span>  <span class="key">"target_audience"</span><span class="punct">:</span> <span class="str">"คนที่สนใจดูแลผิวพรรณ"</span><span class="punct">,</span></div>
+                    <div><span class="ln">10</span>  <span class="key">"content_length"</span><span class="punct">:</span> <span class="num">2450</span> <span class="cmt">// words</span></div>
+                    <div><span class="ln">11</span><span class="punct">}</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-filter"></i>
+                <span>Extracted elements guide AI to generate contextually relevant descriptions</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: AI Generation -->
+    <div class="modal-overlay" id="modal-ai" onclick="closeModal(event, 'modal-ai')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon ai"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div>
+                        <h3 class="modal-title">AI Generation</h3>
+                        <p class="modal-subtitle">LLM prompt and response</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-ai')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-paper-plane"></i> Prompt Template</div>
+                <div class="sample-code" style="margin-bottom: 16px;">
+                    <div><span class="cmt">Generate a compelling Thai meta description for:</span></div>
+                    <div><span class="kw">Keyword:</span> <span class="str">กลูต้าไธโอน คืออะไร</span></div>
+                    <div><span class="kw">Title:</span> <span class="str">กลูต้าไธโอน คืออะไร? ทำความรู้จักสารต้านอนุมูลอิสระ</span></div>
+                    <div></div>
+                    <div><span class="cmt">Requirements:</span></div>
+                    <div><span class="str">- Length: 120-160 characters</span></div>
+                    <div><span class="str">- Include target keyword naturally</span></div>
+                    <div><span class="str">- Add call-to-action</span></div>
+                    <div><span class="str">- Thai language only</span></div>
+                </div>
+                <div class="sample-label"><i class="fa-solid fa-sparkles"></i> Generated Output</div>
+                <div class="sample-code">
+                    <div><span class="kw">กลูต้าไธโอน คืออะไร? เรียนรู้เกี่ยวกับสารต้านอนุมูลอิสระที่ช่วยผิวขาวกระจ่างใส พร้อมวิธีเสริมอย่างถูกต้อง อ่านเลย!</span></div>
+                </div>
+                <div class="char-counter">
+                    <i class="fa-solid fa-check-circle" style="color: #34d399;"></i>
+                    <span>Character count: <span class="count">147</span> / 160 (Optimal)</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-robot"></i>
+                <span>OpenRouter API processes requests with sub-second response times</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Validation -->
+    <div class="modal-overlay" id="modal-validate" onclick="closeModal(event, 'modal-validate')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon validate"><i class="fa-solid fa-spell-check"></i></div>
+                    <div>
+                        <h3 class="modal-title">Validation Checks</h3>
+                        <p class="modal-subtitle">Quality assurance pipeline</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-validate')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-clipboard-check"></i> Validation Results</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="kw">✓</span> <span class="str">Character count: 147 (within 120-160)</span></div>
+                    <div><span class="ln">2</span><span class="kw">✓</span> <span class="str">Keyword present: "กลูต้าไธโอน คืออะไร"</span></div>
+                    <div><span class="ln">3</span><span class="kw">✓</span> <span class="str">No truncation risk at 160 chars</span></div>
+                    <div><span class="ln">4</span><span class="kw">✓</span> <span class="str">Contains call-to-action: "อ่านเลย"</span></div>
+                    <div><span class="ln">5</span><span class="kw">✓</span> <span class="str">Thai language verified</span></div>
+                    <div><span class="ln">6</span><span class="kw">✓</span> <span class="str">No duplicate content detected</span></div>
+                    <div><span class="ln">7</span></div>
+                    <div><span class="ln">8</span><span class="cmt">Status: PASSED - Ready for publishing</span></div>
+                </div>
+                <div style="margin-top: 20px; padding: 16px; background: rgba(16, 185, 129, 0.1); border-radius: 12px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                    <div style="font-size: 12px; color: #34d399; margin-bottom: 8px; font-weight: 600;">SERP Preview</div>
+                    <div class="meta-preview">
+                        <div class="meta-preview-title">กลูต้าไธโอน คืออะไร? ทำความรู้จักสารต้านอนุมูลอิสระ</div>
+                        <div class="meta-preview-url">www.privato.co.th › health › glutathione</div>
+                        <div class="meta-preview-desc">กลูต้าไธโอน คืออะไร? เรียนรู้เกี่ยวกับสารต้านอนุมูลอิสระที่ช่วยผิวขาวกระจ่างใส พร้อมวิธีเสริมอย่างถูกต้อง อ่านเลย!</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-shield-check"></i>
+                <span>Failed validations trigger automatic regeneration with adjusted parameters</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Meta Output -->
+    <div class="modal-overlay" id="modal-output" onclick="closeModal(event, 'modal-output')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon output"><i class="fa-solid fa-tags"></i></div>
+                    <div>
+                        <h3 class="modal-title">Meta Output</h3>
+                        <p class="modal-subtitle">Final metadata.json with description</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-output')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-database"></i> Updated Metadata</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="punct">{</span></div>
+                    <div><span class="ln"> 2</span>  <span class="key">"keyword"</span><span class="punct">:</span> <span class="str">"กลูต้าไธโอน คืออะไร"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 3</span>  <span class="key">"title"</span><span class="punct">:</span> <span class="str">"กลูต้าไธโอน คืออะไร? ทำความรู้จักสารต้านอนุมูลอิสระ"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 4</span>  <span class="key">"first_sentence"</span><span class="punct">:</span> <span class="str">"กลูต้าไธโอนเป็นสารต้านอนุมูลอิสระ..."</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 5</span>  <span class="key">"meta_description"</span><span class="punct">:</span> <span class="str">"กลูต้าไธโอน คืออะไร? เรียนรู้เกี่ยวกับสารต้านอนุมูลอิสระที่ช่วยผิวขาวกระจ่างใส พร้อมวิธีเสริมอย่างถูกต้อง อ่านเลย!"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 6</span>  <span class="key">"meta_char_count"</span><span class="punct">:</span> <span class="num">147</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 7</span>  <span class="key">"meta_generated_at"</span><span class="punct">:</span> <span class="str">"2025-01-16T10:30:00Z"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 8</span>  <span class="key">"meta_model"</span><span class="punct">:</span> <span class="str">"openrouter/anthropic/claude-3-haiku"</span></div>
+                    <div><span class="ln"> 9</span><span class="punct">}</span></div>
+                </div>
+                <div style="margin-top: 16px; padding: 12px; background: rgba(236, 72, 153, 0.1); border-radius: 8px; border-left: 3px solid #ec4899;">
+                    <span style="font-size: 12px; color: #f472b6;">Output: data/articles/กลูต้าไธโอน-คืออะไร/metadata.json</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-rocket"></i>
+                <span>Ready for Phase 8: Image Generation & Phase 9: WordPress Publishing</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event, modalId) {
+            if (event.target === event.currentTarget || event.currentTarget.classList.contains('modal-close')) {
+                document.getElementById(modalId).classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1.2: Competitive Intelligence Collection | Privato Content</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --serper: #10b981;
+            --flikover: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, transparent 40%),
+                        radial-gradient(circle at bottom left, #312e81, transparent 40%),
+                        linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 100px;
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #818cf8;
+            margin-bottom: 32px;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+        }
+
+        .header h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Updated Objectives Styling */
+        .objectives-container {
+            margin-top: 32px;
+            max-width: 800px;
+        }
+
+        .objectives-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .objective-item:last-child {
+            border-bottom: none;
+        }
+
+        .objective-bullet {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            margin-top: 2px;
+        }
+
+        .objective-content {
+            flex: 1;
+        }
+
+        .objective-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.5;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .command-section {
+            margin-bottom: 80px;
+            animation: fadeIn 1s ease 0.15s forwards;
+            opacity: 0;
+        }
+
+        .command-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .command-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .command-card h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* Flow Section */
+        .flow-section {
+            margin: 0 0 100px;
+            animation: fadeIn 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .flow-wrapper {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .flow-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px 32px;
+            text-align: center;
+            width: 220px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+        }
+
+        .flow-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.4);
+        }
+
+        .flow-box:hover::before {
+            opacity: 1;
+        }
+
+        .icon-wrapper {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            position: relative;
+        }
+
+        .flow-box.input .icon-wrapper {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.1));
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .flow-box.serper .icon-wrapper {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .flow-box.flikover .icon-wrapper {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.1));
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .flow-box.merge .icon-wrapper {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(2, 132, 199, 0.1));
+            color: #38bdf8;
+            border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .flow-box.output .icon-wrapper {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.1));
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .flow-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .flow-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            align-self: center;
+        }
+
+        /* Parameters Grid */
+        .params-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 60px;
+            font-size: 18px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .param-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .param-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .param-flag {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 14px;
+            color: #67e8f9;
+            background: rgba(103, 232, 249, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .param-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .param-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Tool Section */
+        .tools-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.35s forwards;
+            opacity: 0;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 32px;
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .tool-card.serper {
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .tool-card.serper::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #10b981;
+        }
+
+        .tool-card.flikover {
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .tool-card.flikover::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #f59e0b;
+        }
+
+        .tool-icon {
+            width: 64px;
+            height: 64px;
+            min-width: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .tool-card.serper .tool-icon {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            color: #34d399;
+        }
+
+        .tool-card.flikover .tool-icon {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.1));
+            color: #fbbf24;
+        }
+
+        .tool-info h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .tool-card.serper .tool-info h3 { color: #34d399; }
+        .tool-card.flikover .tool-info h3 { color: #fbbf24; }
+
+        .tool-info p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .tool-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* Data Flow Diagram */
+        .diagram-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .code-window {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .window-header {
+            background: #0f172a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 16px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #22c55e; }
+
+        .file-name {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-content {
+            padding: 24px;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .ln { color: #475569; margin-right: 16px; user-select: none; }
+        .cmt { color: #64748b; font-style: italic; }
+        .step { color: #818cf8; }
+        .arrow { color: #475569; }
+        .highlight { color: #fbbf24; }
+        .data { color: #86efac; }
+
+        /* Output Structure */
+        .output-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.45s forwards;
+            opacity: 0;
+        }
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .output-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .output-card h4 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tree-view {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .tree-view .folder { color: #fbbf24; }
+        .tree-view .file { color: #86efac; }
+        .tree-view .branch { color: #475569; }
+
+        /* Benefits */
+        .benefits-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.5s forwards;
+            opacity: 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 24px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.3s;
+        }
+
+        .benefit-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-size: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .benefit-text h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .benefit-text p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 120px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 60px;
+        }
+
+        .next-phase {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .next-phase:hover {
+            color: var(--primary);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+            .params-grid { grid-template-columns: repeat(3, 1fr); }
+            .tools-grid { grid-template-columns: 1fr; }
+            .output-grid { grid-template-columns: 1fr; }
+            .flow-wrapper { flex-direction: column; align-items: center; }
+            .flow-arrow { transform: rotate(90deg); margin: 8px 0; }
+            .command-card { padding: 32px 24px; }
+            .objective-content h4 { font-size: 16px; }
+        }
+
+        @media (max-width: 768px) {
+            .params-grid { grid-template-columns: repeat(2, 1fr); }
+            .header h1 { font-size: 42px; }
+            .benefits-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 0;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 80px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .modal-icon.input { background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(79, 70, 229, 0.2)); color: #818cf8; }
+        .modal-icon.serper { background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2)); color: #34d399; }
+        .modal-icon.flikover { background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.2)); color: #fbbf24; }
+        .modal-icon.merge { background: linear-gradient(135deg, rgba(14, 165, 233, 0.3), rgba(2, 132, 199, 0.2)); color: #38bdf8; }
+        .modal-icon.output { background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(124, 58, 237, 0.2)); color: #a78bfa; }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px 28px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sample-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sample-code {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .sample-code .ln { color: #475569; margin-right: 12px; user-select: none; }
+        .sample-code .kw { color: #86efac; }
+        .sample-code .str { color: #fbbf24; }
+        .sample-code .num { color: #f472b6; }
+        .sample-code .cmt { color: #64748b; font-style: italic; }
+        .sample-code .key { color: #67e8f9; }
+        .sample-code .punct { color: #94a3b8; }
+
+        .modal-footer {
+            padding: 16px 28px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-footer i {
+            color: #67e8f9;
+            font-size: 14px;
+        }
+
+        .modal-footer span {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Clickable flow boxes */
+        .flow-box.clickable {
+            cursor: pointer;
+        }
+
+        .flow-box.clickable::after {
+            content: 'Click to view sample';
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .flow-box.clickable:hover::after {
+            opacity: 1;
+        }
+
+        /* Table in modal */
+        .sample-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .sample-table th {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #67e8f9;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sample-table td {
+            padding: 10px 12px;
+            color: #e2e8f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sample-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .sample-table .highlight-row {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .merge-visual {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .merge-box {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .merge-box.small {
+            font-size: 11px;
+        }
+
+        .merge-box .count {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .merge-box .label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .merge-arrow {
+            color: #38bdf8;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="phase-badge">
+                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                Phase 1.2
+            </div>
+            <h1>Competitive Intelligence Collection</h1>
+            <p>Automated extraction of organic keyword data from live Google SERPs, combining Serper API for ranking discovery with Flikover for deep competitive analysis.</p>
+        </header>
+
+        <!-- Objectives -->
+        <section class="command-section">
+            <div class="command-card">
+                <div class="command-label">
+                    <i class="fa-solid fa-bullseye"></i>
+                    Strategic Direction
+                </div>
+                <h2>Core Objectives</h2>
+                <div class="objectives-container">
+                    <ul class="objectives-list">
+                        <!-- Objective 1 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">1</div>
+                            <div class="objective-content">
+                                <h4><strong>Identify Top Competitors</strong> in localized Thai search results</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 2 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">2</div>
+                            <div class="objective-content">
+                                <h4><strong>Extract Keyword Profiles</strong> to reveal traffic-driving terms</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 3 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">3</div>
+                            <div class="objective-content">
+                                <h4><strong>Unify Fragmented Data</strong> into strategic content datasets</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 4 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">4</div>
+                            <div class="objective-content">
+                                <h4><strong>Find Market Opportunities</strong> in high-volume, low-competition niches</h4>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Flow -->
+        <section class="flow-section">
+            <div class="flow-wrapper">
+                <div class="flow-box input clickable" onclick="openModal('modal-input')">
+                    <div class="icon-wrapper">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </div>
+                    <h3>Keywords File</h3>
+                    <p>Target keywords from keywords.txt seed list.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box serper clickable" onclick="openModal('modal-serper')">
+                    <div class="icon-wrapper">
+                        <i class="fa-brands fa-google"></i>
+                    </div>
+                    <h3>Serper API</h3>
+                    <p>Fetch top 30 organic results from Google.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box flikover clickable" onclick="openModal('modal-flikover')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <h3>Flikover Export</h3>
+                    <p>Extract keyword metrics for top 3 URLs.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box merge clickable" onclick="openModal('modal-merge')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-code-merge"></i>
+                    </div>
+                    <h3>CSV Merge</h3>
+                    <p>Consolidate and deduplicate data.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box output clickable" onclick="openModal('modal-output')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <h3>Intelligence Data</h3>
+                    <p>Structured keyword research ready for analysis.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parameters -->
+        <section class="params-section">
+            <h2 class="section-title">Configuration Parameters</h2>
+            <p class="section-subtitle">Each flag precisely controls the scope and targeting of the intelligence gathering operation.</p>
+
+            <div class="params-grid">
+                <div class="param-card">
+                    <div class="param-flag">--country</div>
+                    <div class="param-value">TH</div>
+                    <div class="param-label">Geographic targeting for localized SERP results</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--num</div>
+                    <div class="param-value">30</div>
+                    <div class="param-label">Organic results fetched per keyword query</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--top-urls</div>
+                    <div class="param-value">3</div>
+                    <div class="param-label">Top-ranking URLs analyzed via Flikover</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--hl</div>
+                    <div class="param-value">TH</div>
+                    <div class="param-label">Language code for search result localization</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--merge</div>
+                    <div class="param-value"><i class="fa-solid fa-check"></i></div>
+                    <div class="param-label">Consolidate exports into unified datasets</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Integration -->
+        <section class="tools-section">
+            <h2 class="section-title">Integration Stack</h2>
+            <p class="section-subtitle">Two powerful APIs working in tandem to deliver comprehensive keyword intelligence.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card serper">
+                    <div class="tool-icon">
+                        <i class="fa-brands fa-google"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3>Serper API</h3>
+                        <p>Real-time Google SERP data via fast, reliable API. Retrieves organic rankings, featured snippets, and related searches with millisecond response times.</p>
+                        <div class="tool-features">
+                            <span class="feature-tag">Organic Rankings</span>
+                            <span class="feature-tag">Geo-targeting</span>
+                            <span class="feature-tag">Language Filter</span>
+                            <span class="feature-tag">Real-time Data</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card flikover">
+                    <div class="tool-icon">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3>Flikover (Ahrefs)</h3>
+                        <p>Deep competitive analysis via browser automation. Exports organic keyword profiles including search volume, traffic estimates, and ranking positions.</p>
+                        <div class="tool-features">
+                            <span class="feature-tag">Search Volume</span>
+                            <span class="feature-tag">Organic Traffic</span>
+                            <span class="feature-tag">Keyword Positions</span>
+                            <span class="feature-tag">CSV Export</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Flow Diagram -->
+        <section class="diagram-section">
+            <h2 class="section-title">Execution Flow</h2>
+            <p class="section-subtitle">Step-by-step breakdown of the automated intelligence collection pipeline.</p>
+
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    </div>
+                    <span class="file-name"><i class="fa-solid fa-diagram-project"></i> pipeline-flow.txt</span>
+                </div>
+                <div class="window-content">
+                    <div><span class="ln"> 1</span><span class="cmt"># Privato Content - Competitive Intelligence Pipeline</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="step">Keywords File</span> <span class="arrow">────────────────────────────────────────</span></div>
+                    <div><span class="ln"> 4</span>    <span class="arrow">│</span> <span class="data">data/keywords/keywords.txt</span></div>
+                    <div><span class="ln"> 5</span>    <span class="arrow">▼</span></div>
+                    <div><span class="ln"> 6</span><span class="step">Chrome Browser Init</span> <span class="arrow">─────────────────────────────────</span></div>
+                    <div><span class="ln"> 7</span>    <span class="arrow">│</span> <span class="cmt">User authenticates to Flikover dashboard</span></div>
+                    <div><span class="ln"> 8</span>    <span class="arrow">▼</span></div>
+                    <div><span class="ln"> 9</span><span class="step">FOR EACH</span> <span class="highlight">keyword</span><span class="step">:</span></div>
+                    <div><span class="ln">10</span>    <span class="arrow">├──▶</span> <span class="step">Serper API</span> <span class="cmt">(--country th, --num 30, --hl th)</span></div>
+                    <div><span class="ln">11</span>    <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">Top 30 organic URLs from Google TH</span></div>
+                    <div><span class="ln">12</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">13</span>    <span class="arrow">├──▶</span> <span class="step">URL Filtering</span> <span class="cmt">(--top-urls 3)</span></div>
+                    <div><span class="ln">14</span>    <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">Exclude social media, select top 3</span></div>
+                    <div><span class="ln">15</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">16</span>    <span class="arrow">├──▶</span> <span class="step">Flikover Export</span> <span class="cmt">(for each URL)</span></div>
+                    <div><span class="ln">17</span>    <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">keyword, volume, organic_traffic → CSV</span></div>
+                    <div><span class="ln">18</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">19</span>    <span class="arrow">└──▶</span> <span class="step">Checkpoint</span> <span class="cmt">(save progress for --resume)</span></div>
+                    <div><span class="ln">20</span></div>
+                    <div><span class="ln">21</span><span class="step">CSV Merge</span> <span class="cmt">(--merge)</span> <span class="arrow">────────────────────────────────</span></div>
+                    <div><span class="ln">22</span>    <span class="arrow">└──▶</span> <span class="data">Deduplicate & consolidate per keyword</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Structure -->
+        <section class="output-section">
+            <h2 class="section-title">Output Structure</h2>
+            <p class="section-subtitle">Organized file hierarchy for seamless integration with downstream analysis phases.</p>
+
+            <div class="output-grid">
+                <div class="output-card">
+                    <h4><i class="fa-regular fa-folder-open"></i> Directory Structure</h4>
+                    <div class="tree-view">
+                        <div><span class="folder">data/exports/</span></div>
+                        <div><span class="branch">├── </span><span class="folder">{keyword-1}/</span></div>
+                        <div><span class="branch">│   ├── </span><span class="file">domain-1.csv</span></div>
+                        <div><span class="branch">│   ├── </span><span class="file">domain-2.csv</span></div>
+                        <div><span class="branch">│   ├── </span><span class="file">domain-3.csv</span></div>
+                        <div><span class="branch">│   └── </span><span class="file">{keyword-1}.csv</span> <span class="cmt">(merged)</span></div>
+                        <div><span class="branch">├── </span><span class="folder">{keyword-2}/</span></div>
+                        <div><span class="branch">│   └── </span><span class="cmt">...</span></div>
+                        <div><span class="branch">└── </span><span class="folder">{session-id}/</span></div>
+                        <div><span class="branch">    ├── </span><span class="file">report.json</span></div>
+                        <div><span class="branch">    ├── </span><span class="file">report.csv</span></div>
+                        <div><span class="branch">    └── </span><span class="file">summary.txt</span></div>
+                    </div>
+                </div>
+
+                <div class="output-card">
+                    <h4><i class="fa-solid fa-table-cells"></i> CSV Data Columns</h4>
+                    <div class="tree-view">
+                        <div><span class="file">Keyword</span> <span class="cmt">- Target search term</span></div>
+                        <div><span class="file">Volume</span> <span class="cmt">- Monthly search volume</span></div>
+                        <div><span class="file">Organic Traffic</span> <span class="cmt">- Est. traffic to URL</span></div>
+                        <div><span class="file">Position</span> <span class="cmt">- Current ranking position</span></div>
+                        <div><span class="file">URL</span> <span class="cmt">- Source page URL</span></div>
+                        <div><span class="file">CPC</span> <span class="cmt">- Cost per click estimate</span></div>
+                        <div><span class="file">KD</span> <span class="cmt">- Keyword difficulty score</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="benefits-section">
+            <h2 class="section-title">Operational Advantages</h2>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Checkpoint Recovery</h4>
+                        <p>Built-in progress tracking allows interrupted sessions to resume exactly where they left off with --resume flag.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Smart Filtering</h4>
+                        <p>Automatically excludes social media domains (Facebook, Instagram, TikTok) to focus on content-rich competitors.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Rate Limit Protection</h4>
+                        <p>Intelligent delays between requests mimic human behavior and prevent API throttling or blocking.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Deduplication Engine</h4>
+                        <p>Merge process consolidates overlapping keyword data, eliminating redundancy across multiple sources.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="2_data-collection-flow.html" class="next-phase">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <span>Previous: Data Collection</span>
+            </a>
+            <span style="margin: 0 24px; color: rgba(255,255,255,0.1);">|</span>
+            <a href="4_autocomplete.html" class="next-phase">
+                <span>Next: Autocomplete Expansion</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <p style="margin-top: 16px; color: rgba(255,255,255,0.2); font-size: 12px;">&copy; 2025 Privato Content AI System</p>
+        </footer>
+    </div>
+
+    <!-- Modal 1: Keywords File -->
+    <div class="modal-overlay" id="modal-input" onclick="closeModal(event, 'modal-input')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon input"><i class="fa-regular fa-file-lines"></i></div>
+                    <div>
+                        <h3 class="modal-title">Keywords File</h3>
+                        <p class="modal-subtitle">data/keywords/keywords.txt</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-input')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-regular fa-file-code"></i> Sample Input</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="kw">กลูต้าไธโอน คืออะไร</span></div>
+                    <div><span class="ln">2</span><span class="kw">วิตามินซี ผิวขาว</span></div>
+                    <div><span class="ln">3</span><span class="kw">คอลลาเจน ยี่ห้อไหนดี</span></div>
+                    <div><span class="ln">4</span><span class="kw">อาหารเสริม ลดน้ำหนัก</span></div>
+                    <div><span class="ln">5</span><span class="kw">เซรั่มหน้าใส 2025</span></div>
+                    <div><span class="ln">6</span><span class="cmt"># One keyword per line</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>Each line becomes a separate search query sent to Serper API</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Serper API -->
+    <div class="modal-overlay" id="modal-serper" onclick="closeModal(event, 'modal-serper')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon serper"><i class="fa-brands fa-google"></i></div>
+                    <div>
+                        <h3 class="modal-title">Serper API Response</h3>
+                        <p class="modal-subtitle">Top 30 organic results from Google TH</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-serper')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-code"></i> JSON Response</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="punct">{</span></div>
+                    <div><span class="ln"> 2</span>  <span class="key">"searchParameters"</span><span class="punct">:</span> <span class="punct">{</span></div>
+                    <div><span class="ln"> 3</span>    <span class="key">"q"</span><span class="punct">:</span> <span class="str">"กลูต้าไธโอน คืออะไร"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 4</span>    <span class="key">"gl"</span><span class="punct">:</span> <span class="str">"th"</span><span class="punct">,</span> <span class="key">"hl"</span><span class="punct">:</span> <span class="str">"th"</span></div>
+                    <div><span class="ln"> 5</span>  <span class="punct">},</span></div>
+                    <div><span class="ln"> 6</span>  <span class="key">"organic"</span><span class="punct">:</span> <span class="punct">[</span></div>
+                    <div><span class="ln"> 7</span>    <span class="punct">{</span></div>
+                    <div><span class="ln"> 8</span>      <span class="key">"position"</span><span class="punct">:</span> <span class="num">1</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 9</span>      <span class="key">"title"</span><span class="punct">:</span> <span class="str">"กลูต้าไธโอน คืออะไร ทำไมถึงช่วยผิวขาว"</span><span class="punct">,</span></div>
+                    <div><span class="ln">10</span>      <span class="key">"link"</span><span class="punct">:</span> <span class="str">"https://www.pobpad.com/..."</span><span class="punct">,</span></div>
+                    <div><span class="ln">11</span>      <span class="key">"domain"</span><span class="punct">:</span> <span class="str">"pobpad.com"</span></div>
+                    <div><span class="ln">12</span>    <span class="punct">},</span></div>
+                    <div><span class="ln">13</span>    <span class="punct">{</span></div>
+                    <div><span class="ln">14</span>      <span class="key">"position"</span><span class="punct">:</span> <span class="num">2</span><span class="punct">,</span></div>
+                    <div><span class="ln">15</span>      <span class="key">"link"</span><span class="punct">:</span> <span class="str">"https://www.honestdocs.co/..."</span></div>
+                    <div><span class="ln">16</span>    <span class="punct">},</span></div>
+                    <div><span class="ln">17</span>    <span class="cmt">// ... top 30 results</span></div>
+                    <div><span class="ln">18</span>  <span class="punct">]</span></div>
+                    <div><span class="ln">19</span><span class="punct">}</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-filter"></i>
+                <span>Social media URLs (Facebook, IG, TikTok) are automatically filtered out</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Flikover Export -->
+    <div class="modal-overlay" id="modal-flikover" onclick="closeModal(event, 'modal-flikover')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon flikover"><i class="fa-solid fa-chart-line"></i></div>
+                    <div>
+                        <h3 class="modal-title">Flikover CSV Export</h3>
+                        <p class="modal-subtitle">Organic keywords from competitor URLs</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-flikover')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-table"></i> Exported Data (pobpad.com)</div>
+                <table class="sample-table">
+                    <thead>
+                        <tr>
+                            <th>Keyword</th>
+                            <th>Volume</th>
+                            <th>Traffic</th>
+                            <th>Position</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight-row">
+                            <td>กลูต้าไธโอน คืออะไร</td>
+                            <td>12,100</td>
+                            <td>4,235</td>
+                            <td>1</td>
+                        </tr>
+                        <tr>
+                            <td>กลูต้าไธโอน</td>
+                            <td>33,100</td>
+                            <td>2,108</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td>glutathione คือ</td>
+                            <td>8,100</td>
+                            <td>1,892</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>กลูต้า กินตอนไหน</td>
+                            <td>5,400</td>
+                            <td>756</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>กลูต้าไธโอน ประโยชน์</td>
+                            <td>2,900</td>
+                            <td>521</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-download"></i>
+                <span>One CSV file generated per competitor URL (top 3 URLs per keyword)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: CSV Merge -->
+    <div class="modal-overlay" id="modal-merge" onclick="closeModal(event, 'modal-merge')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon merge"><i class="fa-solid fa-code-merge"></i></div>
+                    <div>
+                        <h3 class="modal-title">CSV Merge Process</h3>
+                        <p class="modal-subtitle">Consolidate & deduplicate keyword data</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-merge')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-compress-arrows-alt"></i> Deduplication Flow</div>
+                <div class="merge-visual">
+                    <div class="merge-box small">
+                        <div class="count">847</div>
+                        <div class="label">pobpad.csv</div>
+                    </div>
+                    <div class="merge-box small">
+                        <div class="count">612</div>
+                        <div class="label">honestdocs.csv</div>
+                    </div>
+                    <div class="merge-box small">
+                        <div class="count">534</div>
+                        <div class="label">sanook.csv</div>
+                    </div>
+                    <i class="fa-solid fa-arrow-right merge-arrow"></i>
+                    <div class="merge-box" style="border-color: #38bdf8;">
+                        <div class="count" style="color: #38bdf8;">1,247</div>
+                        <div class="label">Unique Keywords</div>
+                    </div>
+                </div>
+                <div class="sample-code" style="font-size: 11px;">
+                    <div><span class="cmt"># Before merge: 1,993 total rows (with duplicates)</span></div>
+                    <div><span class="cmt"># After merge:  1,247 unique keywords</span></div>
+                    <div><span class="cmt"># Duplicates removed: 746 rows (37%)</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-check-double"></i>
+                <span>Keeps highest traffic value when duplicate keywords found</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Intelligence Data -->
+    <div class="modal-overlay" id="modal-output" onclick="closeModal(event, 'modal-output')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon output"><i class="fa-solid fa-database"></i></div>
+                    <div>
+                        <h3 class="modal-title">Intelligence Data</h3>
+                        <p class="modal-subtitle">Final merged dataset ready for analysis</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-output')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-gem"></i> High-Value Opportunities Identified</div>
+                <table class="sample-table">
+                    <thead>
+                        <tr>
+                            <th>Keyword</th>
+                            <th>Volume</th>
+                            <th>KD</th>
+                            <th>Opportunity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight-row">
+                            <td>กลูต้า กินตอนไหนดี</td>
+                            <td>5,400</td>
+                            <td>18</td>
+                            <td style="color: #34d399;">High</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>กลูต้าไธโอน ผลข้างเคียง</td>
+                            <td>3,600</td>
+                            <td>22</td>
+                            <td style="color: #34d399;">High</td>
+                        </tr>
+                        <tr>
+                            <td>กลูต้า ยี่ห้อไหนดี 2025</td>
+                            <td>8,100</td>
+                            <td>45</td>
+                            <td style="color: #fbbf24;">Medium</td>
+                        </tr>
+                        <tr>
+                            <td>กลูต้าไธโอน</td>
+                            <td>33,100</td>
+                            <td>67</td>
+                            <td style="color: #f87171;">Competitive</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="margin-top: 16px; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 3px solid #10b981;">
+                    <span style="font-size: 12px; color: #34d399;">Output: data/exports/กลูต้าไธโอน-คืออะไร/กลูต้าไธโอน-คืออะไร.csv</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-rocket"></i>
+                <span>Ready for Phase 2: Title Analysis & Content Strategy</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event, modalId) {
+            if (event.target === event.currentTarget || event.currentTarget.classList.contains('modal-close')) {
+                document.getElementById(modalId).classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>

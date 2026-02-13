@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataForSEO Seed Generation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Theme Variables from 3_data-collection-2.html */
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+
+            /* Mapped/Preserved for compatibility */
+            --cat-base: #10b981;    /* Green (Changed from Light Indigo) */
+            --cat-prefix: #6366f1;  /* Indigo */
+            --cat-suffix: #0ea5e9;  /* Sky Blue */
+            --cat-modifier: #f59e0b; /* Amber */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, transparent 40%),
+                        radial-gradient(circle at bottom left, #312e81, transparent 40%),
+                        linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 20px 50px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 30px;
+            font-weight: 300;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #818cf8;
+            margin-bottom: 24px;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 24px 100px;
+        }
+
+        .section-header { margin-bottom: 30px; }
+        .section-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            color: #67e8f9;
+            background: rgba(103, 232, 249, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .section-title { 
+            font-size: 2rem; 
+            font-weight: 700; 
+            color: white;
+            margin-bottom: 10px; 
+        }
+
+        /* Flow Diagram */
+        .flow-section {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 60px;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+        }
+        
+        .flow-diagram {
+            display: flex;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .flow-step {
+            flex: 1;
+            min-width: 140px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .flow-step:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,255,255,0.2);
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .step-icon {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px; margin: 0 auto 15px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.1));
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+        
+        .step-title { font-size: 1rem; font-weight: 600; margin-bottom: 6px; color: var(--text-main); }
+        .step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+
+        /* Seed Categories */
+        .seed-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 60px;
+        }
+        
+        .seed-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .seed-card:hover { transform: translateY(-5px); }
+        
+        .seed-card-header { padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        
+        .seed-card-header.base { background: linear-gradient(to right, rgba(129, 140, 248, 0.1), transparent); border-left: 4px solid var(--cat-base); }
+        .seed-card-header.prefix { background: linear-gradient(to right, rgba(99, 102, 241, 0.1), transparent); border-left: 4px solid var(--cat-prefix); }
+        .seed-card-header.suffix { background: linear-gradient(to right, rgba(14, 165, 233, 0.1), transparent); border-left: 4px solid var(--cat-suffix); }
+        .seed-card-header.modifier { background: linear-gradient(to right, rgba(245, 158, 11, 0.1), transparent); border-left: 4px solid var(--cat-modifier); }
+
+        .seed-card-badge {
+            display: inline-block; padding: 4px 10px; border-radius: 100px;
+            font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        
+        .seed-card-badge.base { background: rgba(129, 140, 248, 0.1); color: var(--cat-base); border: 1px solid rgba(129, 140, 248, 0.2); }
+        .seed-card-badge.prefix { background: rgba(99, 102, 241, 0.1); color: var(--cat-prefix); border: 1px solid rgba(99, 102, 241, 0.2); }
+        .seed-card-badge.suffix { background: rgba(14, 165, 233, 0.1); color: var(--cat-suffix); border: 1px solid rgba(14, 165, 233, 0.2); }
+        .seed-card-badge.modifier { background: rgba(245, 158, 11, 0.1); color: var(--cat-modifier); border: 1px solid rgba(245, 158, 11, 0.2); }
+
+        .seed-card-title { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
+        .seed-card-body { padding: 24px; }
+
+        .pattern-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #e2e8f0;
+        }
+
+        .char-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(64px, 1fr)); gap: 8px; }
+        .char-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 10px 4px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.2s;
+        }
+        .char-item:hover { background: rgba(255, 255, 255, 0.08); }
+        .char-thai { font-size: 1.1rem; font-weight: 600; color: var(--cat-prefix); margin-bottom: 2px; }
+        .char-meaning { font-size: 10px; color: var(--text-muted); }
+
+        .mod-list { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px; }
+        .mod-item { 
+            color: var(--text-muted); 
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .mod-item::before { content: '•'; color: var(--card-border); }
+        
+        /* Example Section */
+        .example-section {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+        
+        .example-keyword {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            display: inline-block;
+            color: white;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .query-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .query-table th {
+            text-align: left; padding: 16px;
+            font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+            color: var(--text-muted); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+        }
+        .query-table td { 
+            padding: 16px; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05); 
+            font-size: 14px; 
+            color: var(--text-muted);
+        }
+        .query-table tr:last-child td { border-bottom: none; }
+        .query-cell { font-family: 'Menlo', 'Monaco', monospace; color: #e2e8f0; }
+
+        /* Summary Section */
+        .summary-section {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .summary-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px; margin-top: 30px;
+        }
+        
+        .summary-item {
+            text-align: center; padding: 24px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.3s;
+        }
+        .summary-item:hover { transform: translateY(-4px); background: rgba(255, 255, 255, 0.05); }
+        
+        .summary-item-value { font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
+        .summary-item-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+        @media (max-width: 768px) {
+            .char-grid { grid-template-columns: repeat(5, 1fr); }
+            .hero h1 { font-size: 2.5rem; }
+            .stats-bar { flex-direction: column; gap: 20px; }
+            .container { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="hero">
+        <div class="hero-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:4px"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+            DataForSEO Autocomplete
+        </div>
+        <h1>Seed Generation Logic</h1>
+        <p>Thai keyword expansion algorithm for Hybrid Google Autocomplete.</p>
+
+        <div class="stats-bar">
+            <div class="stat-item"><div class="stat-value">33</div><div class="stat-label">Total Queries</div></div>
+            <div class="stat-item"><div class="stat-value">4</div><div class="stat-label">Seed Types</div></div>
+            <div class="stat-item"><div class="stat-value" style="color: #10b981; -webkit-text-fill-color: #10b981;">$0.04</div><div class="stat-label">Per Keyword</div></div>
+        </div>
+    </section>
+
+    <div class="container">
+
+        <section class="flow-section">
+            <div class="section-header">
+                <div class="section-number">01</div>
+                <h2 class="section-title">Workflow</h2>
+            </div>
+            <div class="flow-diagram">
+                <div class="flow-step">
+                    <div class="step-icon">1</div>
+                    <div class="step-title">Input</div>
+                    <div class="step-desc">Load keywords.txt</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-icon">2</div>
+                    <div class="step-title">Generate</div>
+                    <div class="step-desc">Create 33 variations</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-icon">3</div>
+                    <div class="step-title">Submit</div>
+                    <div class="step-desc">POST DataForSEO</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-icon">4</div>
+                    <div class="step-title">Output</div>
+                    <div class="step-desc">Save JSON</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="section-header">
+            <div class="section-number">02</div>
+            <h2 class="section-title">Seed Categories</h2>
+        </div>
+
+        <div class="seed-grid">
+            <!-- Base -->
+            <div class="seed-card">
+                <div class="seed-card-header base">
+                    <div class="seed-card-badge base">Category 1</div>
+                    <h3 class="seed-card-title">Base Keyword</h3>
+                    <div style="font-size:11px; opacity:0.6">2 queries</div>
+                </div>
+                <div class="seed-card-body">
+                    <div class="pattern-box">
+                        <div class="pattern-code">"<span class="keyword">{keyword}</span>"</div>
+                    </div>
+                    <p style="font-size: 13px; color: var(--text-muted);">Exact match + trailing space.</p>
+                </div>
+            </div>
+
+            <!-- Prefix -->
+            <div class="seed-card">
+                <div class="seed-card-header prefix">
+                    <div class="seed-card-badge prefix">Category 2</div>
+                    <h3 class="seed-card-title">Smart Prefix</h3>
+                    <div style="font-size:11px; opacity:0.6">15 queries</div>
+                </div>
+                <div class="seed-card-body">
+                    <div class="pattern-box">
+                        <div class="pattern-code">"<span class="char">{CHAR}</span> <span class="keyword">{keyword}</span>"</div>
+                    </div>
+                    <div class="char-grid">
+                        <div class="char-item"><div class="char-thai">ก</div><div class="char-meaning">กิน, การ</div></div>
+                        <div class="char-item"><div class="char-thai">ซ</div><div class="char-meaning">ซื้อ</div></div>
+                        <div class="char-item"><div class="char-thai">ท</div><div class="char-meaning">ทำ, ที่</div></div>
+                        <div class="char-item"><div class="char-thai">ว</div><div class="char-meaning">วิธี</div></div>
+                        <div class="char-item"><div class="char-thai">ร</div><div class="char-meaning">ราคา</div></div>
+                        <div class="char-item"><div class="char-thai">ป</div><div class="char-meaning">ประโยชน์</div></div>
+                        <div class="char-item"><div class="char-thai">ผ</div><div class="char-meaning">ผล</div></div>
+                        <div class="char-item"><div class="char-thai">ด</div><div class="char-meaning">ดีไหม</div></div>
+                        <div class="char-item"><div class="char-thai">เ</div><div class="char-meaning">เท่าไหร่</div></div>
+                        <div class="char-item"><div class="char-thai">แ</div><div class="char-meaning">แนะนำ</div></div>
+                        <div class="char-item"><div class="char-thai">ไ</div><div class="char-meaning">ไหม</div></div>
+                        <div class="char-item"><div class="char-thai">ใ</div><div class="char-meaning">ใช้</div></div>
+                        <div class="char-item"><div class="char-thai">อ</div><div class="char-meaning">อะไร</div></div>
+                        <div class="char-item"><div class="char-thai">ย</div><div class="char-meaning">ยี่ห้อ</div></div>
+                        <div class="char-item"><div class="char-thai">ค</div><div class="char-meaning">คือ</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Suffix -->
+            <div class="seed-card">
+                <div class="seed-card-header suffix">
+                    <div class="seed-card-badge suffix">Category 3</div>
+                    <h3 class="seed-card-title">Suffix</h3>
+                    <div style="font-size:11px; opacity:0.6">12 queries</div>
+                </div>
+                <div class="seed-card-body">
+                    <div class="pattern-box">
+                        <div class="pattern-code">"<span class="keyword">{keyword}</span> <span class="char">{MOD}</span>"</div>
+                    </div>
+                    <div class="mod-list">
+                        <div class="mod-item">คือ (What)</div>
+                        <div class="mod-item">ช่วยอะไร (Help)</div>
+                        <div class="mod-item">ตัวไหนดี (Which)</div>
+                        <div class="mod-item">ที่ไหนดี (Where)</div>
+                        <div class="mod-item">ใกล้ฉัน (Near me)</div>
+                        <div class="mod-item">สาขา (Branch)</div>
+                        <div class="mod-item">ตอนไหน (When)</div>
+                        <div class="mod-item">กี่วัน (Days)</div>
+                        <div class="mod-item">วิธี (Method)</div>
+                        <div class="mod-item">ยังไง (How)</div>
+                        <div class="mod-item">รีวิว (Review)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modifier -->
+            <div class="seed-card">
+                <div class="seed-card-header modifier">
+                    <div class="seed-card-badge modifier">Category 4</div>
+                    <h3 class="seed-card-title">Prefix Mod</h3>
+                    <div style="font-size:11px; opacity:0.6">4 queries</div>
+                </div>
+                <div class="seed-card-body">
+                    <div class="pattern-box">
+                        <div class="pattern-code">"<span class="char">{MOD}</span> <span class="keyword">{keyword}</span>"</div>
+                    </div>
+                    <div class="mod-list">
+                        <div class="mod-item">สาเหตุ (Cause)</div>
+                        <div class="mod-item">เกิดจาก (From)</div>
+                        <div class="mod-item">ทำไม (Why)</div>
+                        <div class="mod-item">วิธี (How)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <section class="example-section">
+            <div class="section-header">
+                <div class="section-number">03</div>
+                <h2 class="section-title">Example Output</h2>
+            </div>
+            
+            <div class="example-keyword">Example: กลูต้าไธโอน</div>
+
+            <table class="query-table">
+                <thead><tr><th>#</th><th>Query</th><th>Type</th></tr></thead>
+                <tbody>
+                    <tr><td>1-2</td><td class="query-cell">กลูต้าไธโอน ( + space)</td><td><span style="color:var(--cat-base)">Base</span></td></tr>
+                    <tr><td>3-17</td><td class="query-cell">ก กลูต้าไธโอน ... ค กลูต้าไธโอน</td><td><span style="color:var(--cat-prefix)">Prefix</span></td></tr>
+                    <tr><td>18-29</td><td class="query-cell">กลูต้าไธโอน คือ ... รีวิว</td><td><span style="color:var(--cat-suffix)">Suffix</span></td></tr>
+                    <tr><td>30-33</td><td class="query-cell">สาเหตุ กลูต้าไธโอน ... วิธี กลูต้าไธโอน</td><td><span style="color:var(--cat-modifier)">Modifier</span></td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Summary (Renumbered 04) -->
+        <section class="summary-section">
+            <div class="section-header">
+                <div class="section-number">04</div>
+                <h2 class="section-title">Summary</h2>
+            </div>
+            <div class="summary-grid">
+                <div class="summary-item"><div class="summary-item-value" style="color:var(--cat-base)">2</div><div class="summary-item-label">Base</div></div>
+                <div class="summary-item"><div class="summary-item-value" style="color:var(--cat-prefix)">15</div><div class="summary-item-label">Prefix</div></div>
+                <div class="summary-item"><div class="summary-item-value" style="color:var(--cat-suffix)">12</div><div class="summary-item-label">Suffix</div></div>
+                <div class="summary-item"><div class="summary-item-value" style="color:var(--cat-modifier)">4</div><div class="summary-item-label">Modifier</div></div>
+            </div>
+            <div style="margin-top: 20px; text-align:center; font-size:12px; color: var(--text-muted);">
+                Total: 33 queries × $0.0012 = <strong style="color: var(--cat-suffix);">$0.0396 / keyword</strong>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>

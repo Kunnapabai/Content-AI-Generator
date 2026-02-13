@@ -1,0 +1,81 @@
+# ============================================================
+# Khomesolution — OpenRouter Configuration
+# ============================================================
+# Central configuration for all OpenRouter API parameters.
+# Each script loads its section via scripts/config_loader.py.
+# ============================================================
+
+openrouter:
+  api_key: "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"
+  api_url: "https://openrouter.ai/api/v1/chat/completions"
+  http_referer: "https://privatocontent.com"
+
+# -------------------------------------------------------
+# Per-task model configurations
+# -------------------------------------------------------
+models:
+
+  # Phase 2.1 — SERP Semantic Analysis (title_analysis.py)
+  title_analysis:
+    model: "x-ai/grok-4"
+    temperature: 0.2
+    max_tokens: 8000
+    max_concurrency: 10
+    timeout: 90
+    chunk_size: 500
+    rate_limit_rpm: 60
+    quality_threshold: 0.7
+    x_title: "Privato Content SERP Analyzer"
+
+  # Phase 3.1 — Outline Generation (outline_generation.py)
+  outline_generation:
+    model: "google/gemini-3-flash-preview"
+    temperature: 0.3
+    max_tokens: 4000
+    max_concurrency: 10
+    timeout: 90
+    chunk_size: 500
+    rate_limit_rpm: 60
+    x_title: "Privato Outline Generator"
+
+  # Phase 3.1b — Outline Analysis (outline_generation.py, analysis pass)
+  outline_analysis:
+    model: "google/gemini-3-flash-preview"
+    temperature: 0.3
+    max_tokens: 4000
+    x_title: "Privato Outline Analyzer"
+
+  # Phase 4 — Deep Research Prompt Generation (create_deepresearch_prompt.py)
+  deepresearch_prompt:
+    model: "x-ai/grok-4"
+    temperature: 0.2
+    max_tokens: 8000
+    max_concurrency: 8
+    timeout: 90
+    max_retries: 3
+    x_title: "Privato Content Pipeline"
+
+  # Phase 6 — Section-by-Section Article Generation (outline_answer.py)
+  outline_answer:
+    model: "google/gemini-3-flash-preview"
+    temperature: 0.4
+    max_tokens: 4096
+    x_title: "Privato Article Generator"
+
+  # Phase 7.1 — First Sentence Generation (first-sentence.py)
+  first_sentence:
+    model: "google/gemini-3-flash-preview"
+    temperature: 0.3
+    x_title: "Privato First Sentence Gen"
+
+  # Phase 7.2 — SEO Meta Description (meta-description.py)
+  meta_description:
+    model: "google/gemini-3-flash-preview"
+    temperature: 0.5
+    x_title: "Privato SEO Meta Gen"
+
+  # Phase 9 — Author Selection & WP Publishing (pick-author.py)
+  pick_author:
+    model: "x-ai/grok-4"
+    temperature: 0.2
+    x_title: "Privato Author Picker"

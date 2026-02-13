@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1.4: Master Query Merge | Privato Content</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --merge: #14b8a6;
+            --ahrefs: #f97316;
+            --autocomplete: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, transparent 40%),
+                        radial-gradient(circle at bottom left, #134e4a, transparent 40%),
+                        linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 100px;
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(20, 184, 166, 0.1);
+            border: 1px solid rgba(20, 184, 166, 0.3);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #5eead4;
+            margin-bottom: 32px;
+            box-shadow: 0 0 20px rgba(20, 184, 166, 0.1);
+        }
+
+        .header h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Objectives Styling */
+        .objectives-container {
+            margin-top: 32px;
+            max-width: 800px;
+        }
+
+        .objectives-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .objective-item:last-child {
+            border-bottom: none;
+        }
+
+        .objective-bullet {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: rgba(20, 184, 166, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #5eead4;
+            margin-top: 2px;
+        }
+
+        .objective-content {
+            flex: 1;
+        }
+
+        .objective-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.5;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .command-section {
+            margin-bottom: 80px;
+            animation: fadeIn 1s ease 0.15s forwards;
+            opacity: 0;
+        }
+
+        .command-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .command-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .command-card h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* Merge Visual Section */
+        .merge-visual-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .merge-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .source-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 32px;
+            text-align: center;
+            width: 280px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .source-box:hover {
+            transform: translateY(-8px);
+        }
+
+        .source-box.ahrefs {
+            border: 2px solid rgba(249, 115, 22, 0.3);
+        }
+
+        .source-box.ahrefs::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f97316, #fb923c);
+        }
+
+        .source-box.autocomplete {
+            border: 2px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .source-box.autocomplete::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+        }
+
+        .source-icon {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 20px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+        }
+
+        .source-box.ahrefs .source-icon {
+            background: linear-gradient(135deg, rgba(249, 115, 22, 0.2), rgba(234, 88, 12, 0.1));
+            color: #fb923c;
+        }
+
+        .source-box.autocomplete .source-icon {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.1));
+            color: #a78bfa;
+        }
+
+        .source-box h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .source-box p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .source-stats {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .stat-item .label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .merge-arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .merge-arrow i {
+            font-size: 32px;
+            color: #5eead4;
+        }
+
+        .merge-arrow span {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .output-box {
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.1), rgba(13, 148, 136, 0.05));
+            border: 2px solid rgba(20, 184, 166, 0.3);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            width: 320px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .output-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #14b8a6, #5eead4);
+        }
+
+        .output-box .source-icon {
+            background: linear-gradient(135deg, rgba(20, 184, 166, 0.3), rgba(13, 148, 136, 0.2));
+            color: #5eead4;
+        }
+
+        .output-box h3 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #5eead4;
+            margin-bottom: 8px;
+        }
+
+        .output-box p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .output-box .stat-item .value {
+            color: #5eead4;
+            font-size: 28px;
+        }
+
+        /* Command Section */
+        .cli-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.25s forwards;
+            opacity: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 60px;
+            font-size: 18px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .code-window {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .window-header {
+            background: #0f172a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 16px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #22c55e; }
+
+        .file-name {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-content {
+            padding: 24px;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .ln { color: #475569; margin-right: 16px; user-select: none; }
+        .cmt { color: #64748b; font-style: italic; }
+        .cmd { color: #5eead4; }
+        .flag { color: #fbbf24; }
+        .path { color: #86efac; }
+        .arrow { color: #475569; }
+
+        /* Process Steps */
+        .process-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .process-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .process-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(20, 184, 166, 0.3);
+            transform: translateY(-4px);
+        }
+
+        .process-number {
+            width: 36px;
+            height: 36px;
+            background: rgba(20, 184, 166, 0.15);
+            border: 1px solid rgba(20, 184, 166, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: #5eead4;
+            margin: 0 auto 16px;
+        }
+
+        .process-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .process-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Data Schema */
+        .schema-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.35s forwards;
+            opacity: 0;
+        }
+
+        .schema-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .schema-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .schema-card h4 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .schema-list {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .schema-list .col { color: #5eead4; }
+        .schema-list .type { color: #fbbf24; }
+        .schema-list .desc { color: #94a3b8; font-style: italic; }
+        .schema-list .source-tag {
+            display: inline-block;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+        .schema-list .source-tag.ahrefs {
+            background: rgba(249, 115, 22, 0.2);
+            color: #fb923c;
+        }
+        .schema-list .source-tag.auto {
+            background: rgba(139, 92, 246, 0.2);
+            color: #a78bfa;
+        }
+        .schema-list .source-tag.merged {
+            background: rgba(20, 184, 166, 0.2);
+            color: #5eead4;
+        }
+
+        /* Dedup Logic */
+        .dedup-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .dedup-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .dedup-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .dedup-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px 32px;
+            text-align: center;
+        }
+
+        .dedup-box .number {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .dedup-box.input .number { color: #94a3b8; }
+        .dedup-box.removed .number { color: #f87171; }
+        .dedup-box.output .number { color: #5eead4; }
+
+        .dedup-box .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dedup-arrow {
+            font-size: 24px;
+            color: rgba(255,255,255,0.2);
+        }
+
+        .dedup-rules {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            padding: 20px 24px;
+        }
+
+        .dedup-rules h5 {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .dedup-rules ul {
+            list-style: none;
+            font-size: 14px;
+            color: #e2e8f0;
+        }
+
+        .dedup-rules li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dedup-rules li:last-child {
+            border-bottom: none;
+        }
+
+        .dedup-rules li i {
+            color: #5eead4;
+            font-size: 14px;
+        }
+
+        /* Benefits */
+        .benefits-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.45s forwards;
+            opacity: 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 24px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.3s;
+        }
+
+        .benefit-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-size: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .benefit-text h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .benefit-text p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Output Files */
+        .output-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.5s forwards;
+            opacity: 0;
+        }
+
+        .output-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .output-card h4 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tree-view {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .tree-view .folder { color: #fbbf24; }
+        .tree-view .file { color: #86efac; }
+        .tree-view .branch { color: #475569; }
+        .tree-view .highlight { color: #5eead4; font-weight: 600; }
+
+        /* Footer */
+        .footer {
+            margin-top: 120px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 60px;
+        }
+
+        .next-phase {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .next-phase:hover {
+            color: var(--merge);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+            .merge-diagram { flex-direction: column; }
+            .merge-arrow { transform: rotate(90deg); }
+            .process-grid { grid-template-columns: repeat(2, 1fr); }
+            .schema-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 42px; }
+            .process-grid { grid-template-columns: 1fr; }
+            .benefits-grid { grid-template-columns: 1fr; }
+            .source-box, .output-box { width: 100%; max-width: 320px; }
+            .dedup-visual { flex-direction: column; }
+            .dedup-arrow { transform: rotate(90deg); }
+        }
+
+        /* Pulse animation for output */
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.4); }
+            50% { box-shadow: 0 0 0 15px rgba(20, 184, 166, 0); }
+        }
+
+        .output-box {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="phase-badge">
+                <i class="fa-solid fa-code-merge"></i>
+                Phase 1.4
+            </div>
+            <h1>Master Query Merge</h1>
+            <p>Consolidate Ahrefs competitive data with Autocomplete expansions into a unified, deduplicated master query CSV for semantic analysis.</p>
+        </header>
+
+        <!-- Objectives -->
+        <section class="command-section">
+            <div class="command-card">
+                <div class="command-label">
+                    <i class="fa-solid fa-bullseye"></i>
+                    Strategic Direction
+                </div>
+                <h2>Core Objectives</h2>
+                <div class="objectives-container">
+                    <ul class="objectives-list">
+                        <li class="objective-item">
+                            <div class="objective-bullet">1</div>
+                            <div class="objective-content">
+                                <h4><strong>Unify Data Sources</strong> from Ahrefs exports and Autocomplete expansions</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">2</div>
+                            <div class="objective-content">
+                                <h4><strong>Deduplicate Keywords</strong> while preserving highest-value metrics</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">3</div>
+                            <div class="objective-content">
+                                <h4><strong>Standardize Schema</strong> for downstream semantic clustering</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">4</div>
+                            <div class="objective-content">
+                                <h4><strong>Create Master Query List</strong> as single source of truth for content planning</h4>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Merge Visual -->
+        <section class="merge-visual-section">
+            <div class="merge-diagram">
+                <div class="source-box ahrefs">
+                    <div class="source-icon">
+                        <i class="fa-solid fa-chart-column"></i>
+                    </div>
+                    <h3>Ahrefs/Flikover Data</h3>
+                    <p>Competitive keyword profiles with traffic metrics</p>
+                    <div class="source-stats">
+                        <div class="stat-item">
+                            <div class="value">~2,500</div>
+                            <div class="label">Keywords</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value">7</div>
+                            <div class="label">Columns</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="source-box autocomplete">
+                    <div class="source-icon">
+                        <i class="fa-solid fa-keyboard"></i>
+                    </div>
+                    <h3>Autocomplete Data</h3>
+                    <p>Google suggestions with user intent signals</p>
+                    <div class="source-stats">
+                        <div class="stat-item">
+                            <div class="value">~1,800</div>
+                            <div class="label">Keywords</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="value">6</div>
+                            <div class="label">Columns</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="merge-arrow">
+                    <i class="fa-solid fa-arrows-turn-to-dots"></i>
+                    <span>Merge & Dedupe</span>
+                </div>
+
+                <div class="output-box">
+                    <div class="source-icon">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <h3>Master Query CSV</h3>
+                    <p>Unified dataset ready for semantic analysis</p>
+                    <div class="source-stats">
+                        <div class="stat-item">
+                            <div class="value">~3,200</div>
+                            <div class="label">Unique Keywords</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CLI Command -->
+        <section class="cli-section">
+            <h2 class="section-title">Execution Command</h2>
+            <p class="section-subtitle">Single command to merge all data sources with automatic deduplication.</p>
+
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    </div>
+                    <span class="file-name"><i class="fa-solid fa-terminal"></i> terminal</span>
+                </div>
+                <div class="window-content">
+                    <div><span class="ln">1</span><span class="cmt"># Phase 1.4 - Master Query Merge</span></div>
+                    <div><span class="ln">2</span></div>
+                    <div><span class="ln">3</span><span class="cmd">uv run python</span> <span class="path">scripts/kw-semantic/step1_merge.py</span> <span class="flag">--all</span></div>
+                    <div><span class="ln">4</span></div>
+                    <div><span class="ln">5</span><span class="cmt"># The --all flag processes:</span></div>
+                    <div><span class="ln">6</span><span class="cmt">#   - All Ahrefs/Flikover exports from data/exports/</span></div>
+                    <div><span class="ln">7</span><span class="cmt">#   - All Autocomplete CSVs from data/autocomplete/</span></div>
+                    <div><span class="ln">8</span><span class="cmt">#   - Outputs to data/kw-semantic/master_queries.csv</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Steps -->
+        <section class="process-section">
+            <h2 class="section-title">Merge Pipeline</h2>
+            <p class="section-subtitle">Four-step process to create a clean, unified keyword dataset.</p>
+
+            <div class="process-grid">
+                <div class="process-card">
+                    <div class="process-number">1</div>
+                    <h4>Load Sources</h4>
+                    <p>Read all CSV files from Ahrefs exports and Autocomplete directories</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-number">2</div>
+                    <h4>Normalize Schema</h4>
+                    <p>Map columns to unified format, handle missing values</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-number">3</div>
+                    <h4>Deduplicate</h4>
+                    <p>Remove duplicates, keep record with highest search volume</p>
+                </div>
+                <div class="process-card">
+                    <div class="process-number">4</div>
+                    <h4>Export Master</h4>
+                    <p>Write unified CSV ready for semantic clustering</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Schema -->
+        <section class="schema-section">
+            <h2 class="section-title">Data Schema</h2>
+            <p class="section-subtitle">Unified column structure combining the best from each data source.</p>
+
+            <div class="schema-grid">
+                <div class="schema-card">
+                    <h4><i class="fa-solid fa-table-columns"></i> Input Columns (Before Merge)</h4>
+                    <div class="schema-list">
+                        <div><span class="col">keyword</span> <span class="type">string</span> <span class="source-tag ahrefs">Ahrefs</span><span class="source-tag auto">Auto</span></div>
+                        <div><span class="col">volume</span> <span class="type">int</span> <span class="source-tag ahrefs">Ahrefs</span></div>
+                        <div><span class="col">traffic</span> <span class="type">int</span> <span class="source-tag ahrefs">Ahrefs</span></div>
+                        <div><span class="col">kd</span> <span class="type">int</span> <span class="source-tag ahrefs">Ahrefs</span></div>
+                        <div><span class="col">cpc</span> <span class="type">float</span> <span class="source-tag ahrefs">Ahrefs</span></div>
+                        <div><span class="col">seed_keyword</span> <span class="type">string</span> <span class="source-tag auto">Auto</span></div>
+                        <div><span class="col">suggestion_type</span> <span class="type">string</span> <span class="source-tag auto">Auto</span></div>
+                    </div>
+                </div>
+
+                <div class="schema-card">
+                    <h4><i class="fa-solid fa-table-cells"></i> Output Columns (Master CSV)</h4>
+                    <div class="schema-list">
+                        <div><span class="col">keyword</span> <span class="type">string</span> <span class="desc">- Primary search term</span></div>
+                        <div><span class="col">volume</span> <span class="type">int</span> <span class="desc">- Monthly search volume</span></div>
+                        <div><span class="col">traffic</span> <span class="type">int</span> <span class="desc">- Estimated organic traffic</span></div>
+                        <div><span class="col">kd</span> <span class="type">int</span> <span class="desc">- Keyword difficulty (0-100)</span></div>
+                        <div><span class="col">cpc</span> <span class="type">float</span> <span class="desc">- Cost per click estimate</span></div>
+                        <div><span class="col">source</span> <span class="type">string</span> <span class="desc">- Origin (ahrefs/autocomplete)</span></div>
+                        <div><span class="col">intent_type</span> <span class="type">string</span> <span class="desc">- Query intent category</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deduplication Logic -->
+        <section class="dedup-section">
+            <h2 class="section-title">Deduplication Strategy</h2>
+            <p class="section-subtitle">Smart merging that preserves the most valuable data points.</p>
+
+            <div class="dedup-card">
+                <div class="dedup-visual">
+                    <div class="dedup-box input">
+                        <div class="number">4,300</div>
+                        <div class="label">Total Rows</div>
+                    </div>
+                    <i class="fa-solid fa-arrow-right dedup-arrow"></i>
+                    <div class="dedup-box removed">
+                        <div class="number">-1,100</div>
+                        <div class="label">Duplicates</div>
+                    </div>
+                    <i class="fa-solid fa-arrow-right dedup-arrow"></i>
+                    <div class="dedup-box output">
+                        <div class="number">3,200</div>
+                        <div class="label">Unique</div>
+                    </div>
+                </div>
+
+                <div class="dedup-rules">
+                    <h5><i class="fa-solid fa-gavel" style="margin-right: 8px;"></i> Merge Rules</h5>
+                    <ul>
+                        <li><i class="fa-solid fa-check"></i> Exact keyword matches are deduplicated (case-insensitive)</li>
+                        <li><i class="fa-solid fa-check"></i> When duplicates found, keep record with highest search volume</li>
+                        <li><i class="fa-solid fa-check"></i> If volumes equal, prefer Ahrefs data (more complete metrics)</li>
+                        <li><i class="fa-solid fa-check"></i> Unicode normalization (NFC) applied before comparison</li>
+                        <li><i class="fa-solid fa-check"></i> Whitespace trimmed and standardized</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="benefits-section">
+            <h2 class="section-title">Strategic Advantages</h2>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Single Source of Truth</h4>
+                        <p>One unified dataset eliminates confusion and ensures consistent keyword targeting across all content.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Preserved Metrics</h4>
+                        <p>Smart deduplication keeps the most valuable data points from each source.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Semantic-Ready Format</h4>
+                        <p>Standardized schema optimized for downstream clustering and intent analysis.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Complete Coverage</h4>
+                        <p>Combines competitive intelligence with user intent signals for comprehensive keyword strategy.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Files -->
+        <section class="output-section">
+            <h2 class="section-title">Output Structure</h2>
+            <p class="section-subtitle">Generated files ready for Phase 2 analysis.</p>
+
+            <div class="output-card">
+                <h4><i class="fa-regular fa-folder-open"></i> Directory Structure</h4>
+                <div class="tree-view">
+                    <div><span class="folder">data/kw-semantic/</span></div>
+                    <div><span class="branch">├── </span><span class="highlight">master_queries.csv</span> <span class="desc">← Primary output</span></div>
+                    <div><span class="branch">├── </span><span class="file">merge_report.json</span></div>
+                    <div><span class="branch">├── </span><span class="file">duplicates_removed.csv</span></div>
+                    <div><span class="branch">└── </span><span class="file">merge_log.txt</span></div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="4_autocomplete.html" class="next-phase">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <span>Previous: Autocomplete Expansion</span>
+            </a>
+            <span style="margin: 0 24px; color: rgba(255,255,255,0.1);">|</span>
+            <a href="6_title-analysis.html" class="next-phase">
+                <span>Next: SERP Analysis</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <p style="margin-top: 16px; color: rgba(255,255,255,0.2); font-size: 12px;">&copy; 2025 Privato Content AI System</p>
+        </footer>
+    </div>
+</body>
+</html>

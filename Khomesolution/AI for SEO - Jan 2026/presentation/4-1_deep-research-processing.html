@@ -1,0 +1,1638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 4.1: Deep Research Processing | Privato Content</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --chatgpt: #10a37f;
+            --selenium: #43b02a;
+            --chrome: #4285f4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, transparent 40%),
+                        radial-gradient(circle at bottom left, #312e81, transparent 40%),
+                        linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 100px;
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(16, 163, 127, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 163, 127, 0.1);
+            border: 1px solid rgba(16, 163, 127, 0.3);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #10a37f;
+            margin-bottom: 32px;
+            box-shadow: 0 0 20px rgba(16, 163, 127, 0.1);
+        }
+
+        .header h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Updated Objectives Styling */
+        .objectives-container {
+            margin-top: 32px;
+            max-width: 800px;
+        }
+
+        .objectives-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .objective-item:last-child {
+            border-bottom: none;
+        }
+
+        .objective-bullet {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            margin-top: 2px;
+        }
+
+        .objective-content {
+            flex: 1;
+        }
+
+        .objective-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.5;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .command-section {
+            margin-bottom: 80px;
+            animation: fadeIn 1s ease 0.15s forwards;
+            opacity: 0;
+        }
+
+        .command-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .command-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .command-card h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* Execution Command Box */
+        .exec-command {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(16, 163, 127, 0.3);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-top: 24px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .exec-command .prompt {
+            color: #10a37f;
+            font-weight: 600;
+        }
+
+        .exec-command .cmd {
+            color: #f8fafc;
+            flex: 1;
+        }
+
+        .exec-command .copy-btn {
+            background: rgba(16, 163, 127, 0.2);
+            border: 1px solid rgba(16, 163, 127, 0.3);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: #10a37f;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .exec-command .copy-btn:hover {
+            background: rgba(16, 163, 127, 0.3);
+        }
+
+        /* Flow Section */
+        .flow-section {
+            margin: 0 0 100px;
+            animation: fadeIn 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .flow-wrapper {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .flow-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px 32px;
+            text-align: center;
+            width: 200px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+        }
+
+        .flow-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.4);
+        }
+
+        .flow-box:hover::before {
+            opacity: 1;
+        }
+
+        .icon-wrapper {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            position: relative;
+        }
+
+        .flow-box.input .icon-wrapper {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.1));
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .flow-box.chrome .icon-wrapper {
+            background: linear-gradient(135deg, rgba(66, 133, 244, 0.2), rgba(52, 168, 83, 0.1));
+            color: #4285f4;
+            border: 1px solid rgba(66, 133, 244, 0.2);
+        }
+
+        .flow-box.chatgpt .icon-wrapper {
+            background: linear-gradient(135deg, rgba(16, 163, 127, 0.2), rgba(16, 163, 127, 0.1));
+            color: #10a37f;
+            border: 1px solid rgba(16, 163, 127, 0.2);
+        }
+
+        .flow-box.process .icon-wrapper {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(2, 132, 199, 0.1));
+            color: #38bdf8;
+            border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .flow-box.output .icon-wrapper {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.1));
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .flow-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .flow-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            align-self: center;
+        }
+
+        /* Parameters Grid */
+        .params-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 60px;
+            font-size: 18px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .param-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .param-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .param-flag {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 14px;
+            color: #67e8f9;
+            background: rgba(103, 232, 249, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .param-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .param-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Tool Section */
+        .tools-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.35s forwards;
+            opacity: 0;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 32px;
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .tool-card.chatgpt {
+            border: 1px solid rgba(16, 163, 127, 0.2);
+        }
+
+        .tool-card.chatgpt::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #10a37f;
+        }
+
+        .tool-card.selenium {
+            border: 1px solid rgba(67, 176, 42, 0.2);
+        }
+
+        .tool-card.selenium::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #43b02a;
+        }
+
+        .tool-icon {
+            width: 64px;
+            height: 64px;
+            min-width: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .tool-card.chatgpt .tool-icon {
+            background: linear-gradient(135deg, rgba(16, 163, 127, 0.2), rgba(16, 163, 127, 0.1));
+            color: #10a37f;
+        }
+
+        .tool-card.selenium .tool-icon {
+            background: linear-gradient(135deg, rgba(67, 176, 42, 0.2), rgba(67, 176, 42, 0.1));
+            color: #43b02a;
+        }
+
+        .tool-info h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .tool-card.chatgpt .tool-info h3 { color: #10a37f; }
+        .tool-card.selenium .tool-info h3 { color: #43b02a; }
+
+        .tool-info p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .tool-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* Data Flow Diagram */
+        .diagram-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .code-window {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .window-header {
+            background: #0f172a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 16px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #22c55e; }
+
+        .file-name {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-content {
+            padding: 24px;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .ln { color: #475569; margin-right: 16px; user-select: none; }
+        .cmt { color: #64748b; font-style: italic; }
+        .step { color: #10a37f; }
+        .arrow { color: #475569; }
+        .highlight { color: #fbbf24; }
+        .data { color: #86efac; }
+
+        /* Output Structure */
+        .output-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.45s forwards;
+            opacity: 0;
+        }
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .output-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .output-card h4 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tree-view {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .tree-view .folder { color: #fbbf24; }
+        .tree-view .file { color: #86efac; }
+        .tree-view .branch { color: #475569; }
+
+        /* State Status */
+        .state-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.47s forwards;
+            opacity: 0;
+        }
+
+        .state-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .state-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .state-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-4px);
+        }
+
+        .state-emoji {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .state-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .state-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Benefits */
+        .benefits-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.5s forwards;
+            opacity: 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 24px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.3s;
+        }
+
+        .benefit-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-size: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .benefit-text h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .benefit-text p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 120px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 60px;
+        }
+
+        .next-phase {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .next-phase:hover {
+            color: var(--primary);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+            .params-grid { grid-template-columns: repeat(2, 1fr); }
+            .tools-grid { grid-template-columns: 1fr; }
+            .output-grid { grid-template-columns: 1fr; }
+            .state-grid { grid-template-columns: repeat(2, 1fr); }
+            .flow-wrapper { flex-direction: column; align-items: center; }
+            .flow-arrow { transform: rotate(90deg); margin: 8px 0; }
+            .command-card { padding: 32px 24px; }
+            .objective-content h4 { font-size: 16px; }
+        }
+
+        @media (max-width: 768px) {
+            .params-grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 42px; }
+            .benefits-grid { grid-template-columns: 1fr; }
+            .state-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 0;
+            max-width: 650px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 80px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .modal-icon.input { background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(79, 70, 229, 0.2)); color: #818cf8; }
+        .modal-icon.chrome { background: linear-gradient(135deg, rgba(66, 133, 244, 0.3), rgba(52, 168, 83, 0.2)); color: #4285f4; }
+        .modal-icon.chatgpt { background: linear-gradient(135deg, rgba(16, 163, 127, 0.3), rgba(16, 163, 127, 0.2)); color: #10a37f; }
+        .modal-icon.process { background: linear-gradient(135deg, rgba(14, 165, 233, 0.3), rgba(2, 132, 199, 0.2)); color: #38bdf8; }
+        .modal-icon.output { background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(124, 58, 237, 0.2)); color: #a78bfa; }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px 28px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sample-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sample-code {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .sample-code .ln { color: #475569; margin-right: 12px; user-select: none; }
+        .sample-code .kw { color: #86efac; }
+        .sample-code .str { color: #fbbf24; }
+        .sample-code .num { color: #f472b6; }
+        .sample-code .cmt { color: #64748b; font-style: italic; }
+        .sample-code .key { color: #67e8f9; }
+        .sample-code .punct { color: #94a3b8; }
+
+        .modal-footer {
+            padding: 16px 28px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-footer i {
+            color: #67e8f9;
+            font-size: 14px;
+        }
+
+        .modal-footer span {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Clickable flow boxes */
+        .flow-box.clickable {
+            cursor: pointer;
+        }
+
+        .flow-box.clickable::after {
+            content: 'Click to view sample';
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .flow-box.clickable:hover::after {
+            opacity: 1;
+        }
+
+        /* Automation Steps */
+        .steps-visual {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            border-left: 3px solid #10a37f;
+        }
+
+        .step-num {
+            width: 24px;
+            height: 24px;
+            background: rgba(16, 163, 127, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #10a37f;
+        }
+
+        .step-text {
+            font-size: 13px;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="phase-badge">
+                <i class="fa-solid fa-robot"></i>
+                Phase 4.1
+            </div>
+            <h1>Deep Research Processing</h1>
+            <p>Automated execution of ChatGPT Deep Research via Selenium browser automation. Transforms research prompts into comprehensive, citation-rich Markdown documents.</p>
+        </header>
+
+        <!-- Objectives -->
+        <section class="command-section">
+            <div class="command-card">
+                <div class="command-label">
+                    <i class="fa-solid fa-bullseye"></i>
+                    Strategic Direction
+                </div>
+                <h2>Core Objectives</h2>
+                <div class="objectives-container">
+                    <ul class="objectives-list">
+                        <!-- Objective 1 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">1</div>
+                            <div class="objective-content">
+                                <h4><strong>Automate Deep Research</strong> execution via ChatGPT UI interaction</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 2 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">2</div>
+                            <div class="objective-content">
+                                <h4><strong>Process Multiple Keywords</strong> concurrently with state tracking</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 3 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">3</div>
+                            <div class="objective-content">
+                                <h4><strong>Extract Research Results</strong> and convert to clean Markdown</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 4 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">4</div>
+                            <div class="objective-content">
+                                <h4><strong>Enable Resume Capability</strong> for interrupted sessions</h4>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="exec-command">
+                    <span class="prompt">$</span>
+                    <span class="cmd">uv run scripts/deepresearch_gpt.py --all</span>
+                    <button class="copy-btn" onclick="copyCommand()"><i class="fa-regular fa-copy"></i></button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Flow -->
+        <section class="flow-section">
+            <div class="flow-wrapper">
+                <div class="flow-box input clickable" onclick="openModal('modal-input')">
+                    <div class="icon-wrapper">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </div>
+                    <h3>Research Prompts</h3>
+                    <p>Generated prompts from Phase 4</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box chrome clickable" onclick="openModal('modal-chrome')">
+                    <div class="icon-wrapper">
+                        <i class="fa-brands fa-chrome"></i>
+                    </div>
+                    <h3>Chrome Automation</h3>
+                    <p>Selenium WebDriver control</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box chatgpt clickable" onclick="openModal('modal-chatgpt')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h3>ChatGPT Deep Research</h3>
+                    <p>AI-powered web research</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box process clickable" onclick="openModal('modal-process')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h3>HTML to Markdown</h3>
+                    <p>Convert and sanitize output</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box output clickable" onclick="openModal('modal-output')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-file-export"></i>
+                    </div>
+                    <h3>Research Output</h3>
+                    <p>Comprehensive Markdown docs</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parameters -->
+        <section class="params-section">
+            <h2 class="section-title">Configuration Parameters</h2>
+            <p class="section-subtitle">Fine-tune the automation behavior with these command-line options.</p>
+
+            <div class="params-grid">
+                <div class="param-card">
+                    <div class="param-flag">--max-active</div>
+                    <div class="param-value">5</div>
+                    <div class="param-label">Maximum concurrent research jobs</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--poll-interval</div>
+                    <div class="param-value">60s</div>
+                    <div class="param-label">Status check frequency</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--debug-port</div>
+                    <div class="param-value">9222</div>
+                    <div class="param-label">Chrome remote debugging port</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--deep-timeout</div>
+                    <div class="param-value">40m</div>
+                    <div class="param-label">Maximum wait for research completion</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Integration -->
+        <section class="tools-section">
+            <h2 class="section-title">Technology Stack</h2>
+            <p class="section-subtitle">Browser automation combined with ChatGPT's powerful Deep Research capability.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card chatgpt">
+                    <div class="tool-icon">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3>ChatGPT Deep Research</h3>
+                        <p>OpenAI's advanced research mode that performs multi-step web searches, analyzes sources, and synthesizes findings into comprehensive reports with citations.</p>
+                        <div class="tool-features">
+                            <span class="feature-tag">Multi-Source Analysis</span>
+                            <span class="feature-tag">Citation Support</span>
+                            <span class="feature-tag">Web Search</span>
+                            <span class="feature-tag">Synthesis</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card selenium">
+                    <div class="tool-icon">
+                        <i class="fa-solid fa-spider"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3>Selenium WebDriver</h3>
+                        <p>Automated browser control via Chrome's remote debugging interface. Handles authentication, UI interactions, and content extraction with robust retry logic.</p>
+                        <div class="tool-features">
+                            <span class="feature-tag">Chrome Integration</span>
+                            <span class="feature-tag">JS Injection</span>
+                            <span class="feature-tag">Element Waiting</span>
+                            <span class="feature-tag">Session Management</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Flow Diagram -->
+        <section class="diagram-section">
+            <h2 class="section-title">Execution Pipeline</h2>
+            <p class="section-subtitle">Complete automation flow from prompt loading to Markdown output.</p>
+
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    </div>
+                    <span class="file-name"><i class="fa-solid fa-diagram-project"></i> deepresearch-pipeline.txt</span>
+                </div>
+                <div class="window-content">
+                    <div><span class="ln"> 1</span><span class="cmt"># Phase 4.1 - Deep Research Processing Pipeline</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="step">Load Keywords</span> <span class="arrow">─────────────────────────────────────────</span></div>
+                    <div><span class="ln"> 4</span>    <span class="arrow">│</span> <span class="data">data/keywords/keywords.txt</span></div>
+                    <div><span class="ln"> 5</span>    <span class="arrow">▼</span></div>
+                    <div><span class="ln"> 6</span><span class="step">Find Research Prompts</span> <span class="arrow">────────────────────────────────</span></div>
+                    <div><span class="ln"> 7</span>    <span class="arrow">│</span> <span class="data">output/research/{KW}/{KW}-research-prompt.md</span></div>
+                    <div><span class="ln"> 8</span>    <span class="arrow">▼</span></div>
+                    <div><span class="ln"> 9</span><span class="step">FOR EACH</span> <span class="highlight">keyword</span><span class="step">:</span> <span class="cmt">(max 5 concurrent)</span></div>
+                    <div><span class="ln">10</span>    <span class="arrow">├──▶</span> <span class="step">Launch Chrome</span> <span class="cmt">(--debug-port 9222)</span></div>
+                    <div><span class="ln">11</span>    <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">Dedicated automation profile</span></div>
+                    <div><span class="ln">12</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">13</span>    <span class="arrow">├──▶</span> <span class="step">Navigate to ChatGPT</span></div>
+                    <div><span class="ln">14</span>    <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">Verify login session</span></div>
+                    <div><span class="ln">15</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">16</span>    <span class="arrow">├──▶</span> <span class="step">Create New Chat</span></div>
+                    <div><span class="ln">17</span>    <span class="arrow">│</span>       <span class="arrow">├──▶</span> <span class="data">Paste research prompt (JS injection)</span></div>
+                    <div><span class="ln">18</span>    <span class="arrow">│</span>       <span class="arrow">├──▶</span> <span class="data">Enable Deep Research mode</span></div>
+                    <div><span class="ln">19</span>    <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">Submit & capture conversation URL</span></div>
+                    <div><span class="ln">20</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">21</span>    <span class="arrow">├──▶</span> <span class="step">Send Follow-up Prompt</span> <span class="cmt">(from specs/follow-up-deepresearch.md)</span></div>
+                    <div><span class="ln">22</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">23</span>    <span class="arrow">├──▶</span> <span class="step">Monitor Progress</span> <span class="cmt">(poll every 60s)</span></div>
+                    <div><span class="ln">24</span>    <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">Detect: Researching, Analyzing, Completed</span></div>
+                    <div><span class="ln">25</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">26</span>    <span class="arrow">└──▶</span> <span class="step">Extract & Convert</span></div>
+                    <div><span class="ln">27</span>            <span class="arrow">├──▶</span> <span class="data">innerHTML from last article element</span></div>
+                    <div><span class="ln">28</span>            <span class="arrow">├──▶</span> <span class="data">HTML2Text conversion</span></div>
+                    <div><span class="ln">29</span>            <span class="arrow">└──▶</span> <span class="data">Save to {KW}-research.md</span></div>
+                    <div><span class="ln">30</span></div>
+                    <div><span class="ln">31</span><span class="step">State Persistence</span> <span class="arrow">───────────────────────────────────────</span></div>
+                    <div><span class="ln">32</span>    <span class="arrow">└──▶</span> <span class="data">.deepresearch-state.json (supports --resume)</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- State Status Section -->
+        <section class="state-section">
+            <h2 class="section-title">Job State Machine</h2>
+            <p class="section-subtitle">Track progress through distinct processing states with automatic resume support.</p>
+
+            <div class="state-grid">
+                <div class="state-card">
+                    <div class="state-emoji">⏸️</div>
+                    <div class="state-name">not_started</div>
+                    <div class="state-desc">Queued and waiting for processing</div>
+                </div>
+                <div class="state-card">
+                    <div class="state-emoji">🌐</div>
+                    <div class="state-name">tab_opened</div>
+                    <div class="state-desc">Chrome tab created for this job</div>
+                </div>
+                <div class="state-card">
+                    <div class="state-emoji">📤</div>
+                    <div class="state-name">prompt_sent</div>
+                    <div class="state-desc">Research prompt submitted to ChatGPT</div>
+                </div>
+                <div class="state-card">
+                    <div class="state-emoji">🔄</div>
+                    <div class="state-name">research_in_progress</div>
+                    <div class="state-desc">Deep Research actively running</div>
+                </div>
+                <div class="state-card">
+                    <div class="state-emoji">✅</div>
+                    <div class="state-name">research_complete</div>
+                    <div class="state-desc">Research finished, awaiting extraction</div>
+                </div>
+                <div class="state-card">
+                    <div class="state-emoji">📝</div>
+                    <div class="state-name">converting</div>
+                    <div class="state-desc">HTML being converted to Markdown</div>
+                </div>
+                <div class="state-card">
+                    <div class="state-emoji">✓</div>
+                    <div class="state-name">completed</div>
+                    <div class="state-desc">Markdown saved, job done</div>
+                </div>
+                <div class="state-card">
+                    <div class="state-emoji">❌</div>
+                    <div class="state-name">failed</div>
+                    <div class="state-desc">Error occurred, can retry with URL</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Structure -->
+        <section class="output-section">
+            <h2 class="section-title">Output Structure</h2>
+            <p class="section-subtitle">Clean organization of research documents for downstream content generation.</p>
+
+            <div class="output-grid">
+                <div class="output-card">
+                    <h4><i class="fa-regular fa-folder-open"></i> Directory Structure</h4>
+                    <div class="tree-view">
+                        <div><span class="folder">output/research/</span></div>
+                        <div><span class="branch">├── </span><span class="folder">{keyword-1}/</span></div>
+                        <div><span class="branch">│   ├── </span><span class="file">{keyword-1}-research-prompt.md</span> <span class="cmt">(input)</span></div>
+                        <div><span class="branch">│   └── </span><span class="file">{keyword-1}-research.md</span> <span class="cmt">(output)</span></div>
+                        <div><span class="branch">├── </span><span class="folder">{keyword-2}/</span></div>
+                        <div><span class="branch">│   └── </span><span class="cmt">...</span></div>
+                        <div><span class="branch">└── </span><span class="file">.deepresearch-state.json</span> <span class="cmt">(state)</span></div>
+                    </div>
+                </div>
+
+                <div class="output-card">
+                    <h4><i class="fa-solid fa-file-lines"></i> Research Output Format</h4>
+                    <div class="tree-view">
+                        <div><span class="file">Research completed in 14m</span></div>
+                        <div><span class="cmt">---</span></div>
+                        <div><span class="file"># Main Topic Heading</span></div>
+                        <div><span class="branch">  </span><span class="cmt">Synthesized introduction...</span></div>
+                        <div><span class="file">## Section Headings</span></div>
+                        <div><span class="branch">  </span><span class="cmt">Detailed analysis...</span></div>
+                        <div><span class="file">### Sub-sections</span></div>
+                        <div><span class="branch">  </span><span class="cmt">Supporting evidence...</span></div>
+                        <div><span class="file">## Sources & Citations</span></div>
+                        <div><span class="branch">  </span><span class="cmt">[1] https://source1.com</span></div>
+                        <div><span class="branch">  </span><span class="cmt">[2] https://source2.com</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="benefits-section">
+            <h2 class="section-title">Key Features</h2>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Resume Capability</h4>
+                        <p>Persistent state tracking allows interrupted sessions to resume exactly where they left off, preserving conversation URLs.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Concurrent Processing</h4>
+                        <p>Process up to 5 keywords simultaneously with intelligent job scheduling and staggered launches to avoid rate limits.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Robust Error Handling</h4>
+                        <p>Automatic retry logic with exponential backoff, stage-based recovery, and detailed error logging for debugging.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Profile Isolation</h4>
+                        <p>Dedicated Chrome automation profile keeps research sessions separate from personal browsing data.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Follow-up Prompts</h4>
+                        <p>Automated follow-up questions from specs/follow-up-deepresearch.md to enhance research depth and coverage.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Auto-Cleanup</h4>
+                        <p>Completed jobs older than 24 hours are automatically removed from state to keep the system clean.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="8_deep-research-requirement.html" class="next-phase">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <span>Previous: Deep Research Prompt</span>
+            </a>
+            <span style="margin: 0 24px; color: rgba(255,255,255,0.1);">|</span>
+            <a href="10_post-plan-processing.html" class="next-phase">
+                <span>Next: Article Generation</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <p style="margin-top: 16px; color: rgba(255,255,255,0.2); font-size: 12px;">&copy; 2025 Privato Content AI System</p>
+        </footer>
+    </div>
+
+    <!-- Modal 1: Research Prompts Input -->
+    <div class="modal-overlay" id="modal-input" onclick="closeModal(event, 'modal-input')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon input"><i class="fa-regular fa-file-lines"></i></div>
+                    <div>
+                        <h3 class="modal-title">Research Prompts</h3>
+                        <p class="modal-subtitle">output/research/{KW}/{KW}-research-prompt.md</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-input')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-regular fa-file-code"></i> Sample Research Prompt</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="kw"># Deep Research Request</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="str">## Topic: Glutathione Benefits and Usage</span></div>
+                    <div><span class="ln"> 4</span></div>
+                    <div><span class="ln"> 5</span><span class="cmt">Please conduct comprehensive research on:</span></div>
+                    <div><span class="ln"> 6</span></div>
+                    <div><span class="ln"> 7</span><span class="data">1. What is glutathione and its role in the body</span></div>
+                    <div><span class="ln"> 8</span><span class="data">2. Scientific evidence for skin whitening effects</span></div>
+                    <div><span class="ln"> 9</span><span class="data">3. Recommended dosages and timing</span></div>
+                    <div><span class="ln">10</span><span class="data">4. Potential side effects and contraindications</span></div>
+                    <div><span class="ln">11</span><span class="data">5. Best forms of supplementation</span></div>
+                    <div><span class="ln">12</span></div>
+                    <div><span class="ln">13</span><span class="cmt">Target audience: Thai consumers interested</span></div>
+                    <div><span class="ln">14</span><span class="cmt">in beauty supplements.</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>Generated by Phase 4 from outline analysis via Grok</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Chrome Automation -->
+    <div class="modal-overlay" id="modal-chrome" onclick="closeModal(event, 'modal-chrome')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon chrome"><i class="fa-brands fa-chrome"></i></div>
+                    <div>
+                        <h3 class="modal-title">Chrome Automation</h3>
+                        <p class="modal-subtitle">Selenium WebDriver with Remote Debugging</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-chrome')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-terminal"></i> Launch Configuration</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="cmt"># Chrome launches with dedicated profile</span></div>
+                    <div><span class="ln">2</span><span class="kw">chrome</span> <span class="str">--remote-debugging-port=9222</span></div>
+                    <div><span class="ln">3</span>       <span class="str">--user-data-dir=~/Chrome-Automation</span></div>
+                    <div><span class="ln">4</span>       <span class="str">--remote-allow-origins=*</span></div>
+                    <div><span class="ln">5</span>       <span class="str">--no-first-run</span></div>
+                    <div><span class="ln">6</span></div>
+                    <div><span class="ln">7</span><span class="cmt"># Selenium attaches via debuggerAddress</span></div>
+                    <div><span class="ln">8</span><span class="kw">opts.add_experimental_option</span><span class="punct">(</span></div>
+                    <div><span class="ln">9</span>    <span class="str">"debuggerAddress"</span><span class="punct">,</span> <span class="str">"127.0.0.1:9222"</span></div>
+                    <div><span class="ln">10</span><span class="punct">)</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>Isolated profile preserves your personal Chrome session</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: ChatGPT Interaction -->
+    <div class="modal-overlay" id="modal-chatgpt" onclick="closeModal(event, 'modal-chatgpt')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon chatgpt"><i class="fa-solid fa-brain"></i></div>
+                    <div>
+                        <h3 class="modal-title">ChatGPT Deep Research</h3>
+                        <p class="modal-subtitle">Automated UI Interaction Steps</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-chatgpt')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-list-check"></i> Automation Sequence</div>
+                <div class="steps-visual">
+                    <div class="step-item">
+                        <div class="step-num">1</div>
+                        <div class="step-text">Navigate to chatgpt.com and verify login</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">2</div>
+                        <div class="step-text">Click "New Chat" button via CSS selector</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">3</div>
+                        <div class="step-text">Paste research prompt via JS injection</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">4</div>
+                        <div class="step-text">Open "+" menu and select "Deep Research"</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">5</div>
+                        <div class="step-text">Click submit and capture conversation URL</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">6</div>
+                        <div class="step-text">Send follow-up prompt after initial response</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-num">7</div>
+                        <div class="step-text">Poll for "Research completed in..." text</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-clock"></i>
+                <span>Deep Research typically takes 10-20 minutes per query</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: HTML to Markdown -->
+    <div class="modal-overlay" id="modal-process" onclick="closeModal(event, 'modal-process')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon process"><i class="fa-solid fa-code"></i></div>
+                    <div>
+                        <h3 class="modal-title">HTML to Markdown</h3>
+                        <p class="modal-subtitle">Content extraction and conversion</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-process')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-code-compare"></i> Conversion Process</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="cmt"># Extract innerHTML from last article</span></div>
+                    <div><span class="ln"> 2</span><span class="kw">arts</span> <span class="punct">=</span> <span class="str">driver.find_elements(By.TAG_NAME, "article")</span></div>
+                    <div><span class="ln"> 3</span><span class="kw">html</span> <span class="punct">=</span> <span class="str">arts[-1].get_attribute("innerHTML")</span></div>
+                    <div><span class="ln"> 4</span></div>
+                    <div><span class="ln"> 5</span><span class="cmt"># Convert using html2text</span></div>
+                    <div><span class="ln"> 6</span><span class="kw">import</span> <span class="str">html2text</span></div>
+                    <div><span class="ln"> 7</span><span class="kw">h</span> <span class="punct">=</span> <span class="str">html2text.HTML2Text()</span></div>
+                    <div><span class="ln"> 8</span><span class="kw">h.ignore_links</span> <span class="punct">=</span> <span class="num">False</span></div>
+                    <div><span class="ln"> 9</span><span class="kw">h.body_width</span> <span class="punct">=</span> <span class="num">0</span>  <span class="cmt"># No line wrapping</span></div>
+                    <div><span class="ln">10</span><span class="kw">h.unicode_snob</span> <span class="punct">=</span> <span class="num">True</span></div>
+                    <div><span class="ln">11</span><span class="kw">markdown</span> <span class="punct">=</span> <span class="str">h.handle(html)</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-link"></i>
+                <span>Preserves links, emphasis, and document structure</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Research Output -->
+    <div class="modal-overlay" id="modal-output" onclick="closeModal(event, 'modal-output')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon output"><i class="fa-solid fa-file-export"></i></div>
+                    <div>
+                        <h3 class="modal-title">Research Output</h3>
+                        <p class="modal-subtitle">Final Markdown document</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-output')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-file-lines"></i> Sample Output Structure</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="str">Research completed in 14m · 23 sources</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="kw"># Glutathione: The Master Antioxidant</span></div>
+                    <div><span class="ln"> 4</span></div>
+                    <div><span class="ln"> 5</span><span class="cmt">Glutathione is a tripeptide molecule composed</span></div>
+                    <div><span class="ln"> 6</span><span class="cmt">of glutamate, cysteine, and glycine...</span></div>
+                    <div><span class="ln"> 7</span></div>
+                    <div><span class="ln"> 8</span><span class="kw">## Scientific Evidence for Skin Benefits</span></div>
+                    <div><span class="ln"> 9</span></div>
+                    <div><span class="ln">10</span><span class="cmt">Multiple clinical trials have demonstrated...</span></div>
+                    <div><span class="ln">11</span><span class="cmt">[1][2][3]</span></div>
+                    <div><span class="ln">12</span></div>
+                    <div><span class="ln">13</span><span class="kw">## Sources</span></div>
+                    <div><span class="ln">14</span><span class="data">[1] https://pubmed.ncbi.nlm.nih.gov/...</span></div>
+                    <div><span class="ln">15</span><span class="data">[2] https://www.sciencedirect.com/...</span></div>
+                    <div><span class="ln">16</span><span class="data">[3] https://journals.plos.org/...</span></div>
+                </div>
+                <div style="margin-top: 16px; padding: 12px; background: rgba(16, 163, 127, 0.1); border-radius: 8px; border-left: 3px solid #10a37f;">
+                    <span style="font-size: 12px; color: #10a37f;">Saved to: output/research/{keyword}/{keyword}-research.md</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-rocket"></i>
+                <span>Ready for Phase 5: Research Data Merging</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event, modalId) {
+            if (event.target === event.currentTarget || event.currentTarget.classList.contains('modal-close')) {
+                document.getElementById(modalId).classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function copyCommand() {
+            navigator.clipboard.writeText('uv run scripts/deepresearch_gpt.py --all');
+            const btn = document.querySelector('.copy-btn');
+            btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fa-regular fa-copy"></i>';
+            }, 2000);
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>

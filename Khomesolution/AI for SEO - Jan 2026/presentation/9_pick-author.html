@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 9: Author Selection & WordPress Auto-Post | Privato Content</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --wordpress: #21759b;
+            --category: #ec4899;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, transparent 40%),
+                        radial-gradient(circle at bottom left, #312e81, transparent 40%),
+                        linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 100px;
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(33, 117, 155, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(33, 117, 155, 0.1);
+            border: 1px solid rgba(33, 117, 155, 0.3);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #60a5fa;
+            margin-bottom: 32px;
+            box-shadow: 0 0 20px rgba(33, 117, 155, 0.1);
+        }
+
+        .header h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Objectives Styling */
+        .objectives-container {
+            margin-top: 32px;
+            max-width: 800px;
+        }
+
+        .objectives-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .objective-item:last-child {
+            border-bottom: none;
+        }
+
+        .objective-bullet {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            margin-top: 2px;
+        }
+
+        .objective-content {
+            flex: 1;
+        }
+
+        .objective-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.5;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .command-section {
+            margin-bottom: 80px;
+            animation: fadeIn 1s ease 0.15s forwards;
+            opacity: 0;
+        }
+
+        .command-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .command-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .command-card h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* Flow Section */
+        .flow-section {
+            margin: 0 0 100px;
+            animation: fadeIn 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .flow-wrapper {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .flow-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px 32px;
+            text-align: center;
+            width: 220px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+        }
+
+        .flow-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.4);
+        }
+
+        .flow-box:hover::before {
+            opacity: 1;
+        }
+
+        .icon-wrapper {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            position: relative;
+        }
+
+        .flow-box.input .icon-wrapper {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.1));
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .flow-box.classify .icon-wrapper {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.1));
+            color: #f472b6;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .flow-box.author .icon-wrapper {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.1));
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .flow-box.wordpress .icon-wrapper {
+            background: linear-gradient(135deg, rgba(33, 117, 155, 0.2), rgba(23, 97, 135, 0.1));
+            color: #38bdf8;
+            border: 1px solid rgba(33, 117, 155, 0.2);
+        }
+
+        .flow-box.output .icon-wrapper {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .flow-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .flow-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            align-self: center;
+        }
+
+        /* Categories Section */
+        .categories-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.25s forwards;
+            opacity: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 60px;
+            font-size: 18px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .category-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+        }
+
+        .category-card.ranang { border: 1px solid rgba(251, 191, 36, 0.2); }
+        .category-card.ranang::before { background: #fbbf24; }
+
+        .category-card.roof { border: 1px solid rgba(56, 189, 248, 0.2); }
+        .category-card.roof::before { background: #38bdf8; }
+
+        .category-card.door { border: 1px solid rgba(167, 139, 250, 0.2); }
+        .category-card.door::before { background: #a78bfa; }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .category-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .category-card.ranang .category-icon {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(217, 119, 6, 0.1));
+            color: #fbbf24;
+        }
+
+        .category-card.roof .category-icon {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(14, 165, 233, 0.1));
+            color: #38bdf8;
+        }
+
+        .category-card.door .category-icon {
+            background: linear-gradient(135deg, rgba(167, 139, 250, 0.2), rgba(139, 92, 246, 0.1));
+            color: #a78bfa;
+        }
+
+        .category-info h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .category-card.ranang .category-info h3 { color: #fbbf24; }
+        .category-card.roof .category-info h3 { color: #38bdf8; }
+        .category-card.door .category-info h3 { color: #a78bfa; }
+
+        .category-id {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: 'Menlo', 'Monaco', monospace;
+        }
+
+        .category-signals {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .signal-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .author-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 16px;
+            padding: 8px 14px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            font-size: 12px;
+            color: #34d399;
+        }
+
+        /* Algorithm Section */
+        .algorithm-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .algorithm-steps {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .step-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 28px;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(79, 70, 229, 0.2));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: #818cf8;
+            margin-bottom: 16px;
+        }
+
+        .step-card h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .step-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .score-table {
+            margin-top: 12px;
+            font-size: 12px;
+        }
+
+        .score-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .score-row:last-child {
+            border-bottom: none;
+        }
+
+        .score-label {
+            color: var(--text-muted);
+        }
+
+        .score-value {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-weight: 600;
+        }
+
+        .score-value.positive { color: #34d399; }
+        .score-value.negative { color: #f87171; }
+
+        /* Parameters Grid */
+        .params-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.35s forwards;
+            opacity: 0;
+        }
+
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .param-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .param-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .param-flag {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 14px;
+            color: #67e8f9;
+            background: rgba(103, 232, 249, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .param-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .param-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Code Window */
+        .diagram-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .code-window {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .window-header {
+            background: #0f172a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 16px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #22c55e; }
+
+        .file-name {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-content {
+            padding: 24px;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .ln { color: #475569; margin-right: 16px; user-select: none; }
+        .cmt { color: #64748b; font-style: italic; }
+        .step { color: #818cf8; }
+        .arrow { color: #475569; }
+        .highlight { color: #fbbf24; }
+        .data { color: #86efac; }
+        .cmd { color: #f472b6; }
+        .flag { color: #67e8f9; }
+        .str { color: #fbbf24; }
+
+        /* Output Section */
+        .output-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.45s forwards;
+            opacity: 0;
+        }
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .output-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .output-card h4 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-preview {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border-left: 3px solid;
+        }
+
+        .status-item.draft { border-left-color: #fbbf24; }
+        .status-item.success { border-left-color: #34d399; }
+
+        .status-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .status-item.draft .status-icon {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .status-item.success .status-icon {
+            background: rgba(52, 211, 153, 0.2);
+            color: #34d399;
+        }
+
+        .status-info h5 {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .status-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .log-preview {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .log-line {
+            margin-bottom: 8px;
+        }
+
+        .log-time { color: #64748b; }
+        .log-success { color: #34d399; }
+        .log-info { color: #60a5fa; }
+        .log-keyword { color: #fbbf24; }
+
+        /* Benefits */
+        .benefits-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.5s forwards;
+            opacity: 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 24px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.3s;
+        }
+
+        .benefit-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-size: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .benefit-text h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .benefit-text p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 120px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 60px;
+        }
+
+        .next-phase {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .next-phase:hover {
+            color: var(--primary);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+            .params-grid { grid-template-columns: repeat(3, 1fr); }
+            .categories-grid { grid-template-columns: 1fr; }
+            .algorithm-steps { grid-template-columns: 1fr; }
+            .output-grid { grid-template-columns: 1fr; }
+            .flow-wrapper { flex-direction: column; align-items: center; }
+            .flow-arrow { transform: rotate(90deg); margin: 8px 0; }
+            .command-card { padding: 32px 24px; }
+            .objective-content h4 { font-size: 16px; }
+        }
+
+        @media (max-width: 768px) {
+            .params-grid { grid-template-columns: repeat(2, 1fr); }
+            .header h1 { font-size: 42px; }
+            .benefits-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 0;
+            max-width: 650px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 80px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .modal-icon.input { background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(79, 70, 229, 0.2)); color: #818cf8; }
+        .modal-icon.classify { background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.2)); color: #f472b6; }
+        .modal-icon.author { background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.2)); color: #fbbf24; }
+        .modal-icon.wordpress { background: linear-gradient(135deg, rgba(33, 117, 155, 0.3), rgba(23, 97, 135, 0.2)); color: #38bdf8; }
+        .modal-icon.output { background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2)); color: #34d399; }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px 28px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sample-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sample-code {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .sample-code .ln { color: #475569; margin-right: 12px; user-select: none; }
+        .sample-code .kw { color: #86efac; }
+        .sample-code .str { color: #fbbf24; }
+        .sample-code .num { color: #f472b6; }
+        .sample-code .cmt { color: #64748b; font-style: italic; }
+        .sample-code .key { color: #67e8f9; }
+        .sample-code .punct { color: #94a3b8; }
+
+        .modal-footer {
+            padding: 16px 28px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-footer i {
+            color: #67e8f9;
+            font-size: 14px;
+        }
+
+        .modal-footer span {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Clickable flow boxes */
+        .flow-box.clickable {
+            cursor: pointer;
+        }
+
+        .flow-box.clickable::after {
+            content: 'Click to view details';
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .flow-box.clickable:hover::after {
+            opacity: 1;
+        }
+
+        /* Sample table */
+        .sample-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .sample-table th {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 600;
+            color: #67e8f9;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sample-table td {
+            padding: 10px 12px;
+            color: #e2e8f0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .sample-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .sample-table .highlight-row {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .decision-visual {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .decision-box {
+            padding: 10px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .decision-box .score {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .decision-box .label {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .decision-box.winner {
+            border-color: #34d399;
+            background: rgba(16, 185, 129, 0.15);
+        }
+
+        .decision-box.winner .score {
+            color: #34d399;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="phase-badge">
+                <i class="fa-brands fa-wordpress"></i>
+                Phase 9
+            </div>
+            <h1>Author Selection & WordPress Auto-Post</h1>
+            <p>Intelligent keyword classification with deterministic category assignment, automated author mapping, and seamless WordPress draft publishing via CLI automation.</p>
+        </header>
+
+        <!-- Objectives -->
+        <section class="command-section">
+            <div class="command-card">
+                <div class="command-label">
+                    <i class="fa-solid fa-bullseye"></i>
+                    Strategic Direction
+                </div>
+                <h2>Core Objectives</h2>
+                <div class="objectives-container">
+                    <ul class="objectives-list">
+                        <li class="objective-item">
+                            <div class="objective-bullet">1</div>
+                            <div class="objective-content">
+                                <h4><strong>Classify Keywords</strong> into exactly one category using scoring algorithm</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">2</div>
+                            <div class="objective-content">
+                                <h4><strong>Assign Authors</strong> based on category mapping for content ownership</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">3</div>
+                            <div class="objective-content">
+                                <h4><strong>Execute Auto-Post</strong> to WordPress as drafts for review workflow</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">4</div>
+                            <div class="objective-content">
+                                <h4><strong>Maintain Audit Trail</strong> with rationale and confidence scores per post</h4>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Flow -->
+        <section class="flow-section">
+            <div class="flow-wrapper">
+                <div class="flow-box input clickable" onclick="openModal('modal-input')">
+                    <div class="icon-wrapper">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </div>
+                    <h3>Keywords File</h3>
+                    <p>Target keywords from keywords.txt seed list.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box classify clickable" onclick="openModal('modal-classify')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h3>Classification</h3>
+                    <p>Score & assign to single category.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box author clickable" onclick="openModal('modal-author')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-user-pen"></i>
+                    </div>
+                    <h3>Author Mapping</h3>
+                    <p>Assign author based on category.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box wordpress clickable" onclick="openModal('modal-wordpress')">
+                    <div class="icon-wrapper">
+                        <i class="fa-brands fa-wordpress"></i>
+                    </div>
+                    <h3>WordPress CLI</h3>
+                    <p>Execute wp_auto_post.py script.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box output clickable" onclick="openModal('modal-output')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-check-circle"></i>
+                    </div>
+                    <h3>Draft Posts</h3>
+                    <p>Published drafts ready for review.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section class="categories-section">
+            <h2 class="section-title">Category Taxonomy</h2>
+            <p class="section-subtitle">Three primary categories with signal-based classification for building materials content.</p>
+
+            <div class="categories-grid">
+                <div class="category-card ranang">
+                    <div class="category-header">
+                        <div class="category-icon">
+                            <i class="fa-solid fa-bars"></i>
+                        </div>
+                        <div class="category-info">
+                            <h3>ระแนง</h3>
+                            <span class="category-id">Category ID: 4</span>
+                        </div>
+                    </div>
+                    <div class="category-signals">
+                        <span class="signal-tag">ระแนงไม้</span>
+                        <span class="signal-tag">ระแนงเหล็ก</span>
+                        <span class="signal-tag">ระแนงอลูมิเนียม</span>
+                        <span class="signal-tag">บังตา</span>
+                        <span class="signal-tag">กันแดด</span>
+                    </div>
+                    <div class="author-badge">
+                        <i class="fa-solid fa-user"></i>
+                        Author ID: 1
+                    </div>
+                </div>
+
+                <div class="category-card roof">
+                    <div class="category-header">
+                        <div class="category-icon">
+                            <i class="fa-solid fa-house-chimney"></i>
+                        </div>
+                        <div class="category-info">
+                            <h3>หลังคา</h3>
+                            <span class="category-id">Category ID: 3</span>
+                        </div>
+                    </div>
+                    <div class="category-signals">
+                        <span class="signal-tag">หลังคาบ้าน</span>
+                        <span class="signal-tag">เมทัลชีท</span>
+                        <span class="signal-tag">กระเบื้อง</span>
+                        <span class="signal-tag">โพลีคาร์บอเนต</span>
+                        <span class="signal-tag">หลังคาจั่ว</span>
+                    </div>
+                    <div class="author-badge">
+                        <i class="fa-solid fa-user"></i>
+                        Author ID: 1
+                    </div>
+                </div>
+
+                <div class="category-card door">
+                    <div class="category-header">
+                        <div class="category-icon">
+                            <i class="fa-solid fa-door-open"></i>
+                        </div>
+                        <div class="category-info">
+                            <h3>ประตูหน้าต่าง</h3>
+                            <span class="category-id">Category ID: 2</span>
+                        </div>
+                    </div>
+                    <div class="category-signals">
+                        <span class="signal-tag">ประตูไม้</span>
+                        <span class="signal-tag">ประตูอลูมิเนียม</span>
+                        <span class="signal-tag">บานเลื่อน</span>
+                        <span class="signal-tag">บานกระทุ้ง</span>
+                        <span class="signal-tag">UPVC</span>
+                    </div>
+                    <div class="author-badge">
+                        <i class="fa-solid fa-user"></i>
+                        Author ID: 1
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Algorithm Section -->
+        <section class="algorithm-section">
+            <h2 class="section-title">Decision Algorithm</h2>
+            <p class="section-subtitle">Deterministic scoring system ensuring exactly one category per keyword.</p>
+
+            <div class="algorithm-steps">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h4>Preprocess Keyword</h4>
+                    <p>Trim whitespace and normalize to lowercase for matching. Original keyword text preserved for CLI flags and slug generation.</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h4>Score Each Category</h4>
+                    <p>Apply weighted scoring based on signal matches detected in the keyword text.</p>
+                    <div class="score-table">
+                        <div class="score-row">
+                            <span class="score-label">Primary/Core term</span>
+                            <span class="score-value positive">+3</span>
+                        </div>
+                        <div class="score-row">
+                            <span class="score-label">Type/Material match</span>
+                            <span class="score-value positive">+2</span>
+                        </div>
+                        <div class="score-row">
+                            <span class="score-label">Context cue</span>
+                            <span class="score-value positive">+1</span>
+                        </div>
+                        <div class="score-row">
+                            <span class="score-label">Negation detected</span>
+                            <span class="score-value negative">-3</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h4>Resolve Ties</h4>
+                    <p>If multiple categories have the highest score, apply precedence order: ระแนง > หลังคา > ประตูหน้าต่าง. Then longest exact-match token wins.</p>
+                </div>
+
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h4>Semantic Fallback</h4>
+                    <p>If all scores are zero or negative, apply semantic fallback: slat/screen terms go to ระแนง, roof terms to หลังคา, otherwise ประตูหน้าต่าง.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parameters -->
+        <section class="params-section">
+            <h2 class="section-title">CLI Configuration</h2>
+            <p class="section-subtitle">Fixed parameters for the wp_auto_post.py execution pipeline.</p>
+
+            <div class="params-grid">
+                <div class="param-card">
+                    <div class="param-flag">--prototype-id</div>
+                    <div class="param-value">13055</div>
+                    <div class="param-label">Template post ID for formatting</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--reviewer-id</div>
+                    <div class="param-value">7</div>
+                    <div class="param-label">Fixed reviewer for all posts</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--status</div>
+                    <div class="param-value">draft</div>
+                    <div class="param-label">Post status (always draft)</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--base-dir</div>
+                    <div class="param-value">output/</div>
+                    <div class="param-label">Content source directory</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--author-id</div>
+                    <div class="param-value">1</div>
+                    <div class="param-label">Mapped from category</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Execution Flow Diagram -->
+        <section class="diagram-section">
+            <h2 class="section-title">Execution Command</h2>
+            <p class="section-subtitle">Example CLI invocation for a single keyword classification and post.</p>
+
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    </div>
+                    <span class="file-name"><i class="fa-solid fa-terminal"></i> wp_auto_post.py</span>
+                </div>
+                <div class="window-content">
+                    <div><span class="ln"> 1</span><span class="cmt"># Example: Classify and post "ระแนงไม้เทียม ราคา"</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="cmd">python</span> <span class="data">scripts/wp_auto_post.py</span> <span class="highlight">post</span> <span class="arrow">\</span></div>
+                    <div><span class="ln"> 4</span>  <span class="flag">--keywords-file</span> <span class="str">data/keywords/keywords.txt</span> <span class="arrow">\</span></div>
+                    <div><span class="ln"> 5</span>  <span class="flag">--base-dir</span> <span class="str">output/research</span> <span class="arrow">\</span></div>
+                    <div><span class="ln"> 6</span>  <span class="flag">--prototype-id</span> <span class="str">13055</span> <span class="arrow">\</span></div>
+                    <div><span class="ln"> 7</span>  <span class="flag">--category</span> <span class="str">4</span> <span class="cmt"># ระแนง (highest score)</span> <span class="arrow">\</span></div>
+                    <div><span class="ln"> 8</span>  <span class="flag">--author-id</span> <span class="str">1</span> <span class="cmt"># Mapped from category</span> <span class="arrow">\</span></div>
+                    <div><span class="ln"> 9</span>  <span class="flag">--reviewer-id</span> <span class="str">7</span> <span class="arrow">\</span></div>
+                    <div><span class="ln">10</span>  <span class="flag">--status</span> <span class="str">draft</span> <span class="arrow">\</span></div>
+                    <div><span class="ln">11</span>  <span class="flag">--only-keyword</span> <span class="str">"ระแนงไม้เทียม ราคา"</span></div>
+                    <div><span class="ln">12</span></div>
+                    <div><span class="ln">13</span><span class="cmt"># Classification rationale:</span></div>
+                    <div><span class="ln">14</span><span class="cmt"># - "ระแนง" core term detected: +3</span></div>
+                    <div><span class="ln">15</span><span class="cmt"># - "ไม้เทียม" type match: +2</span></div>
+                    <div><span class="ln">16</span><span class="cmt"># - Final score: ระแนง(5) > หลังคา(0) > ประตู(0)</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Section -->
+        <section class="output-section">
+            <h2 class="section-title">Output & Status</h2>
+            <p class="section-subtitle">Post status and execution logging for audit trail and review workflow.</p>
+
+            <div class="output-grid">
+                <div class="output-card">
+                    <h4><i class="fa-solid fa-file-circle-check"></i> Post Status</h4>
+                    <div class="status-preview">
+                        <div class="status-item draft">
+                            <div class="status-icon">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </div>
+                            <div class="status-info">
+                                <h5>Draft Mode</h5>
+                                <p>All posts created as drafts for editorial review</p>
+                            </div>
+                        </div>
+                        <div class="status-item success">
+                            <div class="status-icon">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                            <div class="status-info">
+                                <h5>Reviewer Assigned</h5>
+                                <p>Reviewer ID 7 automatically assigned to all posts</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="output-card">
+                    <h4><i class="fa-solid fa-clipboard-list"></i> Execution Log</h4>
+                    <div class="log-preview">
+                        <div class="log-line"><span class="log-time">[09:15:23]</span> <span class="log-info">Processing:</span> <span class="log-keyword">"ระแนงไม้เทียม ราคา"</span></div>
+                        <div class="log-line"><span class="log-time">[09:15:23]</span> <span class="log-info">Score:</span> ระแนง(5) หลังคา(0) ประตู(0)</div>
+                        <div class="log-line"><span class="log-time">[09:15:24]</span> <span class="log-success">Created:</span> Post #14521 (draft)</div>
+                        <div class="log-line"><span class="log-time">[09:15:25]</span> <span class="log-info">Processing:</span> <span class="log-keyword">"หลังคาเมทัลชีท"</span></div>
+                        <div class="log-line"><span class="log-time">[09:15:25]</span> <span class="log-info">Score:</span> ระแนง(0) หลังคา(5) ประตู(0)</div>
+                        <div class="log-line"><span class="log-time">[09:15:26]</span> <span class="log-success">Created:</span> Post #14522 (draft)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="benefits-section">
+            <h2 class="section-title">Operational Advantages</h2>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Deterministic Classification</h4>
+                        <p>Scoring algorithm guarantees exactly one category per keyword with documented rationale for audit compliance.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Draft-First Workflow</h4>
+                        <p>All posts created as drafts ensuring human review before publication, maintaining editorial quality control.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Automated Author Assignment</h4>
+                        <p>Category-based author mapping ensures content ownership and expertise alignment automatically.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Batch Processing</h4>
+                        <p>Process entire keywords.txt file in single execution loop with checkpoint support for large batches.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="10_post-plan-processing.html" class="next-phase">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <span>Previous: Article Generation</span>
+            </a>
+            <span style="margin: 0 24px; color: rgba(255,255,255,0.1);">|</span>
+            <a href="#" class="next-phase">
+                <span>Pipeline Complete</span>
+                <i class="fa-solid fa-flag-checkered"></i>
+            </a>
+            <p style="margin-top: 16px; color: rgba(255,255,255,0.2); font-size: 12px;">&copy; 2025 Privato Content AI System</p>
+        </footer>
+    </div>
+
+    <!-- Modal 1: Keywords File -->
+    <div class="modal-overlay" id="modal-input" onclick="closeModal(event, 'modal-input')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon input"><i class="fa-regular fa-file-lines"></i></div>
+                    <div>
+                        <h3 class="modal-title">Keywords File</h3>
+                        <p class="modal-subtitle">data/keywords/keywords.txt</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-input')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-regular fa-file-code"></i> Sample Input</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="kw">ระแนงไม้เทียม ราคา</span></div>
+                    <div><span class="ln">2</span><span class="kw">หลังคาเมทัลชีท ข้อดีข้อเสีย</span></div>
+                    <div><span class="ln">3</span><span class="kw">ประตูอลูมิเนียม บานเลื่อน</span></div>
+                    <div><span class="ln">4</span><span class="kw">ระแนงกันแดด วิธีติดตั้ง</span></div>
+                    <div><span class="ln">5</span><span class="kw">หลังคาโพลีคาร์บอเนต ราคา</span></div>
+                    <div><span class="ln">6</span><span class="cmt"># One keyword per line</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>Each line becomes a separate classification and post operation</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Classification -->
+    <div class="modal-overlay" id="modal-classify" onclick="closeModal(event, 'modal-classify')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon classify"><i class="fa-solid fa-brain"></i></div>
+                    <div>
+                        <h3 class="modal-title">Keyword Classification</h3>
+                        <p class="modal-subtitle">Scoring algorithm in action</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-classify')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-calculator"></i> Example: "ระแนงไม้เทียม ราคา"</div>
+                <div class="decision-visual">
+                    <div class="decision-box winner">
+                        <div class="score">+5</div>
+                        <div class="label">ระแนง</div>
+                    </div>
+                    <div class="decision-box">
+                        <div class="score" style="color: #94a3b8;">0</div>
+                        <div class="label">หลังคา</div>
+                    </div>
+                    <div class="decision-box">
+                        <div class="score" style="color: #94a3b8;">0</div>
+                        <div class="label">ประตูหน้าต่าง</div>
+                    </div>
+                </div>
+                <div class="sample-code" style="font-size: 11px;">
+                    <div><span class="cmt"># Signal Detection:</span></div>
+                    <div><span class="kw">"ระแนง"</span> <span class="cmt">→ core term detected → +3</span></div>
+                    <div><span class="kw">"ไม้เทียม"</span> <span class="cmt">→ type match (ระแนงไม้เทียม) → +2</span></div>
+                    <div><span class="kw">"ราคา"</span> <span class="cmt">→ no category signal → +0</span></div>
+                    <div></div>
+                    <div><span class="cmt"># Result: Category 4 (ระแนง) with score 5</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-trophy"></i>
+                <span>Highest score wins; ties resolved by precedence order</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Author Mapping -->
+    <div class="modal-overlay" id="modal-author" onclick="closeModal(event, 'modal-author')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon author"><i class="fa-solid fa-user-pen"></i></div>
+                    <div>
+                        <h3 class="modal-title">Author Mapping</h3>
+                        <p class="modal-subtitle">Category to author assignment</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-author')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-sitemap"></i> Mapping Table</div>
+                <table class="sample-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>ID</th>
+                            <th>Author ID</th>
+                            <th>Reviewer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ระแนง</td>
+                            <td>4</td>
+                            <td>1</td>
+                            <td>7</td>
+                        </tr>
+                        <tr>
+                            <td>หลังคา</td>
+                            <td>3</td>
+                            <td>1</td>
+                            <td>7</td>
+                        </tr>
+                        <tr>
+                            <td>ประตูหน้าต่าง</td>
+                            <td>2</td>
+                            <td>1</td>
+                            <td>7</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="margin-top: 16px; padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border-left: 3px solid #fbbf24;">
+                    <span style="font-size: 12px; color: #fbbf24;">All categories currently map to Author ID 1 with Reviewer ID 7</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-user-check"></i>
+                <span>Author assignment is deterministic based on category</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: WordPress CLI -->
+    <div class="modal-overlay" id="modal-wordpress" onclick="closeModal(event, 'modal-wordpress')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon wordpress"><i class="fa-brands fa-wordpress"></i></div>
+                    <div>
+                        <h3 class="modal-title">WordPress Auto-Post CLI</h3>
+                        <p class="modal-subtitle">scripts/wp_auto_post.py</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-wordpress')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-terminal"></i> CLI Parameters</div>
+                <table class="sample-table">
+                    <thead>
+                        <tr>
+                            <th>Flag</th>
+                            <th>Value</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>--keywords-file</code></td>
+                            <td>data/keywords/keywords.txt</td>
+                            <td>Source keywords list</td>
+                        </tr>
+                        <tr>
+                            <td><code>--base-dir</code></td>
+                            <td>output/research</td>
+                            <td>Content source directory</td>
+                        </tr>
+                        <tr>
+                            <td><code>--prototype-id</code></td>
+                            <td>13055</td>
+                            <td>Template post ID</td>
+                        </tr>
+                        <tr>
+                            <td><code>--category</code></td>
+                            <td>2, 3, or 4</td>
+                            <td>From classification</td>
+                        </tr>
+                        <tr>
+                            <td><code>--only-keyword</code></td>
+                            <td>"keyword text"</td>
+                            <td>Target single keyword</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-code"></i>
+                <span>WordPress auto-generates slugs from post titles</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Output -->
+    <div class="modal-overlay" id="modal-output" onclick="closeModal(event, 'modal-output')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon output"><i class="fa-solid fa-check-circle"></i></div>
+                    <div>
+                        <h3 class="modal-title">Draft Posts Created</h3>
+                        <p class="modal-subtitle">Ready for editorial review</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-output')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-clipboard-check"></i> Execution Checklist</div>
+                <div class="sample-code" style="font-size: 11px;">
+                    <div><span class="kw">[x]</span> Scored all categories; applied negations</div>
+                    <div><span class="kw">[x]</span> Tie resolved by precedence; one category chosen</div>
+                    <div><span class="kw">[x]</span> Author set → 1 + Reviewer 7</div>
+                    <div><span class="kw">[x]</span> CLI executed with --status draft</div>
+                    <div><span class="kw">[x]</span> --only-keyword uses actual keyword</div>
+                    <div><span class="kw">[x]</span> Rationale + confidence recorded</div>
+                </div>
+                <div style="margin-top: 16px; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 3px solid #10b981;">
+                    <span style="font-size: 12px; color: #34d399;">Posts created as drafts in WordPress, awaiting reviewer approval</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-flag-checkered"></i>
+                <span>Phase 9 completes the content pipeline</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event, modalId) {
+            if (event.target === event.currentTarget || event.currentTarget.classList.contains('modal-close')) {
+                document.getElementById(modalId).classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>

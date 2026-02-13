@@ -1,0 +1,1558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 6: AI Article Generation Pipeline | Privato Content</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --ai-purple: #a855f7;
+            --citation-blue: #3b82f6;
+            --stage1: #818cf8;
+            --stage2: #f472b6;
+            --stage3: #a855f7;
+            --stage4: #fbbf24;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, transparent 40%),
+                        radial-gradient(circle at bottom left, #312e81, transparent 40%),
+                        linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 100px;
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(168, 85, 247, 0.1);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #c084fc;
+            margin-bottom: 32px;
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.1);
+        }
+
+        .header h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Objectives Styling */
+        .objectives-container {
+            margin-top: 32px;
+            max-width: 800px;
+        }
+
+        .objectives-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .objective-item:last-child {
+            border-bottom: none;
+        }
+
+        .objective-bullet {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: rgba(168, 85, 247, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #c084fc;
+            margin-top: 2px;
+        }
+
+        .objective-content {
+            flex: 1;
+        }
+
+        .objective-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.5;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .command-section {
+            margin-bottom: 80px;
+            animation: fadeIn 1s ease 0.15s forwards;
+            opacity: 0;
+        }
+
+        .command-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .command-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .command-card h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* Flow Section - Updated for 4 stages */
+        .flow-section {
+            margin: 0 0 100px;
+            animation: fadeIn 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .flow-wrapper {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .flow-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 32px 24px;
+            text-align: center;
+            width: 200px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+        }
+
+        .flow-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.4);
+        }
+
+        .flow-box:hover::before {
+            opacity: 1;
+        }
+
+        .icon-wrapper {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 16px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            position: relative;
+        }
+
+        .stage-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .flow-box.stage1 .icon-wrapper {
+            background: linear-gradient(135deg, rgba(129, 140, 248, 0.2), rgba(99, 102, 241, 0.1));
+            color: #818cf8;
+            border: 1px solid rgba(129, 140, 248, 0.2);
+        }
+        .flow-box.stage1 .stage-badge { color: #818cf8; }
+
+        .flow-box.stage2 .icon-wrapper {
+            background: linear-gradient(135deg, rgba(244, 114, 182, 0.2), rgba(236, 72, 153, 0.1));
+            color: #f472b6;
+            border: 1px solid rgba(244, 114, 182, 0.2);
+        }
+        .flow-box.stage2 .stage-badge { color: #f472b6; }
+
+        .flow-box.stage3 .icon-wrapper {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.1));
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+        .flow-box.stage3 .stage-badge { color: #c084fc; }
+
+        .flow-box.stage4 .icon-wrapper {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.1));
+            color: #fbbf24;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+        .flow-box.stage4 .stage-badge { color: #fbbf24; }
+
+        .flow-box.output .icon-wrapper {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .flow-box h3 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-main);
+        }
+
+        .flow-box p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .flow-arrow {
+            font-size: 18px;
+            color: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            align-self: center;
+        }
+
+        /* Parameters Grid */
+        .params-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 60px;
+            font-size: 18px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .param-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 24px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .param-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .param-flag {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            color: #c084fc;
+            background: rgba(168, 85, 247, 0.1);
+            padding: 5px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .param-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .param-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        /* Tool Section */
+        .tools-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.35s forwards;
+            opacity: 0;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 32px;
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .tool-card.ai {
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .tool-card.ai::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #a855f7;
+        }
+
+        .tool-card.citation {
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .tool-card.citation::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #3b82f6;
+        }
+
+        .tool-icon {
+            width: 64px;
+            height: 64px;
+            min-width: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .tool-card.ai .tool-icon {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.1));
+            color: #c084fc;
+        }
+
+        .tool-card.citation .tool-icon {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.1));
+            color: #60a5fa;
+        }
+
+        .tool-info h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .tool-card.ai .tool-info h3 { color: #c084fc; }
+        .tool-card.citation .tool-info h3 { color: #60a5fa; }
+
+        .tool-info p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .tool-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* Data Flow Diagram */
+        .diagram-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .code-window {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            max-width: 950px;
+            margin: 0 auto;
+        }
+
+        .window-header {
+            background: #0f172a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 16px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #22c55e; }
+
+        .file-name {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-content {
+            padding: 24px;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .ln { color: #475569; margin-right: 16px; user-select: none; }
+        .cmt { color: #64748b; font-style: italic; }
+        .step { color: #c084fc; }
+        .arrow { color: #475569; }
+        .highlight { color: #fbbf24; }
+        .data { color: #86efac; }
+        .cmd { color: #60a5fa; }
+        .stage-color1 { color: #818cf8; }
+        .stage-color2 { color: #f472b6; }
+        .stage-color3 { color: #c084fc; }
+        .stage-color4 { color: #fbbf24; }
+
+        /* Output Structure */
+        .output-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.45s forwards;
+            opacity: 0;
+        }
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .output-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .output-card h4 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tree-view {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .tree-view .folder { color: #fbbf24; }
+        .tree-view .file { color: #86efac; }
+        .tree-view .branch { color: #475569; }
+
+        /* Benefits */
+        .benefits-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.5s forwards;
+            opacity: 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 24px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.3s;
+        }
+
+        .benefit-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-size: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .benefit-text h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .benefit-text p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 120px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 60px;
+        }
+
+        .next-phase {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .next-phase:hover {
+            color: var(--primary);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+            .params-grid { grid-template-columns: repeat(3, 1fr); }
+            .tools-grid { grid-template-columns: 1fr; }
+            .output-grid { grid-template-columns: 1fr; }
+            .flow-wrapper { flex-direction: column; align-items: center; }
+            .flow-arrow { transform: rotate(90deg); margin: 8px 0; }
+            .command-card { padding: 32px 24px; }
+            .objective-content h4 { font-size: 16px; }
+        }
+
+        @media (max-width: 768px) {
+            .params-grid { grid-template-columns: repeat(2, 1fr); }
+            .header h1 { font-size: 42px; }
+            .benefits-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 0;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 80px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .modal-icon.stage1 { background: linear-gradient(135deg, rgba(129, 140, 248, 0.3), rgba(99, 102, 241, 0.2)); color: #818cf8; }
+        .modal-icon.stage2 { background: linear-gradient(135deg, rgba(244, 114, 182, 0.3), rgba(236, 72, 153, 0.2)); color: #f472b6; }
+        .modal-icon.stage3 { background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(139, 92, 246, 0.2)); color: #c084fc; }
+        .modal-icon.stage4 { background: linear-gradient(135deg, rgba(251, 191, 36, 0.3), rgba(245, 158, 11, 0.2)); color: #fbbf24; }
+        .modal-icon.output { background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2)); color: #34d399; }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px 28px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sample-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sample-code {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 11px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .sample-code .ln { color: #475569; margin-right: 12px; user-select: none; }
+        .sample-code .kw { color: #86efac; }
+        .sample-code .str { color: #fbbf24; }
+        .sample-code .num { color: #f472b6; }
+        .sample-code .cmt { color: #64748b; font-style: italic; }
+        .sample-code .key { color: #67e8f9; }
+        .sample-code .punct { color: #94a3b8; }
+
+        .modal-footer {
+            padding: 16px 28px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-footer i {
+            color: #c084fc;
+            font-size: 14px;
+        }
+
+        .modal-footer span {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Clickable flow boxes */
+        .flow-box.clickable {
+            cursor: pointer;
+        }
+
+        .flow-box.clickable::after {
+            content: 'Click for details';
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .flow-box.clickable:hover::after {
+            opacity: 1;
+        }
+
+        /* Article Preview */
+        .article-preview {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+
+        .article-preview h5 {
+            font-size: 16px;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .article-preview p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .citation-marker {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: help;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .stat-box .value {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .stat-box .label {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* File path highlight */
+        .file-path {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-top: 16px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 11px;
+            color: #34d399;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="phase-badge">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                Phase 6
+            </div>
+            <h1>AI Article Generation</h1>
+            <p>A 4-stage production pipeline that transforms outlines into polished HTML articles with intelligent question extraction, prompt templating, LLM-powered answers, and automatic citation injection.</p>
+        </header>
+
+        <!-- Objectives -->
+        <section class="command-section">
+            <div class="command-card">
+                <div class="command-label">
+                    <i class="fa-solid fa-bullseye"></i>
+                    Strategic Direction
+                </div>
+                <h2>Core Objectives</h2>
+                <div class="objectives-container">
+                    <ul class="objectives-list">
+                        <li class="objective-item">
+                            <div class="objective-bullet">1</div>
+                            <div class="objective-content">
+                                <h4><strong>Extract Questions</strong> from outline headings using intelligent selection rules</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">2</div>
+                            <div class="objective-content">
+                                <h4><strong>Generate Prompts</strong> with research context and citation triggers</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">3</div>
+                            <div class="objective-content">
+                                <h4><strong>Create Answers</strong> via LLM with optional inline citations</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">4</div>
+                            <div class="objective-content">
+                                <h4><strong>Merge & Convert</strong> answers into final HTML with proper formatting</h4>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Flow - 4 Stages -->
+        <section class="flow-section">
+            <div class="flow-wrapper">
+                <div class="flow-box stage1 clickable" onclick="openModal('modal-stage1')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-list-check"></i>
+                        <span class="stage-badge">S1</span>
+                    </div>
+                    <h3>Questions</h3>
+                    <p>Extract H2-H4 headings into JSON questions with breadcrumbs.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box stage2 clickable" onclick="openModal('modal-stage2')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-file-code"></i>
+                        <span class="stage-badge">S2</span>
+                    </div>
+                    <h3>Prompts</h3>
+                    <p>Render answer.yml template with context and arguments.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box stage3 clickable" onclick="openModal('modal-stage3')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-brain"></i>
+                        <span class="stage-badge">S3</span>
+                    </div>
+                    <h3>Answers</h3>
+                    <p>LLM generates answers with citation injection logic.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box stage4 clickable" onclick="openModal('modal-stage4')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-code"></i>
+                        <span class="stage-badge">S4</span>
+                    </div>
+                    <h3>HTML</h3>
+                    <p>Merge answers and convert Markdown to HTML.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box output clickable" onclick="openModal('modal-output')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-file-lines"></i>
+                    </div>
+                    <h3>Article</h3>
+                    <p>Final .md and .html files ready for WordPress.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parameters -->
+        <section class="params-section">
+            <h2 class="section-title">Execution Parameters</h2>
+            <p class="section-subtitle">Configure the pipeline for single keyword, parallel batch, or full production runs.</p>
+
+            <div class="params-grid">
+                <div class="param-card">
+                    <div class="param-flag">--parallel</div>
+                    <div class="param-value">5</div>
+                    <div class="param-label">Concurrent worker threads</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--arguments</div>
+                    <div class="param-value"><i class="fa-solid fa-quote-left" style="font-size: 18px;"></i></div>
+                    <div class="param-label">"Included citation" trigger</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">-k</div>
+                    <div class="param-value">KW</div>
+                    <div class="param-label">Process single keyword</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--overwrite</div>
+                    <div class="param-value"><i class="fa-solid fa-rotate" style="font-size: 18px;"></i></div>
+                    <div class="param-label">Replace existing files</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">model</div>
+                    <div class="param-value">Gemini</div>
+                    <div class="param-label">gemini-3-flash-preview</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Integration -->
+        <section class="tools-section">
+            <h2 class="section-title">Generation Stack</h2>
+            <p class="section-subtitle">Template-driven prompt generation with intelligent LLM orchestration.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card ai">
+                    <div class="tool-icon">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3>LLM Engine (OpenRouter)</h3>
+                        <p>Uses Gemini Flash via OpenRouter API for rapid content generation. Processes each question independently with full research context and caching support.</p>
+                        <div class="tool-features">
+                            <span class="feature-tag">Prompt Caching</span>
+                            <span class="feature-tag">Thai Language</span>
+                            <span class="feature-tag">300-500 words/section</span>
+                            <span class="feature-tag">Real-time Progress</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card citation">
+                    <div class="tool-icon">
+                        <i class="fa-solid fa-link"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3>Citation Injection</h3>
+                        <p>Triggered by --arguments flag. Extracts ONE most relevant citation from research context and formats as inline <code>&lt;citation&gt;</code> tags converted to <code>&lt;em&gt;</code> in HTML.</p>
+                        <div class="tool-features">
+                            <span class="feature-tag">Conditional Trigger</span>
+                            <span class="feature-tag">Source Extraction</span>
+                            <span class="feature-tag">Inline Placement</span>
+                            <span class="feature-tag">E-E-A-T Signals</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Execution Flow Diagram -->
+        <section class="diagram-section">
+            <h2 class="section-title">Execution Flow</h2>
+            <p class="section-subtitle">Complete 4-stage pipeline with file inputs and outputs at each step.</p>
+
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    </div>
+                    <span class="file-name"><i class="fa-solid fa-terminal"></i> postplan-pipeline.sh</span>
+                </div>
+                <div class="window-content">
+                    <div><span class="ln"> 1</span><span class="cmt"># Phase 6 - 4-Stage Article Generation Pipeline</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="cmd">uv run</span> <span class="step">-m bankcontent.postplan.main</span> \</div>
+                    <div><span class="ln"> 4</span>    <span class="highlight">--parallel</span> <span class="data">5</span> \</div>
+                    <div><span class="ln"> 5</span>    <span class="highlight">--arguments</span> <span class="data">"Included citation"</span></div>
+                    <div><span class="ln"> 6</span></div>
+                    <div><span class="ln"> 7</span><span class="cmt"># ═══════════════════════════════════════════════════════════════</span></div>
+                    <div><span class="ln"> 8</span></div>
+                    <div><span class="ln"> 9</span><span class="stage-color1">STAGE 1: Questions</span> <span class="cmt">(04_questions.py)</span></div>
+                    <div><span class="ln">10</span>    <span class="arrow">├──</span> <span class="cmt">Input:</span>  <span class="data">{kw}-outline-optimized.md</span></div>
+                    <div><span class="ln">11</span>    <span class="arrow">├──</span> <span class="cmt">Process:</span> Extract H2-H4 → selection rules → breadcrumbs</div>
+                    <div><span class="ln">12</span>    <span class="arrow">└──</span> <span class="cmt">Output:</span> <span class="data">{kw}-outline.json</span></div>
+                    <div><span class="ln">13</span></div>
+                    <div><span class="ln">14</span><span class="stage-color2">STAGE 2: Prompts</span> <span class="cmt">(05_answers.py --generate-prompts-only)</span></div>
+                    <div><span class="ln">15</span>    <span class="arrow">├──</span> <span class="cmt">Input:</span>  <span class="data">outline.json + research-optimized.md + answer.yml</span></div>
+                    <div><span class="ln">16</span>    <span class="arrow">├──</span> <span class="cmt">Replace:</span> {CONTEXT}, {QUESTION}, {ARGUMENTS}</div>
+                    <div><span class="ln">17</span>    <span class="arrow">└──</span> <span class="cmt">Output:</span> <span class="data">prompts/{id}-prompt.txt</span> <span class="cmt">(N files)</span></div>
+                    <div><span class="ln">18</span></div>
+                    <div><span class="ln">19</span><span class="stage-color3">STAGE 3: Answers</span> <span class="cmt">(05_answers.py --answer all)</span></div>
+                    <div><span class="ln">20</span>    <span class="arrow">├──</span> <span class="cmt">Input:</span>  <span class="data">prompts/*.txt + LLM API</span></div>
+                    <div><span class="ln">21</span>    <span class="arrow">├──</span> <span class="cmt">Process:</span> Call LLM → inject <span class="highlight">&lt;citation&gt;</span> if triggered</div>
+                    <div><span class="ln">22</span>    <span class="arrow">└──</span> <span class="cmt">Output:</span> <span class="data">answers/{id}-answer.md</span></div>
+                    <div><span class="ln">23</span></div>
+                    <div><span class="ln">24</span><span class="stage-color4">STAGE 4: HTML</span> <span class="cmt">(06_wordpress.py --html)</span></div>
+                    <div><span class="ln">25</span>    <span class="arrow">├──</span> <span class="cmt">Input:</span>  <span class="data">answers/*.md + outline.json</span></div>
+                    <div><span class="ln">26</span>    <span class="arrow">├──</span> <span class="cmt">Process:</span> Merge → clean citations → Markdown→HTML</div>
+                    <div><span class="ln">27</span>    <span class="arrow">└──</span> <span class="cmt">Output:</span> <span class="data">{kw}.md</span> + <span class="data">{kw}.html</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Structure -->
+        <section class="output-section">
+            <h2 class="section-title">Output Structure</h2>
+            <p class="section-subtitle">Complete file organization with intermediate artifacts at each stage.</p>
+
+            <div class="output-grid">
+                <div class="output-card">
+                    <h4><i class="fa-regular fa-folder-open"></i> Directory Structure</h4>
+                    <div class="tree-view">
+                        <div><span class="folder">output/research/{keyword}/</span></div>
+                        <div><span class="branch">├── </span><span class="file">{kw}-outline-optimized.md</span> <span class="cmt">← input</span></div>
+                        <div><span class="branch">├── </span><span class="file">{kw}-research-optimized.md</span> <span class="cmt">← input</span></div>
+                        <div><span class="branch">├── </span><span class="file">{kw}-outline.json</span> <span class="cmt">← Stage 1</span></div>
+                        <div><span class="branch">├── </span><span class="folder">prompts/</span> <span class="cmt">← Stage 2</span></div>
+                        <div><span class="branch">│   ├── </span><span class="file">1-prompt.txt</span></div>
+                        <div><span class="branch">│   └── </span><span class="file">...</span></div>
+                        <div><span class="branch">├── </span><span class="folder">answers/</span> <span class="cmt">← Stage 3</span></div>
+                        <div><span class="branch">│   ├── </span><span class="file">1-answer.md</span></div>
+                        <div><span class="branch">│   └── </span><span class="file">...</span></div>
+                        <div><span class="branch">├── </span><span class="file">{kw}.md</span> <span class="cmt">← Stage 4</span></div>
+                        <div><span class="branch">└── </span><span class="file">{kw}.html</span> <span class="cmt">← Final</span></div>
+                    </div>
+                </div>
+
+                <div class="output-card">
+                    <h4><i class="fa-solid fa-file-code"></i> Citation Flow</h4>
+                    <div class="tree-view">
+                        <div><span class="file">1. Trigger Check</span></div>
+                        <div><span class="cmt">   └─ --arguments contains "Included citation"?</span></div>
+                        <div style="height: 8px;"></div>
+                        <div><span class="file">2. Source Extraction</span></div>
+                        <div><span class="cmt">   └─ Find relevant source in research context</span></div>
+                        <div style="height: 8px;"></div>
+                        <div><span class="file">3. LLM Output</span></div>
+                        <div><span class="cmt">   └─ &lt;citation&gt;(Source, Year)&lt;/citation&gt;</span></div>
+                        <div style="height: 8px;"></div>
+                        <div><span class="file">4. HTML Conversion</span></div>
+                        <div><span class="cmt">   └─ &lt;em&gt;(Source, Year)&lt;/em&gt;</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="benefits-section">
+            <h2 class="section-title">Pipeline Advantages</h2>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Parallel Processing</h4>
+                        <p>Process multiple keywords simultaneously with --parallel N flag. Each keyword runs through all 4 stages independently with thread-safe progress tracking.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Smart Question Selection</h4>
+                        <p>Intelligent heading extraction with rules: always include leaf nodes, H3/H4, and question-like H2s (ends with ?, contains WH-words, Thai interrogatives).</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Conditional Citations</h4>
+                        <p>Citation injection only when both conditions met: "Included citation" in arguments AND citable sources exist in context. Clean separation of concerns.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Resume Capability</h4>
+                        <p>Skips already-generated answers unless --overwrite is set. Real-time progress shows completed vs pending questions per keyword.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="9_deep-research-processing.html" class="next-phase">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <span>Previous: Deep Research Processing</span>
+            </a>
+            <span style="margin: 0 24px; color: rgba(255,255,255,0.1);">|</span>
+            <a href="11_pick-author.html" class="next-phase">
+                <span>Next: WordPress Publishing</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <p style="margin-top: 16px; color: rgba(255,255,255,0.2); font-size: 12px;">&copy; 2025 Privato Content AI System</p>
+        </footer>
+    </div>
+
+    <!-- Modal 1: Stage 1 Questions -->
+    <div class="modal-overlay" id="modal-stage1" onclick="closeModal(event, 'modal-stage1')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon stage1"><i class="fa-solid fa-list-check"></i></div>
+                    <div>
+                        <h3 class="modal-title">Stage 1: Questions</h3>
+                        <p class="modal-subtitle">04_questions.py - Heading extraction</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-stage1')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-filter"></i> Selection Rules</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="cmt"># Always include:</span></div>
+                    <div><span class="ln">2</span><span class="kw">✓ Leaf nodes</span> <span class="cmt">(headings with no children)</span></div>
+                    <div><span class="ln">3</span><span class="kw">✓ All H3/H4</span> <span class="cmt">(detailed subtopics)</span></div>
+                    <div><span class="ln">4</span></div>
+                    <div><span class="ln">5</span><span class="cmt"># Conditionally include H2 if:</span></div>
+                    <div><span class="ln">6</span><span class="str">• Ends with "?"</span></div>
+                    <div><span class="ln">7</span><span class="str">• Contains WH-words (What, How, Why...)</span></div>
+                    <div><span class="ln">8</span><span class="str">• Thai: "คืออะไร", "วิธี", "ทำไม"</span></div>
+                </div>
+                <div class="sample-label" style="margin-top: 20px;"><i class="fa-solid fa-code"></i> Output JSON</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="punct">[</span></div>
+                    <div><span class="ln">2</span>  <span class="punct">{</span></div>
+                    <div><span class="ln">3</span>    <span class="key">"id"</span><span class="punct">:</span> <span class="num">1</span><span class="punct">,</span></div>
+                    <div><span class="ln">4</span>    <span class="key">"breadcrumb"</span><span class="punct">:</span> <span class="str">"หลังคาใส > ประเภท"</span><span class="punct">,</span></div>
+                    <div><span class="ln">5</span>    <span class="key">"question"</span><span class="punct">:</span> <span class="str">"หลังคาใสมีกี่แบบ?"</span><span class="punct">,</span></div>
+                    <div><span class="ln">6</span>    <span class="key">"depth"</span><span class="punct">:</span> <span class="num">3</span></div>
+                    <div><span class="ln">7</span>  <span class="punct">}</span></div>
+                    <div><span class="ln">8</span><span class="punct">]</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>Breadcrumbs help LLM understand hierarchical context</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Stage 2 Prompts -->
+    <div class="modal-overlay" id="modal-stage2" onclick="closeModal(event, 'modal-stage2')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon stage2"><i class="fa-solid fa-file-code"></i></div>
+                    <div>
+                        <h3 class="modal-title">Stage 2: Prompts</h3>
+                        <p class="modal-subtitle">Template rendering with answer.yml</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-stage2')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-file-alt"></i> Template Placeholders</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="key">{CONTEXT}</span> <span class="cmt">→ research-optimized.md content</span></div>
+                    <div><span class="ln">2</span><span class="key">{QUESTION}</span> <span class="cmt">→ specific question from JSON</span></div>
+                    <div><span class="ln">3</span><span class="key">{ARGUMENTS}</span> <span class="cmt">→ "Included citation"</span></div>
+                </div>
+                <div class="sample-label" style="margin-top: 20px;"><i class="fa-solid fa-scroll"></i> Generated Prompt Structure</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="str">KEYWORD:</span> หลังคาใส</div>
+                    <div><span class="ln"> 2</span><span class="str">QUESTION_ID:</span> 1</div>
+                    <div><span class="ln"> 3</span></div>
+                    <div><span class="ln"> 4</span><span class="punct">&lt;prompt&gt;</span></div>
+                    <div><span class="ln"> 5</span>  <span class="key">&lt;role&gt;</span>Expert answer-writer<span class="key">&lt;/role&gt;</span></div>
+                    <div><span class="ln"> 6</span>  <span class="key">&lt;rules&gt;</span></div>
+                    <div><span class="ln"> 7</span>    <span class="cmt">citations:</span></div>
+                    <div><span class="ln"> 8</span>      <span class="str">trigger_flag: "Included citation"</span></div>
+                    <div><span class="ln"> 9</span>  <span class="key">&lt;/rules&gt;</span></div>
+                    <div><span class="ln">10</span>  <span class="key">&lt;input&gt;</span></div>
+                    <div><span class="ln">11</span>    <span class="key">&lt;context&gt;</span>{CONTEXT}<span class="key">&lt;/context&gt;</span></div>
+                    <div><span class="ln">12</span>    <span class="key">&lt;arguments&gt;</span>{ARGUMENTS}<span class="key">&lt;/arguments&gt;</span></div>
+                    <div><span class="ln">13</span>  <span class="key">&lt;/input&gt;</span></div>
+                    <div><span class="ln">14</span><span class="punct">&lt;/prompt&gt;</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-gear"></i>
+                <span>One prompt file generated per question (prompts/{id}-prompt.txt)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Stage 3 Answers -->
+    <div class="modal-overlay" id="modal-stage3" onclick="closeModal(event, 'modal-stage3')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon stage3"><i class="fa-solid fa-brain"></i></div>
+                    <div>
+                        <h3 class="modal-title">Stage 3: Answers</h3>
+                        <p class="modal-subtitle">LLM generation with citations</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-stage3')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-robot"></i> LLM Processing</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="cmt"># Real-time progress output</span></div>
+                    <div><span class="ln">2</span><span class="kw">[หลังคาใส]</span> Q1/27 <span class="str">💬 หลังคาใสมีกี่แบบ?</span></div>
+                    <div><span class="ln">3</span><span class="kw">[หลังคาใส]</span> Q2/27 <span class="cmt">⏭️ Skipped (exists)</span></div>
+                    <div><span class="ln">4</span><span class="kw">[หลังคาใส]</span> Q3/27 <span class="str">💬 วัสดุอะคริลิก...</span></div>
+                </div>
+                <div class="sample-label" style="margin-top: 20px;"><i class="fa-solid fa-quote-left"></i> Answer with Citation</div>
+                <div class="article-preview">
+                    <p>หลังคาใสแบ่งออกเป็น 5 ประเภทหลัก ได้แก่ <strong>อะคริลิก, โพลีคาร์บอเนต, ไฟเบอร์กลาส...</strong> แต่ละประเภทมีคุณสมบัติที่แตกต่างกัน <span class="citation-marker">&lt;citation&gt;(Shinkolite™ Acrylic Sheets, Mitsubishi Chemical, 2023)&lt;/citation&gt;</span></p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="value">~27</div>
+                        <div class="label">Questions/Keyword</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="value">300-500</div>
+                        <div class="label">Words/Answer</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="value">1</div>
+                        <div class="label">Citation/Answer</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Uses Gemini Flash via OpenRouter with prompt caching</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Stage 4 HTML -->
+    <div class="modal-overlay" id="modal-stage4" onclick="closeModal(event, 'modal-stage4')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon stage4"><i class="fa-solid fa-code"></i></div>
+                    <div>
+                        <h3 class="modal-title">Stage 4: HTML</h3>
+                        <p class="modal-subtitle">06_wordpress.py - Merge & convert</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-stage4')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-object-group"></i> Merge Process</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="cmt"># MarkdownMerger steps:</span></div>
+                    <div><span class="ln">2</span><span class="kw">1.</span> Extract H1 from outline-optimized.md</div>
+                    <div><span class="ln">3</span><span class="kw">2.</span> For each question in outline.json:</div>
+                    <div><span class="ln">4</span>     <span class="str">• Output breadcrumb as H2-H4</span></div>
+                    <div><span class="ln">5</span>     <span class="str">• Load answers/{id}-answer.md</span></div>
+                    <div><span class="ln">6</span>     <span class="str">• Clean standalone citations</span></div>
+                    <div><span class="ln">7</span><span class="kw">3.</span> Convert Markdown → HTML</div>
+                </div>
+                <div class="sample-label" style="margin-top: 20px;"><i class="fa-solid fa-wand-magic-sparkles"></i> Citation Cleanup</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="cmt"># Input (from LLM):</span></div>
+                    <div><span class="ln">2</span>...คุณสมบัติที่ดี</div>
+                    <div><span class="ln">3</span><span class="str">&lt;citation&gt;(Source, 2023)&lt;/citation&gt;</span></div>
+                    <div><span class="ln">4</span></div>
+                    <div><span class="ln">5</span><span class="cmt"># Output (HTML):</span></div>
+                    <div><span class="ln">6</span>...คุณสมบัติที่ดี <span class="kw">&lt;em&gt;</span>(Source, 2023)<span class="kw">&lt;/em&gt;</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-file-export"></i>
+                <span>Outputs both .md and .html for WordPress compatibility</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Final Output -->
+    <div class="modal-overlay" id="modal-output" onclick="closeModal(event, 'modal-output')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon output"><i class="fa-solid fa-file-lines"></i></div>
+                    <div>
+                        <h3 class="modal-title">Final Article</h3>
+                        <p class="modal-subtitle">WordPress-ready output</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-output')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-code"></i> HTML Structure</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="punct">&lt;</span><span class="kw">h1</span><span class="punct">&gt;</span>หลังคาใส<span class="punct">&lt;/</span><span class="kw">h1</span><span class="punct">&gt;</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="punct">&lt;</span><span class="kw">h2</span><span class="punct">&gt;</span>หลังคาใสมีกี่แบบ<span class="punct">&lt;/</span><span class="kw">h2</span><span class="punct">&gt;</span></div>
+                    <div><span class="ln"> 4</span><span class="punct">&lt;</span><span class="kw">p</span><span class="punct">&gt;</span>หลังคาใสแบ่งออกเป็น 5 ประเภท...</div>
+                    <div><span class="ln"> 5</span>  <span class="punct">&lt;</span><span class="str">em</span><span class="punct">&gt;</span>(Shinkolite™, 2023)<span class="punct">&lt;/</span><span class="str">em</span><span class="punct">&gt;</span></div>
+                    <div><span class="ln"> 6</span><span class="punct">&lt;/</span><span class="kw">p</span><span class="punct">&gt;</span></div>
+                    <div><span class="ln"> 7</span></div>
+                    <div><span class="ln"> 8</span><span class="punct">&lt;</span><span class="kw">h3</span><span class="punct">&gt;</span>1. อะคริลิก<span class="punct">&lt;/</span><span class="kw">h3</span><span class="punct">&gt;</span></div>
+                    <div><span class="ln"> 9</span><span class="punct">&lt;</span><span class="kw">p</span><span class="punct">&gt;</span>วัสดุอะคริลิกมีความใส...<span class="punct">&lt;/</span><span class="kw">p</span><span class="punct">&gt;</span></div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="value" style="color: #34d399;">2,500+</div>
+                        <div class="label">Words/Article</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="value" style="color: #60a5fa;">~8</div>
+                        <div class="label">Citations</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="value" style="color: #fbbf24;">WP</div>
+                        <div class="label">Ready</div>
+                    </div>
+                </div>
+                <div class="file-path">
+                    output/research/{keyword}/{keyword}.html
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-rocket"></i>
+                <span>Ready for Phase 7: SEO Optimization (First Sentence + Meta)</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event, modalId) {
+            if (event.target === event.currentTarget || event.currentTarget.classList.contains('modal-close')) {
+                document.getElementById(modalId).classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>

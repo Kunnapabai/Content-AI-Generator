@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 3.1: SEO Outline Generation | Privato Content</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --outline: #8b5cf6;
+            --koray: #ec4899;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, transparent 40%),
+                        radial-gradient(circle at bottom left, #312e81, transparent 40%),
+                        linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 100px;
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #a78bfa;
+            margin-bottom: 32px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+        }
+
+        .header h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Objectives Styling */
+        .objectives-container {
+            margin-top: 32px;
+            max-width: 800px;
+        }
+
+        .objectives-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .objective-item:last-child {
+            border-bottom: none;
+        }
+
+        .objective-bullet {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            margin-top: 2px;
+        }
+
+        .objective-content {
+            flex: 1;
+        }
+
+        .objective-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.5;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .command-section {
+            margin-bottom: 80px;
+            animation: fadeIn 1s ease 0.15s forwards;
+            opacity: 0;
+        }
+
+        .command-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .command-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .command-card h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* Flow Section */
+        .flow-section {
+            margin: 0 0 100px;
+            animation: fadeIn 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .flow-wrapper {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .flow-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px 32px;
+            text-align: center;
+            width: 220px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+        }
+
+        .flow-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.4);
+        }
+
+        .flow-box:hover::before {
+            opacity: 1;
+        }
+
+        .icon-wrapper {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            position: relative;
+        }
+
+        .flow-box.input .icon-wrapper {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.1));
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .flow-box.serp .icon-wrapper {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .flow-box.llm .icon-wrapper {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.1));
+            color: #f472b6;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .flow-box.process .icon-wrapper {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(2, 132, 199, 0.1));
+            color: #38bdf8;
+            border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .flow-box.output .icon-wrapper {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.1));
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .flow-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .flow-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            align-self: center;
+        }
+
+        /* Parameters Grid */
+        .params-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 60px;
+            font-size: 18px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .param-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .param-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .param-flag {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 14px;
+            color: #67e8f9;
+            background: rgba(103, 232, 249, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .param-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .param-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Koray Framework Section */
+        .framework-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.35s forwards;
+            opacity: 0;
+        }
+
+        .framework-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .framework-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .framework-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .framework-card.macro {
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .framework-card.macro::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #8b5cf6;
+        }
+
+        .framework-card.bridge {
+            border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .framework-card.bridge::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #0ea5e9;
+        }
+
+        .framework-card.antonym {
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .framework-card.antonym::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #ec4899;
+        }
+
+        .framework-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .framework-card.macro .framework-icon {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.1));
+            color: #a78bfa;
+        }
+
+        .framework-card.bridge .framework-icon {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(2, 132, 199, 0.1));
+            color: #38bdf8;
+        }
+
+        .framework-card.antonym .framework-icon {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.1));
+            color: #f472b6;
+        }
+
+        .framework-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .framework-card.macro h3 { color: #a78bfa; }
+        .framework-card.bridge h3 { color: #38bdf8; }
+        .framework-card.antonym h3 { color: #f472b6; }
+
+        .framework-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .framework-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .framework-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* Heading Structure Section */
+        .structure-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .code-window {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .window-header {
+            background: #0f172a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 16px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #22c55e; }
+
+        .file-name {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-content {
+            padding: 24px;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .ln { color: #475569; margin-right: 16px; user-select: none; }
+        .cmt { color: #64748b; font-style: italic; }
+        .h1-tag { color: #f472b6; font-weight: 700; }
+        .h2-tag { color: #a78bfa; }
+        .h3-tag { color: #38bdf8; }
+        .highlight { color: #fbbf24; }
+        .bridge { color: #22d3ee; }
+
+        /* Output Structure */
+        .output-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.45s forwards;
+            opacity: 0;
+        }
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .output-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .output-card h4 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tree-view {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .tree-view .folder { color: #fbbf24; }
+        .tree-view .file { color: #86efac; }
+        .tree-view .branch { color: #475569; }
+
+        /* Validation Checklist */
+        .validation-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.5s forwards;
+            opacity: 0;
+        }
+
+        .validation-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .validation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 24px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.3s;
+        }
+
+        .validation-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-size: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .validation-text h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .validation-text p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 120px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 60px;
+        }
+
+        .next-phase {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .next-phase:hover {
+            color: var(--primary);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+            .params-grid { grid-template-columns: repeat(2, 1fr); }
+            .framework-grid { grid-template-columns: 1fr; }
+            .output-grid { grid-template-columns: 1fr; }
+            .flow-wrapper { flex-direction: column; align-items: center; }
+            .flow-arrow { transform: rotate(90deg); margin: 8px 0; }
+            .command-card { padding: 32px 24px; }
+            .objective-content h4 { font-size: 16px; }
+        }
+
+        @media (max-width: 768px) {
+            .params-grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 42px; }
+            .validation-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 0;
+            max-width: 700px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 80px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .modal-icon.input { background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(79, 70, 229, 0.2)); color: #818cf8; }
+        .modal-icon.serp { background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2)); color: #34d399; }
+        .modal-icon.llm { background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.2)); color: #f472b6; }
+        .modal-icon.process { background: linear-gradient(135deg, rgba(14, 165, 233, 0.3), rgba(2, 132, 199, 0.2)); color: #38bdf8; }
+        .modal-icon.output { background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(124, 58, 237, 0.2)); color: #a78bfa; }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px 28px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sample-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sample-code {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .sample-code .ln { color: #475569; margin-right: 12px; user-select: none; }
+        .sample-code .kw { color: #86efac; }
+        .sample-code .str { color: #fbbf24; }
+        .sample-code .num { color: #f472b6; }
+        .sample-code .cmt { color: #64748b; font-style: italic; }
+        .sample-code .key { color: #67e8f9; }
+        .sample-code .punct { color: #94a3b8; }
+
+        .modal-footer {
+            padding: 16px 28px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-footer i {
+            color: #67e8f9;
+            font-size: 14px;
+        }
+
+        .modal-footer span {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Clickable flow boxes */
+        .flow-box.clickable {
+            cursor: pointer;
+        }
+
+        .flow-box.clickable::after {
+            content: 'Click to view sample';
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .flow-box.clickable:hover::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="phase-badge">
+                <i class="fa-solid fa-sitemap"></i>
+                Phase 3.1
+            </div>
+            <h1>SEO Outline Generation</h1>
+            <p>Automated batch generation of Koray-aligned SEO outlines, transforming SERP analysis into strategic heading hierarchies optimized for search intent and semantic structure.</p>
+        </header>
+
+        <!-- Objectives -->
+        <section class="command-section">
+            <div class="command-card">
+                <div class="command-label">
+                    <i class="fa-solid fa-bullseye"></i>
+                    Strategic Direction
+                </div>
+                <h2>Core Objectives</h2>
+                <div class="objectives-container">
+                    <ul class="objectives-list">
+                        <!-- Objective 1 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">1</div>
+                            <div class="objective-content">
+                                <h4><strong>Transform SERP Data</strong> into strategic heading hierarchies (H1-H4)</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 2 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">2</div>
+                            <div class="objective-content">
+                                <h4><strong>Apply Koray Methodology</strong> for semantic content network alignment</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 3 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">3</div>
+                            <div class="objective-content">
+                                <h4><strong>Enforce Single Macro Context</strong> per page with contextual bridges</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 4 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">4</div>
+                            <div class="objective-content">
+                                <h4><strong>Generate Answer-First Outlines</strong> with FAQ and opportunity gaps</h4>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Flow -->
+        <section class="flow-section">
+            <div class="flow-wrapper">
+                <div class="flow-box input clickable" onclick="openModal('modal-input')">
+                    <div class="icon-wrapper">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </div>
+                    <h3>Keywords File</h3>
+                    <p>Target keywords from keywords.txt seed list.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box serp clickable" onclick="openModal('modal-serp')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-chart-simple"></i>
+                    </div>
+                    <h3>SERP Analysis</h3>
+                    <p>Read YAML with entity signals & intent data.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box llm clickable" onclick="openModal('modal-llm')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-brain"></i>
+                    </div>
+                    <h3>OpenRouter LLM</h3>
+                    <p>Generate headings via Koray-aligned prompt.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box process clickable" onclick="openModal('modal-process')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3>Batch Processing</h3>
+                    <p>Concurrent execution with checkpoint support.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box output clickable" onclick="openModal('modal-output')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-heading"></i>
+                    </div>
+                    <h3>HTML Outlines</h3>
+                    <p>Optimized heading structure per keyword.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parameters -->
+        <section class="params-section">
+            <h2 class="section-title">Configuration Parameters</h2>
+            <p class="section-subtitle">Fine-tune the batch generation process with these command-line options.</p>
+
+            <div class="params-grid">
+                <div class="param-card">
+                    <div class="param-flag">--max-concurrency</div>
+                    <div class="param-value">10</div>
+                    <div class="param-label">Parallel OpenRouter API calls</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--chunk-size</div>
+                    <div class="param-value">500</div>
+                    <div class="param-label">Keywords per checkpoint chunk</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--timeout</div>
+                    <div class="param-value">90s</div>
+                    <div class="param-label">HTTP timeout for each request</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--resume-from</div>
+                    <div class="param-value"><i class="fa-solid fa-rotate"></i></div>
+                    <div class="param-label">Continue from last checkpoint</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Koray Framework -->
+        <section class="framework-section">
+            <h2 class="section-title">Koray SEO Framework</h2>
+            <p class="section-subtitle">Three pillars of semantic content structure for search-optimized outlines.</p>
+
+            <div class="framework-grid">
+                <div class="framework-card macro">
+                    <div class="framework-icon">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h3>Macro Context</h3>
+                    <p>Exactly ONE central topic per page. The H1 establishes the single macro context that all other headings must support without drifting.</p>
+                    <div class="framework-tags">
+                        <span class="framework-tag">Single H1</span>
+                        <span class="framework-tag">Central Entity</span>
+                        <span class="framework-tag">Source Context</span>
+                        <span class="framework-tag">Root Node</span>
+                    </div>
+                </div>
+
+                <div class="framework-card bridge">
+                    <div class="framework-icon">
+                        <i class="fa-solid fa-right-left"></i>
+                    </div>
+                    <h3>Contextual Bridge</h3>
+                    <p>A required H2 that transitions from informational intent to decision/solution intent. Connects main content to monetization topics.</p>
+                    <div class="framework-tags">
+                        <span class="framework-tag">Info to Action</span>
+                        <span class="framework-tag">Decision Point</span>
+                        <span class="framework-tag">DIY vs Pro</span>
+                        <span class="framework-tag">Selection Guide</span>
+                    </div>
+                </div>
+
+                <div class="framework-card antonym">
+                    <div class="framework-icon">
+                        <i class="fa-solid fa-scale-balanced"></i>
+                    </div>
+                    <h3>Antonym Context</h3>
+                    <p>At least ONE supplementary H2 presenting the opposite perspective: drawbacks, limitations, or precautions for balanced coverage.</p>
+                    <div class="framework-tags">
+                        <span class="framework-tag">Drawbacks</span>
+                        <span class="framework-tag">Limitations</span>
+                        <span class="framework-tag">Precautions</span>
+                        <span class="framework-tag">E-E-A-T Signal</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Heading Structure Diagram -->
+        <section class="structure-section">
+            <h2 class="section-title">Output Heading Structure</h2>
+            <p class="section-subtitle">Koray-aligned HTML heading hierarchy generated per keyword.</p>
+
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    </div>
+                    <span class="file-name"><i class="fa-solid fa-heading"></i> {keyword}-outline-optimized.md</span>
+                </div>
+                <div class="window-content">
+                    <div><span class="ln"> 1</span><span class="h1-tag">&lt;h1&gt;</span><span class="highlight">หลังคา UPVC คืออะไร ข้อดี-ข้อเสีย และราคา 2025</span><span class="h1-tag">&lt;/h1&gt;</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="cmt">&lt;!-- Early Answer Zone --&gt;</span></div>
+                    <div><span class="ln"> 4</span><span class="h2-tag">&lt;h2&gt;</span>หลังคา UPVC คืออะไร?<span class="h2-tag">&lt;/h2&gt;</span></div>
+                    <div><span class="ln"> 5</span></div>
+                    <div><span class="ln"> 6</span><span class="cmt">&lt;!-- Core Content (High Prominence) --&gt;</span></div>
+                    <div><span class="ln"> 7</span><span class="h2-tag">&lt;h2&gt;</span>ข้อดีของหลังคา UPVC ที่ควรรู้<span class="h2-tag">&lt;/h2&gt;</span></div>
+                    <div><span class="ln"> 8</span><span class="h3-tag">   &lt;h3&gt;</span>ทนทานต่อความร้อนและรังสี UV<span class="h3-tag">&lt;/h3&gt;</span></div>
+                    <div><span class="ln"> 9</span><span class="h3-tag">   &lt;h3&gt;</span>น้ำหนักเบา ติดตั้งง่าย<span class="h3-tag">&lt;/h3&gt;</span></div>
+                    <div><span class="ln">10</span><span class="h3-tag">   &lt;h3&gt;</span>ไม่ลามไฟ ปลอดภัย<span class="h3-tag">&lt;/h3&gt;</span></div>
+                    <div><span class="ln">11</span></div>
+                    <div><span class="ln">12</span><span class="h2-tag">&lt;h2&gt;</span>ประเภทหลังคา UPVC มีกี่แบบ<span class="h2-tag">&lt;/h2&gt;</span></div>
+                    <div><span class="ln">13</span><span class="h3-tag">   &lt;h3&gt;</span>แบบลอนใส<span class="h3-tag">&lt;/h3&gt;</span></div>
+                    <div><span class="ln">14</span><span class="h3-tag">   &lt;h3&gt;</span>แบบลอนทึบ<span class="h3-tag">&lt;/h3&gt;</span></div>
+                    <div><span class="ln">15</span></div>
+                    <div><span class="ln">16</span><span class="cmt">&lt;!-- Contextual Bridge --&gt;</span></div>
+                    <div><span class="ln">17</span><span class="h2-tag">&lt;h2&gt;</span><span class="bridge">ติดตั้งหลังคา UPVC เองได้ไหม หรือควรใช้ช่าง</span><span class="h2-tag">&lt;/h2&gt;</span></div>
+                    <div><span class="ln">18</span></div>
+                    <div><span class="ln">19</span><span class="cmt">&lt;!-- Supplementary (Antonym Context) --&gt;</span></div>
+                    <div><span class="ln">20</span><span class="h2-tag">&lt;h2&gt;</span>ข้อเสียและข้อจำกัดของหลังคา UPVC<span class="h2-tag">&lt;/h2&gt;</span></div>
+                    <div><span class="ln">21</span></div>
+                    <div><span class="ln">22</span><span class="h2-tag">&lt;h2&gt;</span>ราคาหลังคา UPVC ต่อตารางเมตร<span class="h2-tag">&lt;/h2&gt;</span></div>
+                    <div><span class="ln">23</span></div>
+                    <div><span class="ln">24</span><span class="cmt">&lt;!-- FAQ Section --&gt;</span></div>
+                    <div><span class="ln">25</span><span class="h2-tag">&lt;h2&gt;</span>คำถามที่พบบ่อยเกี่ยวกับหลังคา UPVC<span class="h2-tag">&lt;/h2&gt;</span></div>
+                    <div><span class="ln">26</span><span class="h3-tag">   &lt;h3&gt;</span>หลังคา UPVC กันร้อนได้จริงไหม?<span class="h3-tag">&lt;/h3&gt;</span></div>
+                    <div><span class="ln">27</span><span class="h3-tag">   &lt;h3&gt;</span>อายุการใช้งานหลังคา UPVC กี่ปี?<span class="h3-tag">&lt;/h3&gt;</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Structure -->
+        <section class="output-section">
+            <h2 class="section-title">Output Structure</h2>
+            <p class="section-subtitle">Organized file outputs for seamless integration with content generation phases.</p>
+
+            <div class="output-grid">
+                <div class="output-card">
+                    <h4><i class="fa-regular fa-folder-open"></i> Directory Structure</h4>
+                    <div class="tree-view">
+                        <div><span class="folder">output/research/</span></div>
+                        <div><span class="branch">├── </span><span class="folder">{keyword-1}/</span></div>
+                        <div><span class="branch">│   ├── </span><span class="file">{keyword-1}-serp-analysis.yaml</span> <span class="cmt">(input)</span></div>
+                        <div><span class="branch">│   ├── </span><span class="file">{keyword-1}-master-queries.csv</span> <span class="cmt">(input)</span></div>
+                        <div><span class="branch">│   └── </span><span class="file">{keyword-1}-outline-optimized.md</span> <span class="cmt">(output)</span></div>
+                        <div><span class="branch">├── </span><span class="folder">{keyword-2}/</span></div>
+                        <div><span class="branch">│   └── </span><span class="cmt">...</span></div>
+                        <div><span class="branch">└── </span><span class="folder">checkpoints/</span></div>
+                        <div><span class="branch">    └── </span><span class="file">outline_master_checkpoint.json</span></div>
+                    </div>
+                </div>
+
+                <div class="output-card">
+                    <h4><i class="fa-solid fa-code"></i> Heading Tags Only</h4>
+                    <div class="tree-view">
+                        <div><span class="file">&lt;h1&gt;</span> <span class="cmt">- Exactly one macro context</span></div>
+                        <div><span class="file">&lt;h2&gt;</span> <span class="cmt">- Main sections (5+ minimum)</span></div>
+                        <div><span class="file">&lt;h3&gt;</span> <span class="cmt">- Supporting subtopics</span></div>
+                        <div><span class="file">&lt;h4&gt;</span> <span class="cmt">- Deep hierarchy (if needed)</span></div>
+                        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.05);">
+                            <span class="cmt">No prose, no JSON, no markdown.</span><br>
+                            <span class="cmt">Pure HTML heading tags only.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Validation Checklist -->
+        <section class="validation-section">
+            <h2 class="section-title">Validation Checklist</h2>
+
+            <div class="validation-grid">
+                <div class="validation-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="validation-text">
+                        <h4>Single Macro Context</h4>
+                        <p>Exactly one H1 tag. All headings support the same central topic without introducing a second macro context.</p>
+                    </div>
+                </div>
+                <div class="validation-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="validation-text">
+                        <h4>Contextual Bridge Present</h4>
+                        <p>Exactly one H2 that transitions from informational to decision intent (e.g., DIY vs professional).</p>
+                    </div>
+                </div>
+                <div class="validation-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="validation-text">
+                        <h4>Antonym Context Included</h4>
+                        <p>At least one supplementary H2 presenting drawbacks, limitations, or precautions for E-E-A-T compliance.</p>
+                    </div>
+                </div>
+                <div class="validation-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="validation-text">
+                        <h4>Language Consistency</h4>
+                        <p>All headings match the SERP language (Thai/English) detected in the analysis YAML file.</p>
+                    </div>
+                </div>
+                <div class="validation-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="validation-text">
+                        <h4>No Duplicate Headings</h4>
+                        <p>No duplicate heading strings across levels. FAQ questions do not repeat earlier H2 text.</p>
+                    </div>
+                </div>
+                <div class="validation-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="validation-text">
+                        <h4>Answer-First Structure</h4>
+                        <p>First H2 is phrased as a direct question mirroring H1's core intent for immediate answer delivery.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="5_autocomplete-merge.html" class="next-phase">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <span>Previous: Autocomplete Merge</span>
+            </a>
+            <span style="margin: 0 24px; color: rgba(255,255,255,0.1);">|</span>
+            <a href="#" class="next-phase">
+                <span>Next: Deep Research</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <p style="margin-top: 16px; color: rgba(255,255,255,0.2); font-size: 12px;">&copy; 2025 Privato Content AI System</p>
+        </footer>
+    </div>
+
+    <!-- Modal 1: Keywords File -->
+    <div class="modal-overlay" id="modal-input" onclick="closeModal(event, 'modal-input')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon input"><i class="fa-regular fa-file-lines"></i></div>
+                    <div>
+                        <h3 class="modal-title">Keywords File</h3>
+                        <p class="modal-subtitle">data/keywords/keywords.txt</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-input')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-regular fa-file-code"></i> Sample Input</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="kw">หลังคา UPVC</span></div>
+                    <div><span class="ln">2</span><span class="kw">ประตูบานเลื่อน TOSTEM</span></div>
+                    <div><span class="ln">3</span><span class="kw">กระจกนิรภัย ห้องน้ำ</span></div>
+                    <div><span class="ln">4</span><span class="kw">มุ้งลวด กันยุง</span></div>
+                    <div><span class="ln">5</span><span class="kw">อลูมิเนียม คอมโพสิต</span></div>
+                    <div><span class="ln">6</span><span class="cmt"># Each keyword gets its own outline</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>Each keyword resolves to output/research/{keyword}/ directory</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: SERP Analysis -->
+    <div class="modal-overlay" id="modal-serp" onclick="closeModal(event, 'modal-serp')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon serp"><i class="fa-solid fa-chart-simple"></i></div>
+                    <div>
+                        <h3 class="modal-title">SERP Analysis YAML</h3>
+                        <p class="modal-subtitle">{keyword}-serp-analysis.yaml</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-serp')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-code"></i> Key YAML Fields Used</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="key">meta</span><span class="punct">:</span></div>
+                    <div><span class="ln"> 2</span>  <span class="key">query</span><span class="punct">:</span> <span class="str">"หลังคา UPVC"</span></div>
+                    <div><span class="ln"> 3</span>  <span class="key">language_detected</span><span class="punct">:</span></div>
+                    <div><span class="ln"> 4</span>    <span class="key">iso</span><span class="punct">:</span> <span class="str">"th"</span></div>
+                    <div><span class="ln"> 5</span></div>
+                    <div><span class="ln"> 6</span><span class="key">intent</span><span class="punct">:</span></div>
+                    <div><span class="ln"> 7</span>  <span class="key">primary</span><span class="punct">:</span> <span class="str">"informational"</span></div>
+                    <div><span class="ln"> 8</span>  <span class="key">micro_intents</span><span class="punct">:</span> <span class="punct">[</span><span class="str">"definition"</span><span class="punct">,</span> <span class="str">"comparison"</span><span class="punct">]</span></div>
+                    <div><span class="ln"> 9</span></div>
+                    <div><span class="ln">10</span><span class="key">entity_signals</span><span class="punct">:</span></div>
+                    <div><span class="ln">11</span>  <span class="key">entities</span><span class="punct">:</span></div>
+                    <div><span class="ln">12</span>    <span class="punct">-</span> <span class="key">name</span><span class="punct">:</span> <span class="str">"UPVC"</span></div>
+                    <div><span class="ln">13</span>      <span class="key">salience</span><span class="punct">:</span> <span class="num">0.92</span></div>
+                    <div><span class="ln">14</span></div>
+                    <div><span class="ln">15</span><span class="key">knowledge_graph</span><span class="punct">:</span></div>
+                    <div><span class="ln">16</span>  <span class="key">edges</span><span class="punct">:</span> <span class="cmt"># attribute prominence scores</span></div>
+                    <div><span class="ln">17</span>  <span class="key">central_concepts</span><span class="punct">:</span> <span class="cmt"># root nodes</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-database"></i>
+                <span>Generated by Phase 2.1 Title Analysis via Grok API</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: OpenRouter LLM -->
+    <div class="modal-overlay" id="modal-llm" onclick="closeModal(event, 'modal-llm')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon llm"><i class="fa-solid fa-brain"></i></div>
+                    <div>
+                        <h3 class="modal-title">OpenRouter LLM Processing</h3>
+                        <p class="modal-subtitle">Koray-aligned outline-master.md prompt</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-llm')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-wand-magic-sparkles"></i> Prompt Injection Points</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="cmt"># Variables injected into prompt:</span></div>
+                    <div><span class="ln">2</span></div>
+                    <div><span class="ln">3</span><span class="key">{keyword_index}</span> <span class="cmt">→ Line number in keywords.txt</span></div>
+                    <div><span class="ln">4</span><span class="key">{query_csv}</span> <span class="cmt">→ Master queries CSV content</span></div>
+                    <div><span class="ln">5</span><span class="key">{serp_analysis_yaml}</span> <span class="cmt">→ Full YAML analysis</span></div>
+                    <div><span class="ln">6</span></div>
+                    <div><span class="ln">7</span><span class="cmt"># Source Context (hardcoded):</span></div>
+                    <div><span class="ln">8</span><span class="str">"Home solution center specializing in</span></div>
+                    <div><span class="ln">9</span><span class="str"> roofing, doors, windows, bathroom</span></div>
+                    <div><span class="ln">10</span><span class="str"> fixtures with installation services"</span></div>
+                </div>
+                <div style="margin-top: 20px; padding: 16px; background: rgba(236, 72, 153, 0.1); border-radius: 10px; border-left: 3px solid #ec4899;">
+                    <div style="font-size: 12px; color: #f472b6; font-weight: 600; margin-bottom: 8px;">KEY DECISION FACTORS</div>
+                    <div style="font-size: 13px; color: var(--text-muted); line-height: 1.6;">
+                        Entity salience ranking, intent.primary, dominant_title_patterns, title_generation_signals, knowledge_graph edges
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-bolt"></i>
+                <span>Uses OpenRouter API with async concurrent processing</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Batch Processing -->
+    <div class="modal-overlay" id="modal-process" onclick="closeModal(event, 'modal-process')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon process"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div>
+                        <h3 class="modal-title">Batch Processing Engine</h3>
+                        <p class="modal-subtitle">Async concurrent execution with checkpoints</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-process')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-terminal"></i> CLI Commands</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="cmt"># Dry run (no API calls)</span></div>
+                    <div><span class="ln">2</span><span class="kw">uv run scripts/outline_master.py</span> <span class="str">--dry-run</span></div>
+                    <div><span class="ln">3</span></div>
+                    <div><span class="ln">4</span><span class="cmt"># Estimate cost before running</span></div>
+                    <div><span class="ln">5</span><span class="kw">uv run scripts/outline_master.py</span> <span class="str">--estimate-cost</span></div>
+                    <div><span class="ln">6</span></div>
+                    <div><span class="ln">7</span><span class="cmt"># Full execution (default)</span></div>
+                    <div><span class="ln">8</span><span class="kw">uv run scripts/outline_master.py</span></div>
+                    <div><span class="ln">9</span></div>
+                    <div><span class="ln">10</span><span class="cmt"># Custom concurrency</span></div>
+                    <div><span class="ln">11</span><span class="kw">uv run scripts/outline_master.py</span> <span class="str">--max-concurrency=5</span></div>
+                    <div><span class="ln">12</span></div>
+                    <div><span class="ln">13</span><span class="cmt"># Incremental (skip existing)</span></div>
+                    <div><span class="ln">14</span><span class="kw">uv run scripts/outline_master.py</span> <span class="str">--incremental</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-shield-check"></i>
+                <span>Checkpoint auto-saves progress for --resume recovery</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: HTML Outlines -->
+    <div class="modal-overlay" id="modal-output" onclick="closeModal(event, 'modal-output')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon output"><i class="fa-solid fa-heading"></i></div>
+                    <div>
+                        <h3 class="modal-title">Generated HTML Outline</h3>
+                        <p class="modal-subtitle">{keyword}-outline-optimized.md</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-output')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-heading"></i> Output Sample</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="key">&lt;h1&gt;</span>หลังคา UPVC คืออะไร ข้อดี-ข้อเสีย 2025<span class="key">&lt;/h1&gt;</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="str">&lt;h2&gt;</span>หลังคา UPVC คืออะไร?<span class="str">&lt;/h2&gt;</span></div>
+                    <div><span class="ln"> 4</span></div>
+                    <div><span class="ln"> 5</span><span class="str">&lt;h2&gt;</span>ข้อดีของหลังคา UPVC<span class="str">&lt;/h2&gt;</span></div>
+                    <div><span class="ln"> 6</span><span class="num">&lt;h3&gt;</span>ทนทานต่อความร้อน<span class="num">&lt;/h3&gt;</span></div>
+                    <div><span class="ln"> 7</span><span class="num">&lt;h3&gt;</span>น้ำหนักเบา ติดตั้งง่าย<span class="num">&lt;/h3&gt;</span></div>
+                    <div><span class="ln"> 8</span></div>
+                    <div><span class="ln"> 9</span><span class="str">&lt;h2&gt;</span>ประเภทหลังคา UPVC<span class="str">&lt;/h2&gt;</span></div>
+                    <div><span class="ln">10</span></div>
+                    <div><span class="ln">11</span><span class="cmt">&lt;!-- Contextual Bridge --&gt;</span></div>
+                    <div><span class="ln">12</span><span class="str">&lt;h2&gt;</span>ติดตั้งเองได้ไหม หรือควรใช้ช่าง<span class="str">&lt;/h2&gt;</span></div>
+                    <div><span class="ln">13</span></div>
+                    <div><span class="ln">14</span><span class="cmt">&lt;!-- Antonym Context --&gt;</span></div>
+                    <div><span class="ln">15</span><span class="str">&lt;h2&gt;</span>ข้อเสียและข้อจำกัด<span class="str">&lt;/h2&gt;</span></div>
+                    <div><span class="ln">16</span></div>
+                    <div><span class="ln">17</span><span class="str">&lt;h2&gt;</span>คำถามที่พบบ่อย<span class="str">&lt;/h2&gt;</span></div>
+                    <div><span class="ln">18</span><span class="num">&lt;h3&gt;</span>หลังคา UPVC กันร้อนได้จริงไหม?<span class="num">&lt;/h3&gt;</span></div>
+                </div>
+                <div style="margin-top: 16px; padding: 12px; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 3px solid #8b5cf6;">
+                    <span style="font-size: 12px; color: #a78bfa;">Ready for Phase 4: Deep Research & Phase 6: Article Generation</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-rocket"></i>
+                <span>Pure HTML headings - no prose, no JSON, no markdown</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event, modalId) {
+            if (event.target === event.currentTarget || event.currentTarget.classList.contains('modal-close')) {
+                document.getElementById(modalId).classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>

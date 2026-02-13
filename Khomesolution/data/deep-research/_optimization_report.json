@@ -1,0 +1,18 @@
+{
+  "total_files_processed": 1,
+  "total_tokens_before": 5985,
+  "total_tokens_after": 4100,
+  "total_reduction": "31.5%",
+  "processing_time": "0.2s",
+  "quality_reverts": 0,
+  "files": [
+    {
+      "file": "หน้าต่างกันเสียง-research.md",
+      "tokens_before": 5985,
+      "tokens_after": 4100,
+      "reduction": "31.5%",
+      "quality_passed": true,
+      "reverted": false
+    }
+  ]
+}

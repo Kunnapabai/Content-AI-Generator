@@ -1,0 +1,1761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 7.1: SEO First Sentence Generation | Privato Content</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --gemini-blue: #4285f4;
+            --gemini-red: #ea4335;
+            --gemini-yellow: #fbbc04;
+            --gemini-green: #34a853;
+            --openrouter: #6366f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, transparent 40%),
+                        radial-gradient(circle at bottom left, #312e81, transparent 40%),
+                        linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 100px;
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(66, 133, 244, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(66, 133, 244, 0.1);
+            border: 1px solid rgba(66, 133, 244, 0.3);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #60a5fa;
+            margin-bottom: 32px;
+            box-shadow: 0 0 20px rgba(66, 133, 244, 0.1);
+        }
+
+        .header h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Objectives Styling */
+        .objectives-container {
+            margin-top: 32px;
+            max-width: 800px;
+        }
+
+        .objectives-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .objective-item:last-child {
+            border-bottom: none;
+        }
+
+        .objective-bullet {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: rgba(66, 133, 244, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #60a5fa;
+            margin-top: 2px;
+        }
+
+        .objective-content {
+            flex: 1;
+        }
+
+        .objective-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.5;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .command-section {
+            margin-bottom: 80px;
+            animation: fadeIn 1s ease 0.15s forwards;
+            opacity: 0;
+        }
+
+        .command-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .command-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .command-card h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* Flow Section */
+        .flow-section {
+            margin: 0 0 100px;
+            animation: fadeIn 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .flow-wrapper {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .flow-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px 32px;
+            text-align: center;
+            width: 220px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+        }
+
+        .flow-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.4);
+        }
+
+        .flow-box:hover::before {
+            opacity: 1;
+        }
+
+        .icon-wrapper {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            position: relative;
+        }
+
+        .flow-box.input .icon-wrapper {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.1));
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .flow-box.html .icon-wrapper {
+            background: linear-gradient(135deg, rgba(234, 88, 12, 0.2), rgba(194, 65, 12, 0.1));
+            color: #fb923c;
+            border: 1px solid rgba(234, 88, 12, 0.2);
+        }
+
+        .flow-box.gemini .icon-wrapper {
+            background: linear-gradient(135deg, rgba(66, 133, 244, 0.2), rgba(52, 168, 83, 0.1));
+            color: #60a5fa;
+            border: 1px solid rgba(66, 133, 244, 0.2);
+        }
+
+        .flow-box.classify .icon-wrapper {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.2), rgba(139, 92, 246, 0.1));
+            color: #c084fc;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .flow-box.output .icon-wrapper {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.1));
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .flow-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .flow-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            align-self: center;
+        }
+
+        /* Parameters Grid */
+        .params-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 60px;
+            font-size: 18px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+        }
+
+        .param-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .param-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .param-flag {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 14px;
+            color: #60a5fa;
+            background: rgba(66, 133, 244, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .param-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .param-value.small {
+            font-size: 18px;
+        }
+
+        .param-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Tool Section */
+        .tools-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.35s forwards;
+            opacity: 0;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 32px;
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .tool-card.gemini {
+            border: 1px solid rgba(66, 133, 244, 0.2);
+        }
+
+        .tool-card.gemini::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #4285f4, #34a853, #fbbc04, #ea4335);
+        }
+
+        .tool-card.openrouter {
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .tool-card.openrouter::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #6366f1;
+        }
+
+        .tool-icon {
+            width: 64px;
+            height: 64px;
+            min-width: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .tool-card.gemini .tool-icon {
+            background: linear-gradient(135deg, rgba(66, 133, 244, 0.2), rgba(52, 168, 83, 0.1));
+            color: #60a5fa;
+        }
+
+        .tool-card.openrouter .tool-icon {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.1));
+            color: #818cf8;
+        }
+
+        .tool-info h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .tool-card.gemini .tool-info h3 { color: #60a5fa; }
+        .tool-card.openrouter .tool-info h3 { color: #818cf8; }
+
+        .tool-info p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .tool-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* H1 Types Section */
+        .h1-types-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.38s forwards;
+            opacity: 0;
+        }
+
+        .h1-types-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .h1-type-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .h1-type-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .h1-type-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .h1-type-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .h1-type-card.definitional .h1-type-icon { background: rgba(66, 133, 244, 0.2); color: #60a5fa; }
+        .h1-type-card.howto .h1-type-icon { background: rgba(52, 168, 83, 0.2); color: #4ade80; }
+        .h1-type-card.list .h1-type-icon { background: rgba(251, 188, 4, 0.2); color: #fbbf24; }
+        .h1-type-card.boolean .h1-type-icon { background: rgba(234, 67, 53, 0.2); color: #f87171; }
+        .h1-type-card.comparative .h1-type-icon { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+        .h1-type-card.other .h1-type-icon { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
+
+        .h1-type-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .h1-type-pattern {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-family: 'Menlo', 'Monaco', monospace;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        /* Data Flow Diagram */
+        .diagram-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .code-window {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .window-header {
+            background: #0f172a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 16px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #22c55e; }
+
+        .file-name {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-content {
+            padding: 24px;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .ln { color: #475569; margin-right: 16px; user-select: none; }
+        .cmt { color: #64748b; font-style: italic; }
+        .step { color: #60a5fa; }
+        .arrow { color: #475569; }
+        .highlight { color: #fbbf24; }
+        .data { color: #86efac; }
+        .cmd { color: #67e8f9; }
+
+        /* Output Structure */
+        .output-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.45s forwards;
+            opacity: 0;
+        }
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .output-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .output-card h4 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tree-view {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .tree-view .folder { color: #fbbf24; }
+        .tree-view .file { color: #86efac; }
+        .tree-view .branch { color: #475569; }
+
+        /* Example Section */
+        .example-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.48s forwards;
+            opacity: 0;
+        }
+
+        .example-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(66, 133, 244, 0.2);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .example-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #60a5fa;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .example-keyword {
+            background: rgba(234, 88, 12, 0.1);
+            border: 1px solid rgba(234, 88, 12, 0.2);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+
+        .example-keyword-label {
+            font-size: 11px;
+            color: #fb923c;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .example-keyword-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .example-h1-type {
+            display: inline-block;
+            background: rgba(66, 133, 244, 0.1);
+            border: 1px solid rgba(66, 133, 244, 0.2);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 12px;
+            color: #60a5fa;
+            margin-bottom: 16px;
+        }
+
+        .example-output {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .example-output-label {
+            font-size: 11px;
+            color: #4ade80;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .example-output-text {
+            font-size: 16px;
+            color: white;
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        .example-output-text strong {
+            color: #fbbf24;
+        }
+
+        /* Cost Badge */
+        .cost-badge {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .cost-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(99, 102, 241, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #818cf8;
+        }
+
+        .cost-details {
+            flex: 1;
+        }
+
+        .cost-details h5 {
+            font-size: 14px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+
+        .cost-details p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .cost-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4ade80;
+        }
+
+        /* Benefits */
+        .benefits-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.5s forwards;
+            opacity: 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 24px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.3s;
+        }
+
+        .benefit-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-size: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .benefit-text h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .benefit-text p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 120px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 60px;
+        }
+
+        .next-phase {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .next-phase:hover {
+            color: var(--primary);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+            .params-grid { grid-template-columns: repeat(3, 1fr); }
+            .tools-grid { grid-template-columns: 1fr; }
+            .output-grid { grid-template-columns: 1fr; }
+            .h1-types-grid { grid-template-columns: repeat(2, 1fr); }
+            .flow-wrapper { flex-direction: column; align-items: center; }
+            .flow-arrow { transform: rotate(90deg); margin: 8px 0; }
+            .command-card { padding: 32px 24px; }
+            .objective-content h4 { font-size: 16px; }
+        }
+
+        @media (max-width: 768px) {
+            .params-grid { grid-template-columns: repeat(2, 1fr); }
+            .h1-types-grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 42px; }
+            .benefits-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 0;
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            overflow: hidden;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 80px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .modal-icon.input { background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(79, 70, 229, 0.2)); color: #818cf8; }
+        .modal-icon.html { background: linear-gradient(135deg, rgba(234, 88, 12, 0.3), rgba(194, 65, 12, 0.2)); color: #fb923c; }
+        .modal-icon.gemini { background: linear-gradient(135deg, rgba(66, 133, 244, 0.3), rgba(52, 168, 83, 0.2)); color: #60a5fa; }
+        .modal-icon.classify { background: linear-gradient(135deg, rgba(168, 85, 247, 0.3), rgba(139, 92, 246, 0.2)); color: #c084fc; }
+        .modal-icon.output { background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.2)); color: #4ade80; }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px 28px;
+            max-height: 55vh;
+            overflow-y: auto;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sample-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sample-code {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .sample-code .ln { color: #475569; margin-right: 12px; user-select: none; }
+        .sample-code .kw { color: #86efac; }
+        .sample-code .str { color: #fbbf24; }
+        .sample-code .num { color: #f472b6; }
+        .sample-code .cmt { color: #64748b; font-style: italic; }
+        .sample-code .key { color: #67e8f9; }
+        .sample-code .punct { color: #94a3b8; }
+        .sample-code .tag { color: #fb923c; }
+        .sample-code .attr { color: #60a5fa; }
+
+        .modal-footer {
+            padding: 16px 28px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-footer i {
+            color: #60a5fa;
+            font-size: 14px;
+        }
+
+        .modal-footer span {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Clickable flow boxes */
+        .flow-box.clickable {
+            cursor: pointer;
+        }
+
+        .flow-box.clickable::after {
+            content: 'Click to view sample';
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .flow-box.clickable:hover::after {
+            opacity: 1;
+        }
+
+        /* Gemini Logo Animation */
+        .gemini-logo {
+            display: flex;
+            gap: 2px;
+        }
+
+        .gemini-logo span {
+            font-size: 8px;
+        }
+
+        .gemini-logo .g-blue { color: #4285f4; }
+        .gemini-logo .g-red { color: #ea4335; }
+        .gemini-logo .g-yellow { color: #fbbc04; }
+        .gemini-logo .g-green { color: #34a853; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="phase-badge">
+                <i class="fa-solid fa-feather-pointed"></i>
+                Phase 7.1
+            </div>
+            <h1>SEO First Sentence Generation</h1>
+            <p>AI-powered generation of compelling opening sentences using Google Gemini 3 Flash via OpenRouter, optimized for search engines with intelligent H1 classification patterns.</p>
+        </header>
+
+        <!-- Objectives -->
+        <section class="command-section">
+            <div class="command-card">
+                <div class="command-label">
+                    <i class="fa-solid fa-bullseye"></i>
+                    Strategic Direction
+                </div>
+                <h2>Core Objectives</h2>
+                <div class="objectives-container">
+                    <ul class="objectives-list">
+                        <li class="objective-item">
+                            <div class="objective-bullet">1</div>
+                            <div class="objective-content">
+                                <h4><strong>Classify H1 Type</strong> to apply the optimal sentence pattern (6 types)</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">2</div>
+                            <div class="objective-content">
+                                <h4><strong>Ground in HTML</strong> using article content as the only source of truth</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">3</div>
+                            <div class="objective-content">
+                                <h4><strong>Keyword-First Placement</strong> within the first 15 words for SEO</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">4</div>
+                            <div class="objective-content">
+                                <h4><strong>Batch Processing</strong> all keywords with async concurrency and caching</h4>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Flow -->
+        <section class="flow-section">
+            <div class="flow-wrapper">
+                <div class="flow-box input clickable" onclick="openModal('modal-input')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-list"></i>
+                    </div>
+                    <h3>Keywords File</h3>
+                    <p>Load keywords from keywords.txt seed list.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box html clickable" onclick="openModal('modal-html')">
+                    <div class="icon-wrapper">
+                        <i class="fa-brands fa-html5"></i>
+                    </div>
+                    <h3>HTML Source</h3>
+                    <p>Load article HTML from research output.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box gemini clickable" onclick="openModal('modal-gemini')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-sparkles"></i>
+                    </div>
+                    <h3>Gemini 3 Flash</h3>
+                    <p>Generate via OpenRouter API with caching.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box classify clickable" onclick="openModal('modal-classify')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-tags"></i>
+                    </div>
+                    <h3>H1 Classification</h3>
+                    <p>Apply pattern based on H1 type.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box output clickable" onclick="openModal('modal-output')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-file-code"></i>
+                    </div>
+                    <h3>Meta SEO JSON</h3>
+                    <p>Save to {keyword}-meta-seo.json file.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parameters -->
+        <section class="params-section">
+            <h2 class="section-title">Configuration Parameters</h2>
+            <p class="section-subtitle">Optimized settings for high-quality first sentence generation at scale.</p>
+
+            <div class="params-grid">
+                <div class="param-card">
+                    <div class="param-flag">--all</div>
+                    <div class="param-value"><i class="fa-solid fa-check"></i></div>
+                    <div class="param-label">Process all keywords in batch</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">model</div>
+                    <div class="param-value small">Gemini 3</div>
+                    <div class="param-label">google/gemini-3-flash-preview</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">temp</div>
+                    <div class="param-value">0.2</div>
+                    <div class="param-label">Low temperature for consistency</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">concurrency</div>
+                    <div class="param-value">5</div>
+                    <div class="param-label">Parallel async requests</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">rate-limit</div>
+                    <div class="param-value">60</div>
+                    <div class="param-label">Requests per minute cap</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Integration -->
+        <section class="tools-section">
+            <h2 class="section-title">Technology Stack</h2>
+            <p class="section-subtitle">Google Gemini via OpenRouter with intelligent prompt caching for cost efficiency.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card gemini">
+                    <div class="tool-icon">
+                        <i class="fa-solid fa-sparkles"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3>Google Gemini 3 Flash Preview</h3>
+                        <p>Fast, cost-effective LLM with 1M+ token context window. Generates SEO-optimized first sentences grounded in HTML content with deterministic output at temperature 0.2.</p>
+                        <div class="tool-features">
+                            <span class="feature-tag">1M Context</span>
+                            <span class="feature-tag">Implicit Caching</span>
+                            <span class="feature-tag">$0.50/1M Input</span>
+                            <span class="feature-tag">$3.00/1M Output</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card openrouter">
+                    <div class="tool-icon">
+                        <i class="fa-solid fa-route"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3>OpenRouter API</h3>
+                        <p>Unified API gateway providing access to Gemini with built-in rate limiting, retry logic, and automatic prompt caching for system prompts above 2048 tokens.</p>
+                        <div class="tool-features">
+                            <span class="feature-tag">Rate Limiting</span>
+                            <span class="feature-tag">Auto Retry</span>
+                            <span class="feature-tag">Token Tracking</span>
+                            <span class="feature-tag">Cost Calculation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- H1 Types Section -->
+        <section class="h1-types-section">
+            <h2 class="section-title">H1 Classification Patterns</h2>
+            <p class="section-subtitle">Six distinct patterns for generating the perfect opening sentence based on article intent.</p>
+
+            <div class="h1-types-grid">
+                <div class="h1-type-card definitional">
+                    <div class="h1-type-header">
+                        <div class="h1-type-icon"><i class="fa-solid fa-book"></i></div>
+                        <span class="h1-type-name">Definitional</span>
+                    </div>
+                    <div class="h1-type-pattern">"[Entity] is [definition]."<br><br>Example: What is X?</div>
+                </div>
+
+                <div class="h1-type-card howto">
+                    <div class="h1-type-header">
+                        <div class="h1-type-icon"><i class="fa-solid fa-list-check"></i></div>
+                        <span class="h1-type-name">How-To</span>
+                    </div>
+                    <div class="h1-type-pattern">"To [verb], [action/outcome]."<br><br>Example: How to...</div>
+                </div>
+
+                <div class="h1-type-card list">
+                    <div class="h1-type-header">
+                        <div class="h1-type-icon"><i class="fa-solid fa-ranking-star"></i></div>
+                        <span class="h1-type-name">List</span>
+                    </div>
+                    <div class="h1-type-pattern">"There are [N] key [items]..."<br><br>Example: Top X, Benefits of...</div>
+                </div>
+
+                <div class="h1-type-card boolean">
+                    <div class="h1-type-header">
+                        <div class="h1-type-icon"><i class="fa-solid fa-circle-question"></i></div>
+                        <span class="h1-type-name">Boolean</span>
+                    </div>
+                    <div class="h1-type-pattern">"Yes/No, [claim], if [condition]..."<br><br>Example: Can/Is/Does...</div>
+                </div>
+
+                <div class="h1-type-card comparative">
+                    <div class="h1-type-header">
+                        <div class="h1-type-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+                        <span class="h1-type-name">Comparative</span>
+                    </div>
+                    <div class="h1-type-pattern">"The [best] for [user] is..."<br><br>Example: Best/Most...</div>
+                </div>
+
+                <div class="h1-type-card other">
+                    <div class="h1-type-header">
+                        <div class="h1-type-icon"><i class="fa-solid fa-building"></i></div>
+                        <span class="h1-type-name">Other/Brand</span>
+                    </div>
+                    <div class="h1-type-pattern">"[Entity] helps [user] [outcome]..."<br><br>Example: Brand pages</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Flow Diagram -->
+        <section class="diagram-section">
+            <h2 class="section-title">Execution Flow</h2>
+            <p class="section-subtitle">Complete pipeline with async processing, caching, and retry logic.</p>
+
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    </div>
+                    <span class="file-name"><i class="fa-solid fa-terminal"></i> first-sentence-pipeline.sh</span>
+                </div>
+                <div class="window-content">
+                    <div><span class="ln"> 1</span><span class="cmt"># Phase 7.1 - SEO First Sentence Generation</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="cmd">$ uv run -m bankcontent.meta_seo.first_sentence --all</span></div>
+                    <div><span class="ln"> 4</span></div>
+                    <div><span class="ln"> 5</span><span class="step">1. Initialize</span> <span class="arrow">─────────────────────────────────────</span></div>
+                    <div><span class="ln"> 6</span>   <span class="arrow">├──▶</span> <span class="data">Load system prompt from specs/first_sentence-script.yaml</span></div>
+                    <div><span class="ln"> 7</span>   <span class="arrow">├──▶</span> <span class="data">Initialize PromptCache (SHA256 hash validation)</span></div>
+                    <div><span class="ln"> 8</span>   <span class="arrow">└──▶</span> <span class="data">Configure OpenRouter client (rate limits, retry)</span></div>
+                    <div><span class="ln"> 9</span></div>
+                    <div><span class="ln">10</span><span class="step">2. Load Keywords</span> <span class="arrow">────────────────────────────────</span></div>
+                    <div><span class="ln">11</span>   <span class="arrow">└──▶</span> <span class="data">data/keywords/keywords.txt → chunk into batches</span></div>
+                    <div><span class="ln">12</span></div>
+                    <div><span class="ln">13</span><span class="step">FOR EACH</span> <span class="highlight">keyword</span> <span class="cmt">(async, max 5 concurrent)</span><span class="step">:</span></div>
+                    <div><span class="ln">14</span>   <span class="arrow">├──▶</span> <span class="step">Load HTML</span></div>
+                    <div><span class="ln">15</span>   <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">output/research/{keyword}/{keyword}.html</span></div>
+                    <div><span class="ln">16</span>   <span class="arrow">│</span></div>
+                    <div><span class="ln">17</span>   <span class="arrow">├──▶</span> <span class="step">Build Prompt</span></div>
+                    <div><span class="ln">18</span>   <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">KEYWORD + HTML_PATH + CONTEXT_HTML</span></div>
+                    <div><span class="ln">19</span>   <span class="arrow">│</span></div>
+                    <div><span class="ln">20</span>   <span class="arrow">├──▶</span> <span class="step">OpenRouter API Call</span> <span class="cmt">(gemini-3-flash-preview)</span></div>
+                    <div><span class="ln">21</span>   <span class="arrow">│</span>       <span class="arrow">├──▶</span> <span class="data">Rate limit: sliding window (60 req/min)</span></div>
+                    <div><span class="ln">22</span>   <span class="arrow">│</span>       <span class="arrow">├──▶</span> <span class="data">Token limit: bucket (60k tokens/min)</span></div>
+                    <div><span class="ln">23</span>   <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">Retry: max 3 with exponential backoff</span></div>
+                    <div><span class="ln">24</span>   <span class="arrow">│</span></div>
+                    <div><span class="ln">25</span>   <span class="arrow">├──▶</span> <span class="step">Extract & Validate JSON</span></div>
+                    <div><span class="ln">26</span>   <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">{ "first_sentence": "..." }</span></div>
+                    <div><span class="ln">27</span>   <span class="arrow">│</span></div>
+                    <div><span class="ln">28</span>   <span class="arrow">└──▶</span> <span class="step">Save Output</span></div>
+                    <div><span class="ln">29</span>           <span class="arrow">└──▶</span> <span class="data">output/research/{keyword}/{keyword}-meta-seo.json</span></div>
+                    <div><span class="ln">30</span></div>
+                    <div><span class="ln">31</span><span class="step">3. Update Resume State</span> <span class="arrow">──────────────────────────</span></div>
+                    <div><span class="ln">32</span>   <span class="arrow">└──▶</span> <span class="data">first_sentence_resume.json (completed/failed tracking)</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Example Section -->
+        <section class="example-section">
+            <h2 class="section-title">Generation Example</h2>
+            <p class="section-subtitle">See how Gemini transforms HTML content into SEO-optimized opening sentences.</p>
+
+            <div class="example-card">
+                <div class="example-label">
+                    <i class="fa-solid fa-sparkles"></i>
+                    Live Example - Definitional H1 Type
+                </div>
+
+                <div class="example-keyword">
+                    <div class="example-keyword-label">Target Keyword</div>
+                    <div class="example-keyword-text">กลูต้าไธโอน คืออะไร</div>
+                </div>
+
+                <div class="example-h1-type">
+                    <i class="fa-solid fa-book"></i> H1 Type: Definitional (What is X?)
+                </div>
+
+                <div class="example-output">
+                    <div class="example-output-label">
+                        <i class="fa-solid fa-feather-pointed"></i>
+                        Generated First Sentence (15-30 words)
+                    </div>
+                    <div class="example-output-text">
+                        <strong>กลูต้าไธโอน</strong> คือสารต้านอนุมูลอิสระที่ร่างกายผลิตขึ้นเองตามธรรมชาติ ช่วยปกป้องเซลล์จากความเสียหายและสนับสนุนระบบภูมิคุ้มกันให้ทำงานได้อย่างมีประสิทธิภาพ
+                    </div>
+
+                    <div class="cost-badge">
+                        <div class="cost-icon"><i class="fa-solid fa-coins"></i></div>
+                        <div class="cost-details">
+                            <h5>Estimated Cost per Keyword</h5>
+                            <p>Input: ~6000 tokens | Output: ~240 tokens | Cached: ~2000 tokens</p>
+                        </div>
+                        <div class="cost-value">~$0.004</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Structure -->
+        <section class="output-section">
+            <h2 class="section-title">Output Structure</h2>
+            <p class="section-subtitle">Organized file hierarchy with resume state and logging for production reliability.</p>
+
+            <div class="output-grid">
+                <div class="output-card">
+                    <h4><i class="fa-regular fa-folder-open"></i> Directory Structure</h4>
+                    <div class="tree-view">
+                        <div><span class="folder">output/research/</span></div>
+                        <div><span class="branch">├── </span><span class="folder">{keyword-1}/</span></div>
+                        <div><span class="branch">│   ├── </span><span class="file">{keyword-1}.html</span> <span class="cmt">(input)</span></div>
+                        <div><span class="branch">│   └── </span><span class="file">{keyword-1}-meta-seo.json</span> <span class="cmt">(output)</span></div>
+                        <div><span class="branch">├── </span><span class="folder">{keyword-2}/</span></div>
+                        <div><span class="branch">│   └── </span><span class="cmt">...</span></div>
+                        <div><span class="branch">└── </span><span class="file">first_sentence_resume.json</span></div>
+                        <div></div>
+                        <div><span class="folder">logs/</span></div>
+                        <div><span class="branch">└── </span><span class="file">first_sentence_generator.log</span></div>
+                    </div>
+                </div>
+
+                <div class="output-card">
+                    <h4><i class="fa-solid fa-code"></i> JSON Output Schema</h4>
+                    <div class="tree-view">
+                        <div><span class="file">first_sentence</span> <span class="cmt">- Generated opening (string)</span></div>
+                        <div></div>
+                        <div style="margin-top: 16px; color: #64748b; font-size: 11px;">Resume State Schema:</div>
+                        <div><span class="file">completed</span> <span class="cmt">- Array of done keywords</span></div>
+                        <div><span class="file">failed</span> <span class="cmt">- Array of failed keywords</span></div>
+                        <div></div>
+                        <div style="margin-top: 16px; color: #64748b; font-size: 11px;">Log Entry Schema:</div>
+                        <div><span class="file">timestamp</span> <span class="cmt">- ISO datetime</span></div>
+                        <div><span class="file">status</span> <span class="cmt">- success|error|skipped</span></div>
+                        <div><span class="file">tokens</span> <span class="cmt">- {input, output, cached}</span></div>
+                        <div><span class="file">cost_usd</span> <span class="cmt">- Actual cost in USD</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="benefits-section">
+            <h2 class="section-title">Key Advantages</h2>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>HTML-Grounded Generation</h4>
+                        <p>Uses article HTML as the only source of truth—never invents facts or relies on external knowledge.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Prompt Caching</h4>
+                        <p>System prompt cached automatically for 2048+ tokens, reducing costs by 75% on cached portions.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Async Concurrency</h4>
+                        <p>Processes 5 keywords in parallel with intelligent rate limiting (60 req/min, 60k tokens/min).</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Resume Support</h4>
+                        <p>Checkpoint state saved after each batch—interrupted runs resume exactly where they left off.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="6_article-generation.html" class="next-phase">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <span>Previous: Article Generation</span>
+            </a>
+            <span style="margin: 0 24px; color: rgba(255,255,255,0.1);">|</span>
+            <a href="7.2_meta-description.html" class="next-phase">
+                <span>Next: Meta Description</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <p style="margin-top: 16px; color: rgba(255,255,255,0.2); font-size: 12px;">&copy; 2025 Privato Content AI System</p>
+        </footer>
+    </div>
+
+    <!-- Modal 1: Keywords File -->
+    <div class="modal-overlay" id="modal-input" onclick="closeModal(event, 'modal-input')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon input"><i class="fa-solid fa-list"></i></div>
+                    <div>
+                        <h3 class="modal-title">Keywords File</h3>
+                        <p class="modal-subtitle">data/keywords/keywords.txt</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-input')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-regular fa-file-code"></i> Sample Input</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="kw">กลูต้าไธโอน คืออะไร</span></div>
+                    <div><span class="ln">2</span><span class="kw">วิตามินซี ผิวขาว</span></div>
+                    <div><span class="ln">3</span><span class="kw">คอลลาเจน ยี่ห้อไหนดี</span></div>
+                    <div><span class="ln">4</span><span class="kw">อาหารเสริม ลดน้ำหนัก</span></div>
+                    <div><span class="ln">5</span><span class="kw">เซรั่มหน้าใส 2025</span></div>
+                    <div><span class="ln">6</span><span class="cmt"># One keyword per line</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>Keywords chunked into batches for concurrent processing</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: HTML Source -->
+    <div class="modal-overlay" id="modal-html" onclick="closeModal(event, 'modal-html')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon html"><i class="fa-brands fa-html5"></i></div>
+                    <div>
+                        <h3 class="modal-title">HTML Source</h3>
+                        <p class="modal-subtitle">output/research/{keyword}/{keyword}.html</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-html')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-brands fa-html5"></i> HTML Content (Source of Truth)</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="tag">&lt;!DOCTYPE html&gt;</span></div>
+                    <div><span class="ln"> 2</span><span class="tag">&lt;html</span> <span class="attr">lang</span>=<span class="str">"th"</span><span class="tag">&gt;</span></div>
+                    <div><span class="ln"> 3</span><span class="tag">&lt;head&gt;</span></div>
+                    <div><span class="ln"> 4</span>  <span class="tag">&lt;title&gt;</span><span class="kw">กลูต้าไธโอน คืออะไร</span><span class="tag">&lt;/title&gt;</span></div>
+                    <div><span class="ln"> 5</span>  <span class="tag">&lt;meta</span> <span class="attr">name</span>=<span class="str">"description"</span> <span class="attr">content</span>=<span class="str">"..."</span><span class="tag">/&gt;</span></div>
+                    <div><span class="ln"> 6</span><span class="tag">&lt;/head&gt;</span></div>
+                    <div><span class="ln"> 7</span><span class="tag">&lt;body&gt;</span></div>
+                    <div><span class="ln"> 8</span>  <span class="tag">&lt;h1&gt;</span><span class="kw">กลูต้าไธโอน คืออะไร</span><span class="tag">&lt;/h1&gt;</span></div>
+                    <div><span class="ln"> 9</span>  <span class="tag">&lt;h2&gt;</span>ทำความรู้จักกลูต้าไธโอน<span class="tag">&lt;/h2&gt;</span></div>
+                    <div><span class="ln">10</span>  <span class="tag">&lt;p&gt;</span>กลูต้าไธโอนเป็นสารต้านอนุมูลอิสระ...</div>
+                    <div><span class="ln">11</span>  <span class="cmt">&lt;!-- Full article content --&gt;</span></div>
+                    <div><span class="ln">12</span><span class="tag">&lt;/body&gt;</span></div>
+                    <div><span class="ln">13</span><span class="tag">&lt;/html&gt;</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-shield-halved"></i>
+                <span>HTML is the ONLY source of truth—no external knowledge used</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Gemini API -->
+    <div class="modal-overlay" id="modal-gemini" onclick="closeModal(event, 'modal-gemini')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon gemini"><i class="fa-solid fa-sparkles"></i></div>
+                    <div>
+                        <h3 class="modal-title">Gemini 3 Flash Preview</h3>
+                        <p class="modal-subtitle">via OpenRouter API</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-gemini')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-gear"></i> Model Configuration</div>
+                <div class="sample-code" style="margin-bottom: 20px;">
+                    <div><span class="ln">1</span><span class="key">model</span><span class="punct">:</span> <span class="str">"google/gemini-3-flash-preview"</span></div>
+                    <div><span class="ln">2</span><span class="key">temperature</span><span class="punct">:</span> <span class="num">0.2</span></div>
+                    <div><span class="ln">3</span><span class="key">max_tokens</span><span class="punct">:</span> <span class="num">1200</span></div>
+                    <div><span class="ln">4</span><span class="key">context_window</span><span class="punct">:</span> <span class="num">1,050,000</span></div>
+                </div>
+                <div class="sample-label"><i class="fa-solid fa-message"></i> User Prompt Template</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="key">KEYWORD</span><span class="punct">:</span> <span class="str">กลูต้าไธโอน คืออะไร</span></div>
+                    <div><span class="ln">2</span><span class="key">HTML_PATH</span><span class="punct">:</span> <span class="str">output/research/.../...html</span></div>
+                    <div><span class="ln">3</span><span class="key">JSON_OUT_PATH</span><span class="punct">:</span> <span class="str">output/research/.../-meta-seo.json</span></div>
+                    <div><span class="ln">4</span><span class="key">CONTEXT_HTML</span><span class="punct">:</span></div>
+                    <div><span class="ln">5</span><span class="str">&lt;&lt;&lt;HTML&gt;&gt;&gt;</span></div>
+                    <div><span class="ln">6</span><span class="cmt">{full HTML content}</span></div>
+                    <div><span class="ln">7</span><span class="str">&lt;&lt;&lt;HTML&gt;&gt;&gt;</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-database"></i>
+                <span>System prompt cached (2048+ tokens) for 75% cost reduction</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: H1 Classification -->
+    <div class="modal-overlay" id="modal-classify" onclick="closeModal(event, 'modal-classify')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon classify"><i class="fa-solid fa-tags"></i></div>
+                    <div>
+                        <h3 class="modal-title">H1 Classification</h3>
+                        <p class="modal-subtitle">6 sentence patterns</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-classify')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-list-check"></i> Pattern Selection Rules</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="cmt"># Definitional (What is X?)</span></div>
+                    <div><span class="ln"> 2</span><span class="str">"[Entity] is [short definition]."</span></div>
+                    <div><span class="ln"> 3</span></div>
+                    <div><span class="ln"> 4</span><span class="cmt"># How-To (How to...)</span></div>
+                    <div><span class="ln"> 5</span><span class="str">"To [verb], [main action/outcome]."</span></div>
+                    <div><span class="ln"> 6</span></div>
+                    <div><span class="ln"> 7</span><span class="cmt"># List (Top X, Benefits of...)</span></div>
+                    <div><span class="ln"> 8</span><span class="str">"There are [N] key [items]..."</span></div>
+                    <div><span class="ln"> 9</span></div>
+                    <div><span class="ln">10</span><span class="cmt"># Boolean (Can/Is/Does...)</span></div>
+                    <div><span class="ln">11</span><span class="str">"Yes/No, [claim], if [condition]..."</span></div>
+                    <div><span class="ln">12</span></div>
+                    <div><span class="ln">13</span><span class="cmt"># Comparative (Best/Most...)</span></div>
+                    <div><span class="ln">14</span><span class="str">"The [best] for [user] is..."</span></div>
+                    <div><span class="ln">15</span></div>
+                    <div><span class="ln">16</span><span class="cmt"># Other/Brand</span></div>
+                    <div><span class="ln">17</span><span class="str">"[Entity] helps [user] [outcome]..."</span></div>
+                </div>
+                <div style="margin-top: 16px; padding: 12px; background: rgba(168, 85, 247, 0.1); border-radius: 8px; border-left: 3px solid #a855f7;">
+                    <span style="font-size: 12px; color: #c084fc;"><strong>Quality Rules:</strong> 15-30 words, keyword in first clause, no fluff phrases, snippet-worthy</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Pattern automatically selected based on H1 analysis</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Output JSON -->
+    <div class="modal-overlay" id="modal-output" onclick="closeModal(event, 'modal-output')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon output"><i class="fa-solid fa-file-code"></i></div>
+                    <div>
+                        <h3 class="modal-title">Meta SEO JSON</h3>
+                        <p class="modal-subtitle">{keyword}-meta-seo.json</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-output')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-file-export"></i> Output JSON</div>
+                <div class="sample-code" style="margin-bottom: 20px;">
+                    <div><span class="ln">1</span><span class="punct">{</span></div>
+                    <div><span class="ln">2</span>  <span class="key">"first_sentence"</span><span class="punct">:</span> <span class="str">"กลูต้าไธโอน คือสารต้านอนุมูลอิสระที่ร่างกายผลิตขึ้นเองตามธรรมชาติ ช่วยปกป้องเซลล์จากความเสียหายและสนับสนุนระบบภูมิคุ้มกันให้ทำงานได้อย่างมีประสิทธิภาพ"</span></div>
+                    <div><span class="ln">3</span><span class="punct">}</span></div>
+                </div>
+                <div class="sample-label"><i class="fa-solid fa-rotate"></i> Resume State</div>
+                <div class="sample-code" style="margin-bottom: 20px;">
+                    <div><span class="ln">1</span><span class="punct">{</span></div>
+                    <div><span class="ln">2</span>  <span class="key">"completed"</span><span class="punct">:</span> <span class="punct">[</span><span class="str">"keyword-1"</span><span class="punct">,</span> <span class="str">"keyword-2"</span><span class="punct">],</span></div>
+                    <div><span class="ln">3</span>  <span class="key">"failed"</span><span class="punct">:</span> <span class="punct">[</span><span class="str">"keyword-3"</span><span class="punct">]</span></div>
+                    <div><span class="ln">4</span><span class="punct">}</span></div>
+                </div>
+                <div class="sample-label"><i class="fa-solid fa-scroll"></i> Log Entry</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="punct">{</span></div>
+                    <div><span class="ln">2</span>  <span class="key">"timestamp"</span><span class="punct">:</span> <span class="str">"2025-01-16T10:30:00Z"</span><span class="punct">,</span></div>
+                    <div><span class="ln">3</span>  <span class="key">"keyword"</span><span class="punct">:</span> <span class="str">"กลูต้าไธโอน คืออะไร"</span><span class="punct">,</span></div>
+                    <div><span class="ln">4</span>  <span class="key">"status"</span><span class="punct">:</span> <span class="str">"success"</span><span class="punct">,</span></div>
+                    <div><span class="ln">5</span>  <span class="key">"tokens"</span><span class="punct">:</span> <span class="punct">{</span><span class="key">"input"</span><span class="punct">:</span> <span class="num">6240</span><span class="punct">,</span> <span class="key">"output"</span><span class="punct">:</span> <span class="num">45</span><span class="punct">,</span> <span class="key">"cached"</span><span class="punct">:</span> <span class="num">2000</span><span class="punct">},</span></div>
+                    <div><span class="ln">6</span>  <span class="key">"cost_usd"</span><span class="punct">:</span> <span class="num">0.00234</span></div>
+                    <div><span class="ln">7</span><span class="punct">}</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-rocket"></i>
+                <span>Ready for Phase 7.2: Meta Description Generation</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event, modalId) {
+            if (event.target === event.currentTarget || event.currentTarget.classList.contains('modal-close')) {
+                document.getElementById(modalId).classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>

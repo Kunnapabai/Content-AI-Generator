@@ -1,0 +1,291 @@
+meta:
+  query: หน้าต่างกันเสียง
+  language: Thai
+  query_type: commercial_informational
+  search_volume_estimate: medium
+  location: Thailand
+intent:
+  primary: commercial
+  primary_description: Users seeking products, advice, or solutions for soundproof
+    windows to reduce external noise.
+  micro_intents:
+  - product_recommendations
+  - diy_noise_reduction_methods
+  - material_comparisons
+  - installation_guides
+ymyl:
+  classification: non_ymyl
+  confidence: 0.3
+  rationale: Topic involves home improvement for comfort, not directly impacting health,
+    finance, or safety in a critical way.
+lexical_signals:
+  overused_tokens:
+  - กันเสียง
+  - หน้าต่าง
+  - ลดเสียง
+  distinctive_tokens:
+  - uPVC
+  - Windsor
+  - SCG
+  - Insulated Glass
+  temporal_tokens: []
+  semantic_clusters:
+  - noise_reduction
+  - window_materials
+  - home_improvement
+pattern_signals:
+  dominant_patterns:
+  - product_promotion: 'Brand + Benefit (e.g., Windsor: ห้องกันเสียง)'
+  - how_to_guide: วิธีลดเสียง (e.g., 2 วิธีลดเสียงดังทะลุหน้าต่าง)
+  - review_recommendation: แนะนำ + Solution (e.g., แนะนำวิธีลดเสียงดัง)
+  observed_angles:
+  - practical_solutions_for_noise
+  - product_features_and_benefits
+  - budget_conscious_diy
+entity_signals:
+- entity: หน้าต่างกันเสียง
+  type: product
+  salience: 1.0
+  synonyms:
+  - soundproof windows
+  - noise-reducing windows
+- entity: uPVC
+  type: material
+  salience: 0.9
+  synonyms:
+  - unplasticized polyvinyl chloride
+  - vinyl windows
+- entity: Windsor
+  type: brand
+  salience: 0.8
+  synonyms:
+  - Windsor SCG
+- entity: SCG
+  type: brand
+  salience: 0.7
+  synonyms:
+  - Siam Cement Group
+- entity: Insulated Glass
+  type: component
+  salience: 0.6
+  synonyms:
+  - double glazing
+  - กระจกสองชั้น
+- entity: Noise Protection
+  type: benefit
+  salience: 0.5
+  synonyms:
+  - sound insulation
+  - ลดทอนเสียง
+- entity: Home Theater
+  type: use_case
+  salience: 0.4
+  synonyms:
+  - ห้องดูหนัง
+  - music room
+- entity: Aluminum Windows
+  type: product_variant
+  salience: 0.3
+  synonyms:
+  - หน้าต่างอลูมิเนียม
+knowledge_graph:
+  nodes:
+  - id: 1
+    label: หน้าต่างกันเสียง
+  - id: 2
+    label: uPVC
+  - id: 3
+    label: Windsor
+  - id: 4
+    label: SCG
+  - id: 5
+    label: Insulated Glass
+  - id: 6
+    label: Noise Reduction
+  - id: 7
+    label: Home Theater
+  - id: 8
+    label: Bedroom
+  - id: 9
+    label: Aluminum Windows
+  - id: 10
+    label: DIY Methods
+  - id: 11
+    label: Sound Insulation
+  - id: 12
+    label: Road Noise
+  edges:
+  - from: 1
+    to: 2
+    predicate: made_of
+  - from: 1
+    to: 3
+    predicate: part_of
+  - from: 1
+    to: 4
+    predicate: part_of
+  - from: 1
+    to: 5
+    predicate: contains
+  - from: 1
+    to: 6
+    predicate: has_benefit
+  - from: 1
+    to: 7
+    predicate: used_for
+  - from: 1
+    to: 8
+    predicate: used_for
+  - from: 2
+    to: 6
+    predicate: provides
+  - from: 3
+    to: 1
+    predicate: is_a
+  - from: 4
+    to: 3
+    predicate: part_of
+  - from: 5
+    to: 6
+    predicate: causes
+  - from: 9
+    to: 6
+    predicate: has_drawback
+  - from: 10
+    to: 1
+    predicate: compared_with
+  - from: 11
+    to: 1
+    predicate: requires
+  - from: 12
+    to: 1
+    predicate: prevents
+  - from: 7
+    to: 1
+    predicate: requires
+  - from: 8
+    to: 1
+    predicate: located_in
+  - from: 6
+    to: 11
+    predicate: is_a
+competitor_matrix:
+- position: 1
+  title: ประตูหน้าต่างกันเสียง Indetails (@indetails456)
+  url: https://www.facebook.com/indetails456/?locale=th_TH
+  pattern: social_media_promotion
+  risk_flags:
+  - low_engagement
+  - non_informational
+- position: 2
+  title: 'WINDSOR : ห้องกันเสียง เก็บเสียง ลดเสียง โฮมเธียเตอร์ | ประตู ...'
+  url: https://www.vtp.co.th/WINDSOR/Sound-Insulation
+  pattern: product_page
+  risk_flags: []
+- position: 3
+  title: แนะนำวิธีลดเสียงดังเข้ามาทางหน้าต่างห้องนอนหน่อยครับ
+  url: https://pantip.com/topic/31634989
+  pattern: forum_qa
+  risk_flags:
+  - user_generated
+  - outdated
+- position: 4
+  title: 2 วิธีลดเสียงดังทะลุหน้าต่าง ทั้งแบบงบน้อยและงบเยอะ
+  url: https://www.acousticexpert.co/acoustic-problem/4184/
+  pattern: how_to_guide
+  risk_flags: []
+- position: 5
+  title: หน้าต่างกันเสียง จบทุกปัญหาเสียงรบกวนจากภายนอก
+  url: https://windowasia.com/blog/%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%E0%B8%95%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%81%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%AA%E0%B8%B5%E0%B8%A2%E0%B8%87-%E0%B8%88%E0%B8%9A%E0%B8%97%E0%B8%B8%E0%B8%81%E0%B8%9B%E0%B8%B1%E0%B8%8D%E0%B8%AB%E0%B8%B2%E0%B9%80%E0%B8%AA%E0%B8%B5%E0%B8%A2%E0%B8%87%E0%B8%A3%E0%B8%9A%E0%B8%81%E0%B8%A7%E0%B8%99%E0%B8%88%E0%B8%B2%E0%B8%81%E0%B8%A0%E0%B8%B2%E0%B8%A2%E0%B8%99%E0%B8%AD%E0%B8%81/
+  pattern: blog_post
+  risk_flags: []
+- position: 6
+  title: ‍♂️เงียบมาก ตั้งแต่เปลี่ยนมาใช้.. ประตู-หน้าต่างกันเสียง Indetails ...
+  url: https://www.facebook.com/indetails456/videos/%E0%B9%80%E0%B8%87%E0%B8%B5%E0%B8%A2%E0%B8%9A%E0%B8%A1%E0%B8%B2%E0%B8%81%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%95%E0%B8%B9-%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%E0%B8%95%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%81%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%AA%E0%B8%B5%E0%B8%A2%E0%B8%87-indetails/8053048671404996/
+  pattern: video_promotion
+  risk_flags:
+  - social_media
+  - short_form
+- position: 7
+  title: พักผ่อนแบบไร้เสียงรบกวนด้วย “ประตูและหน้าต่าง uPVC”
+  url: https://www.thaiwatsadu.com/th/articles/upvc-door-window-reduce-noise-by-framex
+  pattern: informational_article
+  risk_flags: []
+- position: 8
+  title: ประตู หน้าต่าง กันเสียง Windsor scg
+  url: https://www.bcscgexpert.com/catalog/item/%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B8%95%E0%B8%B9-%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%E0%B8%95%E0%B9%88%E0%B8%B2%E0%B8%87-%E0%B8%81%E0%B8%B1%E0%B8%99%E0%B9%80%E0%B8%AA%E0%B8%B5%E0%B8%A2%E0%B8%87-Windsor-scg-d1LRfas
+  pattern: product_catalog
+  risk_flags: []
+- position: 9
+  title: 'ผ้าม่านกันแสง#ผ้าม่านหน้าต่าง #ผ้าม่านกันแสง #ผ้าม่าน #ผ้าม่านมินิ ...'
+  url: https://www.tiktok.com/@mameaw_shop999/video/7601809093321329927
+  pattern: social_video
+  risk_flags:
+  - off_topic
+  - low_relevance
+- position: 10
+  title: สก๊อตไบร์ท 3M MIGHTY BLUE 4.5x6 นิ้ว (แพ็ก 5 ชิ้น)
+  url: https://www.megahome.co.th/p/1290321?srsltid=AfmBOopi4Ex0j1Hb1c0c3_Pc__N7KMiLWgVkzFQp7Zfm2PlE0GC_69ko
+  pattern: product_listing
+  risk_flags:
+  - irrelevant
+  - ad_like
+paa_and_related:
+  paa_questions:
+  - question: หน้าต่างแบบไหนกันเสียงรบกวนได้ดี
+    mapped_intent: product_recommendations
+    expansion_keywords:
+    - กระจกสองชั้น
+    - uPVC
+  - question: ประตูกันเสียง SCG ราคาเท่าไหร่
+    mapped_intent: pricing_inquiry
+    expansion_keywords:
+    - SCG Windsor
+    - ราคาประตู
+  - question: ประตูแบบไหนกันเสียงได้ดีที่สุด
+    mapped_intent: comparisons
+    expansion_keywords:
+    - ประตู uPVC
+    - ประตูกันเสียง
+  - question: หน้าต่างอลูมิเนียม กันเสียงได้ไหม
+    mapped_intent: material_evaluation
+    expansion_keywords:
+    - อลูมิเนียม vs uPVC
+    - กันเสียง
+  related_keywords: []
+consensus_signals:
+  must_cover_concepts:
+  - types_of_soundproof_windows
+  - materials_like_uPVC_and_glass
+  - benefits_for_noise_reduction
+  - installation_and_diy_options
+  dominant_tone: helpful_promotional
+  common_narratives:
+  - Effective noise blocking for peaceful living
+  - Product recommendations from brands like Windsor and SCG
+opportunity_gaps:
+- gap: Detailed pricing comparisons for soundproof window options
+  confidence: 0.8
+  rationale: PAA mentions pricing, but top results lack specifics.
+- gap: Step-by-step installation guides for DIY noise reduction
+  confidence: 0.7
+  rationale: Methods mentioned but no comprehensive tutorials.
+- gap: Long-term durability and maintenance reviews
+  confidence: 0.6
+  rationale: Focus on benefits, but little on upkeep.
+title_generation_signals:
+  required_tokens:
+  - กันเสียง
+  - หน้าต่าง
+  avoid_tokens:
+  - ผ้าม่าน
+  - สก๊อตไบร์ท
+  recommended_formats:
+  - 'How-to Guide: [Number] วิธี [Benefit]'
+  - 'Product Review: [Brand] [Keyword]'
+  - 'Question: [PAA Question]?'
+  angle_recommendations:
+  - budget_friendly_solutions
+  - best_materials_for_thai_homes
+  - comparisons_with_traditional_windows
+quality_score: 1.0

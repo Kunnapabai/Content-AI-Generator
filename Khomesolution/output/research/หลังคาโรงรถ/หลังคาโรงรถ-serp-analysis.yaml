@@ -1,256 +1,279 @@
-competitor_matrix:
-- pattern: listicle
-  position: 1
-  quality_score: 0.8
-  risk_flags:
-  - low_eeat
-  title: วัสดุต่อเติมหลังคาโรงจอดรถหน้าบ้าน ทำกันสาด มีอะไรบ้าง
-- pattern: service_catalog
-  position: 2
-  quality_score: 0.7
-  risk_flags: []
-  title: แคตตาล็อก | รับออกแบบสร้างหลังคาที่จอดรถ วิริยะไพศาล
-- pattern: service_ad
-  position: 3
-  quality_score: 0.6
-  risk_flags:
-  - social_media
-  title: CN Roof รับทำหลังคา หลังคาโรงรถ กันสาด หลังคาไว ...
-- pattern: service_offering
-  position: 4
-  quality_score: 0.8
-  risk_flags: []
-  title: บริการติดตั้งโรงจอดรถ หลังคาโรงรถ กันสาด - SHERA
-- pattern: inspiration_board
-  position: 5
-  quality_score: 0.5
-  risk_flags:
-  - user_generated
-  title: ไอเดีย หลังคาโรงรถ 8 รายการเพื่อบันทึกในวันนี้
-- pattern: pros_cons_guide
-  position: 6
-  quality_score: 0.7
-  risk_flags: []
-  title: ไอเดียแบบหลังคาโรงจอดรถ พร้อมข้อดี ข้อเสีย
-- pattern: listicle
-  position: 7
-  quality_score: 0.9
-  risk_flags: []
-  title: 5 ประเภทหลังคาที่แนะนำสำหรับหลังคาโรงรถและกันสาด
-- pattern: product_service
-  position: 8
-  quality_score: 0.8
-  risk_flags: []
-  title: หลังคาโรงรถ-กันสาด แผ่นเมทัลชีท พร้อมติดตั้ง
-- pattern: decision_guide
-  position: 9
-  quality_score: 0.8
-  risk_flags: []
-  title: ทําหลังคาโรงรถแบบไหนดี ทนแดดทนฝน ปกป้องรถได้เต็มที่
-- pattern: product_catalog
-  position: 10
-  quality_score: 0.7
-  risk_flags: []
-  title: หลังคาจอดรถสำเร็จรูป มีแบบให้ลูกค้าเลือกถึง 12แบบ
-consensus_signals:
-  authority_signals:
-  - brand_mentions: SHERA
-  - Q-Chang
-  dominant_tone: informative_practical
-  must_cover_concepts:
-  - วัสดุหลังคา (materials)
-  - ข้อดีข้อเสีย (pros and cons)
-  - ไอเดียการออกแบบ (design ideas)
-  - บริการติดตั้ง (installation services)
-entity_signals:
-- entity: หลังคาเมทัลชีท
-  salience: 0.9
-  synonyms:
-  - metal sheet roof
-  - เมทัลชีล
-  type: building_material
-- entity: หลังคาไวนิล
-  salience: 0.8
-  synonyms:
-  - vinyl roof
-  - UPVC roof
-  type: building_material
-- entity: หลังคาโพลีคาร์บอเนต
-  salience: 0.7
-  synonyms:
-  - polycarbonate roof
-  type: building_material
-- entity: กันสาด
-  salience: 0.8
-  synonyms:
-  - awning
-  - canopy
-  type: structure
-- entity: โรงจอดรถ
-  salience: 1.0
-  synonyms:
-  - carport
-  - garage
-  type: structure
-- entity: หลังคาอะคริลิก
-  salience: 0.6
-  synonyms:
-  - acrylic roof
-  - SHINKOLITE
-  type: building_material
-- entity: หลังคาไฟเบอร์กลาส
-  salience: 0.6
-  synonyms:
-  - fiberglass roof
-  type: building_material
-- entity: วัสดุหลังคา
-  salience: 0.9
-  synonyms:
-  - roof materials
-  type: category
+meta:
+  query: หลังคาโรงรถ
+  language: th
+  search_volume_estimate: null
+  competition_level: medium
+  query_type: informational_commercial
 intent:
+  primary_intent: informational_commercial
+  description: Users seek information on types, materials, designs, and services for
+    carport roofs, including pros/cons and installation options.
   micro_intents:
   - material_selection
   - design_ideas
+  - pros_cons_analysis
   - installation_services
-  - pros_cons_evaluation
-  primary: commercial_research
-knowledge_graph:
-  edges:
-  - from: 1
-    predicate: made_of
-    to: 2
-  - from: 1
-    predicate: made_of
-    to: 3
-  - from: 1
-    predicate: made_of
-    to: 4
-  - from: 1
-    predicate: made_of
-    to: 5
-  - from: 1
-    predicate: made_of
-    to: 6
-  - from: 1
-    predicate: part_of
-    to: 7
-  - from: 1
-    predicate: requires
-    to: 8
-  - from: 1
-    predicate: used_for
-    to: 9
-  - from: 1
-    predicate: used_for
-    to: 10
-  - from: 2
-    predicate: has_benefit
-    to: 11
-  - from: 3
-    predicate: has_benefit
-    to: 11
-  - from: 4
-    predicate: has_benefit
-    to: 11
-  - from: 1
-    predicate: costs
-    to: 12
-  - from: 7
-    predicate: compared_with
-    to: 1
-  - from: 9
-    predicate: requires
-    to: 1
-  - from: 2
-    predicate: used_for
-    to: 1
-  - from: 10
-    predicate: prevents
-    to: 1
-  - from: 11
-    predicate: has_benefit
-    to: 1
-  nodes:
-  - id: 1
-    label: หลังคาโรงรถ
-  - id: 2
-    label: เมทัลชีท
-  - id: 3
-    label: ไวนิล
-  - id: 4
-    label: โพลีคาร์บอเนต
-  - id: 5
-    label: อะคริลิก
-  - id: 6
-    label: ไฟเบอร์กลาส
-  - id: 7
-    label: กันสาด
-  - id: 8
-    label: โครงสร้างเหล็ก
-  - id: 9
-    label: การติดตั้ง
-  - id: 10
-    label: ปกป้องรถ
-  - id: 11
-    label: ทนแดดทนฝน
-  - id: 12
-    label: ราคา
+  - cost_estimates
+ymyl:
+  classification: non_ymyl
+  confidence: 0.3
+  rationale: Topic involves home improvement and potential costs but lacks direct
+    financial, health, or safety implications requiring expert authority.
 lexical_signals:
-  distinctive_tokens:
-  - เมทัลชีท
-  - ไวนิล
-  - โพลีคาร์บอเนต
   overused_tokens:
   - หลังคา
   - โรงรถ
   - กันสาด
+  distinctive_tokens:
+  - เมทัลชีท
+  - ไวนิล
+  - โพลีคาร์บอเนต
   temporal_tokens: []
-meta:
-  language: Thai
-  query: หลังคาโรงรถ
-  query_type: informational_commercial
-  search_volume_estimate: medium
-  seasonality: low
-opportunity_gaps:
-- confidence: 0.8
-  gap: detailed_cost_calculator
-  rationale: Titles mention prices but lack interactive tools.
-- confidence: 0.7
-  gap: DIY_installation_guides
-  rationale: Focus on professional services; opportunity for user-friendly DIY.
-- confidence: 0.6
-  gap: regional_climate_adaptations
-  rationale: Thai-specific weather durability not deeply covered.
+  frequency_analysis:
+    หลังคา: 10
+    โรงรถ: 9
+    กันสาด: 5
+pattern_signals:
+  dominant_patterns:
+  - listicle: 3
+  - descriptive_guide: 4
+  - service_offering: 3
+  - idea_inspiration: 2
+  angles_observed:
+  - material_types_and_features
+  - design_ideas_and_pros_cons
+  - installation_and_pricing
+  - product_catalogs
+entity_signals:
+- entity: หลังคา
+  type: product
+  salience: 1.0
+  synonyms:
+  - roof
+  - หลังคาโรงรถ
+- entity: โรงรถ
+  type: structure
+  salience: 0.95
+  synonyms:
+  - carport
+  - garage
+- entity: กันสาด
+  type: structure
+  salience: 0.8
+  synonyms:
+  - awning
+  - canopy
+- entity: เมทัลชีท
+  type: material
+  salience: 0.75
+  synonyms:
+  - metal sheet
+- entity: ไวนิล
+  type: material
+  salience: 0.7
+  synonyms:
+  - vinyl
+- entity: โพลีคาร์บอเนต
+  type: material
+  salience: 0.65
+  synonyms:
+  - polycarbonate
+- entity: อะคริลิก
+  type: material
+  salience: 0.6
+  synonyms:
+  - acrylic
+- entity: ไฟเบอร์กลาส
+  type: material
+  salience: 0.55
+  synonyms:
+  - fiberglass
+knowledge_graph:
+  nodes:
+  - id: carport_roof
+    label: หลังคาโรงรถ
+    type: structure
+  - id: metal_sheet
+    label: เมทัลชีท
+    type: material
+  - id: vinyl_roof
+    label: หลังคาไวนิล
+    type: material
+  - id: polycarbonate
+    label: โพลีคาร์บอเนต
+    type: material
+  - id: acrylic
+    label: อะคริลิก
+    type: material
+  - id: fiberglass
+    label: ไฟเบอร์กลาส
+    type: material
+  - id: awning
+    label: กันสาด
+    type: structure
+  - id: installation_service
+    label: บริการติดตั้ง
+    type: service
+  - id: durability
+    label: ความทนทาน
+    type: attribute
+  - id: cost
+    label: ราคา
+    type: attribute
+  - id: design_idea
+    label: ไอเดียออกแบบ
+    type: concept
+  - id: home_extension
+    label: ต่อเติมบ้าน
+    type: activity
+  edges:
+  - source: carport_roof
+    target: metal_sheet
+    predicate: made_of
+  - source: carport_roof
+    target: vinyl_roof
+    predicate: made_of
+  - source: carport_roof
+    target: polycarbonate
+    predicate: made_of
+  - source: carport_roof
+    target: acrylic
+    predicate: made_of
+  - source: carport_roof
+    target: fiberglass
+    predicate: made_of
+  - source: carport_roof
+    target: awning
+    predicate: part_of
+  - source: carport_roof
+    target: installation_service
+    predicate: requires
+  - source: metal_sheet
+    target: durability
+    predicate: has_benefit
+  - source: vinyl_roof
+    target: cost
+    predicate: costs
+  - source: polycarbonate
+    target: durability
+    predicate: has_benefit
+  - source: carport_roof
+    target: design_idea
+    predicate: used_for
+  - source: carport_roof
+    target: home_extension
+    predicate: part_of
+  - source: awning
+    target: durability
+    predicate: has_benefit
+  - source: installation_service
+    target: cost
+    predicate: costs
+  - source: fiberglass
+    target: durability
+    predicate: has_benefit
+  - source: acrylic
+    target: durability
+    predicate: has_drawback
+  - source: carport_roof
+    target: cost
+    predicate: costs
+  - source: design_idea
+    target: home_extension
+    predicate: used_for
+competitor_matrix:
+- position: 1
+  title: วัสดุต่อเติมหลังคาโรงจอดรถหน้าบ้าน ทำกันสาด มีอะไรบ้าง
+  url: https://www.scghome.com/living-ideas/articles/%E0%B8%A7%E0%B8%B1%E0%B8%AA%E0%B8%94%E0%B8%B8%E0%B8%AB%E0%B8%A5%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B8%A3%E0%B8%96%E0%B8%A1%E0%B8%B5%E0%B8%AD%E0%B8%B0%E0%B9%84%E0%B8%A3%E0%B8%9A%E0%B9%89%E0%B8%B2%E0%B8%87?srsltid=AfmBOoqtOg4Q9uU6cXzBC3DdYY5aFE9RK3PyD5WpZiXHHo8y833LQNNg
+  pattern: descriptive_guide
+  risk_flags:
+  - potential_thin_content
+- position: 2
+  title: แคตตาล็อก | รับออกแบบสร้างหลังคาที่จอดรถ วิริยะไพศาล
+  url: https://www.viriyaphaisal.co.th/catalog
+  pattern: service_offering
+  risk_flags: []
+- position: 3
+  title: CN Roof รับทำหลังคา หลังคาโรงรถ กันสาด หลังคาไว ...
+  url: https://www.facebook.com/cnroof/?locale=th_TH
+  pattern: service_offering
+  risk_flags:
+  - social_media_source
+- position: 4
+  title: บริการติดตั้งโรงจอดรถ หลังคาโรงรถ กันสาด - SHERA
+  url: https://www.shera.com/services-solutions/garage-extension
+  pattern: service_offering
+  risk_flags: []
+- position: 5
+  title: ไอเดีย หลังคาโรงรถ 8 รายการเพื่อบันทึกในวันนี้
+  url: https://www.pinterest.com/suwannamaehem/%E0%B8%AB%E0%B8%A5%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B8%A3%E0%B8%96/
+  pattern: idea_inspiration
+  risk_flags:
+  - visual_only
+- position: 6
+  title: ไอเดียแบบหลังคาโรงจอดรถ พร้อมข้อดี ข้อเสีย
+  url: https://www.thaiwatsadu.com/th/articles/carport-roof-ideas-pros-cons
+  pattern: descriptive_guide
+  risk_flags: []
+- position: 7
+  title: 5 ประเภทหลังคาที่แนะนำสำหรับหลังคาโรงรถและกันสาด
+  url: https://www.wongguru.com/content/5139/5-%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%80%E0%B8%A0%E0%B8%97%E0%B8%AB%E0%B8%A5%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B9%81%E0%B8%99%E0%B8%B0%E0%B8%99%E0%B8%B3%E0%B8%AA%E0%B8%B3%E0%B8%AB%E0%B8%A3%E0%B8%B1%E0%B8%9A%E0%B8%AB%E0%B8%A5%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B8%A3%E0%B8%96%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%81%E0%B8%B1%E0%B8%99%E0%B8%AA%E0%B8%B2%E0%B8%94
+  pattern: listicle
+  risk_flags: []
+- position: 8
+  title: หลังคาโรงรถ-กันสาด แผ่นเมทัลชีท พร้อมติดตั้ง
+  url: https://www.q-chang.com/p/carport-metal-sheet-premium-c1
+  pattern: product_page
+  risk_flags: []
+- position: 9
+  title: ทําหลังคาโรงรถแบบไหนดี ทนแดดทนฝน ปกป้องรถได้เต็มที่
+  url: https://nocnoc.com/blog/how-choose-garage-roof-to-protect-your-car/?srsltid=AfmBOoq-tOQcu2Xe1Na32sbyY2FQzxnuw_cHftQYXEVclxmX33DUzFtD
+  pattern: question_guide
+  risk_flags: []
+- position: 10
+  title: หลังคาจอดรถสำเร็จรูป มีแบบให้ลูกค้าเลือกถึง 12แบบ
+  url: https://www.viriyaphaisal.com/16775508/%E0%B8%AB%E0%B8%A5%E0%B8%B1%E0%B8%87%E0%B8%84%E0%B8%B2%E0%B9%82%E0%B8%A3%E0%B8%87%E0%B8%A3%E0%B8%96%E0%B8%AA%E0%B8%B3%E0%B9%80%E0%B8%A3%E0%B9%87%E0%B8%88%E0%B8%A3%E0%B8%B9%E0%B8%9B-%E0%B8%A3%E0%B8%A7%E0%B8%A1
+  pattern: listicle
+  risk_flags: []
 paa_and_related:
-  mappings: {}
   paa_questions: []
   related_keywords: []
-pattern_signals:
-  angles_observed:
-  - material_comparison
-  - design_inspiration
-  - installation_offers
-  dominant_patterns:
-  - listicle: 5 ประเภทหลังคาที่แนะนำ
-  - guide: ทําหลังคาโรงรถแบบไหนดี
-  - service: รับทำหลังคา หลังคาโรงรถ
-quality_score: 1.0
-title_generation_signals:
-  angle_recommendations:
-  - comparison_focus
-  - budget_oriented
-  - modern_design
-  avoid_tokens:
-  - ราคาถูก
-  - ฟรี
-  format_recommendations: X ประเภท[Token]สำหรับ[Query] พร้อมข้อดีข้อเสีย
-  required_tokens:
-  - หลังคา
-  - โรงรถ
-  - กันสาด
-ymyl:
-  classification: true
+  mappings: {}
+consensus_signals:
+  must_cover_concepts:
+  - types_of_roof_materials
+  - pros_and_cons
+  - installation_options
+  - design_ideas
+  - cost_factors
+  dominant_tone: informative_practical
+  authority_indicators:
+  - expert_recommendations
+  - material_specs
+opportunity_gaps:
+- gap: detailed_cost_comparisons_across_materials
+  confidence: 0.8
+  rationale: Snippets mention prices but lack comprehensive breakdowns.
+- gap: DIY_installation_guides
   confidence: 0.7
-  rationale: Involves home improvement costs and structural decisions affecting property
-    value and safety.
+  rationale: Focus on professional services; user interest in self-build likely.
+- gap: modern_sustainable_design_trends
+  confidence: 0.6
+  rationale: Traditional materials dominate; eco-friendly options underexplored.
+title_generation_signals:
+  required_tokens:
+  - หลังคาโรงรถ
+  - แบบ
+  - ไอเดีย
+  avoid_tokens:
+  - รีวิว
+  - ราคาถูก
+  recommended_formats:
+  - 'listicle: [Number] แบบหลังคาโรงรถ...'
+  - 'question: หลังคาโรงรถแบบไหนดี...'
+  - 'guide: คู่มือเลือกหลังคาโรงรถ...'
+  angle_recommendations:
+  - material-focused
+  - pros_cons
+  - budget-friendly
+quality_score: 1.0

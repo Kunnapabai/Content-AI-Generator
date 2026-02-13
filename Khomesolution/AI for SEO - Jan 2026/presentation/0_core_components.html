@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4 Core Components of AI-Powered SEO | Privato Content</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+
+            /* Circle colors */
+            --context-color: #3b82f6;
+            --context-glow: rgba(59, 130, 246, 0.3);
+            --tools-color: #eab308;
+            --tools-glow: rgba(234, 179, 8, 0.3);
+            --model-color: #ef4444;
+            --model-glow: rgba(239, 68, 68, 0.3);
+            --prompt-color: #22c55e;
+            --prompt-glow: rgba(34, 197, 94, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, transparent 40%),
+                        radial-gradient(circle at bottom left, #312e81, transparent 40%),
+                        linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            height: 100vh;
+            margin: 0 auto;
+            padding: 60px 24px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #818cf8;
+            margin-bottom: 16px;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 0;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Venn Diagram Container */
+        .venn-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            flex: 1;
+            animation: fadeIn 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .venn-container {
+            position: relative;
+            width: 520px;
+            height: 520px;
+        }
+
+        /* Individual circles - all positioned from center */
+        .circle {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: inherit;
+            filter: blur(30px);
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        .circle:hover {
+            transform: scale(1.03);
+            z-index: 10;
+        }
+
+        .circle-label {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9),
+                         0 2px 4px rgba(0, 0, 0, 1);
+            color: #ffffff;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        /* Context - Top Left (Blue) - offset from center */
+        .circle.context {
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.65) 0%, rgba(59, 130, 246, 0.3) 40%, rgba(59, 130, 246, 0.15) 60%, transparent 80%);
+            border: 3px solid var(--context-color);
+            box-shadow: 0 0 60px var(--context-glow),
+                        inset 0 0 60px rgba(59, 130, 246, 0.15);
+        }
+
+        .circle.context:hover {
+            box-shadow: 0 0 100px var(--context-glow),
+                        inset 0 0 80px rgba(59, 130, 246, 0.25);
+        }
+
+        /* Tools - Top Right (Yellow) */
+        .circle.tools {
+            top: 0;
+            right: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(234, 179, 8, 0.65) 0%, rgba(234, 179, 8, 0.3) 40%, rgba(234, 179, 8, 0.15) 60%, transparent 80%);
+            border: 3px solid var(--tools-color);
+            box-shadow: 0 0 60px var(--tools-glow),
+                        inset 0 0 60px rgba(234, 179, 8, 0.15);
+        }
+
+        .circle.tools:hover {
+            box-shadow: 0 0 100px var(--tools-glow),
+                        inset 0 0 80px rgba(234, 179, 8, 0.25);
+        }
+
+        /* Model - Bottom Left (Red) */
+        .circle.model {
+            bottom: 0;
+            left: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(239, 68, 68, 0.65) 0%, rgba(239, 68, 68, 0.3) 40%, rgba(239, 68, 68, 0.15) 60%, transparent 80%);
+            border: 3px solid var(--model-color);
+            box-shadow: 0 0 60px var(--model-glow),
+                        inset 0 0 60px rgba(239, 68, 68, 0.15);
+        }
+
+        .circle.model:hover {
+            box-shadow: 0 0 100px var(--model-glow),
+                        inset 0 0 80px rgba(239, 68, 68, 0.25);
+        }
+
+        /* Prompt - Bottom Right (Green) */
+        .circle.prompt {
+            bottom: 0;
+            right: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.65) 0%, rgba(34, 197, 94, 0.3) 40%, rgba(34, 197, 94, 0.15) 60%, transparent 80%);
+            border: 3px solid var(--prompt-color);
+            box-shadow: 0 0 60px var(--prompt-glow),
+                        inset 0 0 60px rgba(34, 197, 94, 0.15);
+        }
+
+        .circle.prompt:hover {
+            box-shadow: 0 0 100px var(--prompt-glow),
+                        inset 0 0 80px rgba(34, 197, 94, 0.25);
+        }
+
+        /* Center intersection glow */
+        .center-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle,
+                rgba(255, 255, 255, 0.5) 0%,
+                rgba(139, 92, 246, 0.4) 40%,
+                transparent 70%);
+            filter: blur(15px);
+            animation: pulse 3s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* Info Card Styles */
+        .modal-overlay {
+            position: fixed;
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Positioning for each card */
+        #modal-context { top: 12%; left: 3%; }
+        #modal-tools { top: 12%; right: 3%; }
+        #modal-model { bottom: 8%; left: 3%; }
+        #modal-prompt { bottom: 8%; right: 3%; }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 0;
+            width: 380px;
+            max-width: 90vw;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            pointer-events: auto;
+            transform: translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-content::-webkit-scrollbar { width: 6px; }
+        .modal-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+        .modal-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+
+        .modal-header {
+            padding: 28px 32px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .modal-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .modal-icon.context {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(59, 130, 246, 0.1));
+            color: var(--context-color);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .modal-icon.tools {
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.3), rgba(234, 179, 8, 0.1));
+            color: var(--tools-color);
+            border: 1px solid rgba(234, 179, 8, 0.3);
+        }
+
+        .modal-icon.model {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(239, 68, 68, 0.1));
+            color: var(--model-color);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .modal-icon.prompt {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(34, 197, 94, 0.1));
+            color: var(--prompt-color);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .modal-title.context { color: var(--context-color); }
+        .modal-title.tools { color: var(--tools-color); }
+        .modal-title.model { color: var(--model-color); }
+        .modal-title.prompt { color: var(--prompt-color); }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 18px;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px 32px 32px;
+        }
+
+        .modal-description {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-main);
+            margin-bottom: 20px;
+        }
+
+        .bullet-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .bullet-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .bullet-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .bullet-list.context li::before { background: var(--context-color); }
+        .bullet-list.tools li::before { background: var(--tools-color); }
+        .bullet-list.model li::before { background: var(--model-color); }
+        .bullet-list.prompt li::before { background: var(--prompt-color); }
+
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 30px;
+            width: 100%;
+        }
+
+        .next-phase {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .next-phase:hover {
+            color: var(--primary);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 28px; }
+            .phase-badge { font-size: 11px; padding: 6px 14px; }
+            .venn-container {
+                width: 340px;
+                height: 340px;
+            }
+            .circle {
+                width: 210px;
+                height: 210px;
+            }
+            .circle-label {
+                font-size: 16px;
+                letter-spacing: 2px;
+            }
+            .modal-content {
+                max-width: 95%;
+            }
+            .modal-header {
+                padding: 20px 24px;
+            }
+            .modal-body {
+                padding: 20px 24px 24px;
+            }
+            .modal-title {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="phase-badge">
+                <i class="fa-solid fa-brain"></i>
+                Core Architecture
+            </div>
+            <h1>4 Core Components of AI-Powered SEO</h1>
+        </header>
+
+        <!-- Venn Diagram -->
+        <section class="venn-section">
+            <div class="venn-container">
+                <!-- Context Circle - Top Left -->
+                <div class="circle context" onclick="openModal('modal-context')">
+                    <span class="circle-label">Context</span>
+                </div>
+
+                <!-- Tools Circle - Top Right -->
+                <div class="circle tools" onclick="openModal('modal-tools')">
+                    <span class="circle-label">Tools</span>
+                </div>
+
+                <!-- Model Circle - Bottom Left -->
+                <div class="circle model" onclick="openModal('modal-model')">
+                    <span class="circle-label">Model</span>
+                </div>
+
+                <!-- Prompt Circle - Bottom Right -->
+                <div class="circle prompt" onclick="openModal('modal-prompt')">
+                    <span class="circle-label">Prompt</span>
+                </div>
+
+                <!-- Center Glow -->
+                <div class="center-glow"></div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="2_data-collection-flow.html" class="next-phase">
+                <span>Next: Data Collection</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <p style="margin-top: 16px; color: rgba(255,255,255,0.2); font-size: 12px;">&copy; 2025 Privato Content AI System</p>
+        </footer>
+    </div>
+
+    <!-- Modal: Context -->
+    <div class="modal-overlay" id="modal-context" onclick="closeModal(event, 'modal-context')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon context"><i class="fa-solid fa-layer-group"></i></div>
+                    <div>
+                        <h3 class="modal-title context">Context</h3>
+                        <p class="modal-subtitle">Information that shapes understanding</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-context')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">Each keyword generates 10+ context files that flow through the pipeline, building comprehensive SEO intelligence:</p>
+                <ul class="bullet-list context">
+                    <li>SERP Data - competitions.json (titles, snippets) + keywords.json (PAA, related)</li>
+                    <li>Keyword Metrics - master-queries.csv with volume, traffic from Flikover</li>
+                    <li>Title Analysis - Intent, entities, knowledge graph, pattern signals (YAML)</li>
+                    <li>Outline + Research - H1-H4 structure → research phases → deep research findings</li>
+                    <li>Final Output - HTML article + meta-seo.json + schema markup</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Tools -->
+    <div class="modal-overlay" id="modal-tools" onclick="closeModal(event, 'modal-tools')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon tools"><i class="fa-solid fa-wrench"></i></div>
+                    <div>
+                        <h3 class="modal-title tools">Tools</h3>
+                        <p class="modal-subtitle">External capabilities that extend functionality</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-tools')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">We integrate 6+ specialized tools to automate the entire SEO content pipeline from research to publishing:</p>
+                <ul class="bullet-list tools">
+                    <li>Flikover + Serper - Keyword research (volume, traffic) & SERP data (PAA, competitors)</li>
+                    <li>Google Search Console - CTR analysis & search performance tracking</li>
+                    <li>ChatGPT Deep Research - Manual research execution using generated prompts</li>
+                    <li>WordPress API - Automated schema injection & content publishing</li>
+                    <li>Google Sheets - Pipeline tracking & report exports</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Model -->
+    <div class="modal-overlay" id="modal-model" onclick="closeModal(event, 'modal-model')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon model"><i class="fa-solid fa-microchip"></i></div>
+                    <div>
+                        <h3 class="modal-title model">Model</h3>
+                        <p class="modal-subtitle">The AI engine powering intelligence</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-model')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">We leverage multiple specialized AI models via OpenRouter to optimize for different tasks - balancing speed, cost, and quality.</p>
+                <ul class="bullet-list model">
+                    <li>Grok 4 Fast - 2M context window for deep analysis (Title, Research, Schema)</li>
+                    <li>Gemini 3 Flash - Fast content generation with implicit caching (Outline, Meta SEO)</li>
+                    <li>Cost-Optimized - Strategic model selection reduces costs by 60-75%</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Prompt -->
+    <div class="modal-overlay" id="modal-prompt" onclick="closeModal(event, 'modal-prompt')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon prompt"><i class="fa-solid fa-terminal"></i></div>
+                    <div>
+                        <h3 class="modal-title prompt">Prompt</h3>
+                        <p class="modal-subtitle">Instructions that guide AI behavior</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-prompt')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-description">Our prompt library contains 10+ specialized prompts for each SEO pipeline stage. Top 5 priority prompts:</p>
+                <ul class="bullet-list prompt">
+                    <li>Title Analysis - SERP pattern extractor for intent, entities & knowledge graph</li>
+                    <li>Title Generator - Creates 3 CTR-optimized titles with scoring algorithm</li>
+                    <li>Outline Architect - SERP-aware H1-H4 structure with weighted signals</li>
+                    <li>Deep Research - Converts outline to 3-7 research phases (Academic vs Industry)</li>
+                    <li>Meta SEO - First sentence + meta description grounded in HTML context</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event, modalId) {
+            if (event.target === event.currentTarget || event.currentTarget.classList.contains('modal-close')) {
+                document.getElementById(modalId).classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Add subtle hover interactions
+        document.querySelectorAll('.circle').forEach(circle => {
+            circle.addEventListener('mouseenter', () => {
+                document.querySelectorAll('.circle').forEach(c => {
+                    if (c !== circle) {
+                        c.style.opacity = '0.6';
+                    }
+                });
+            });
+
+            circle.addEventListener('mouseleave', () => {
+                document.querySelectorAll('.circle').forEach(c => {
+                    c.style.opacity = '1';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

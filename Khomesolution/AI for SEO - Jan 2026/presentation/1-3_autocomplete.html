@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1.3: Google Autocomplete Expansion | Privato Content</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --dataforseo: #ec4899;
+            --autocomplete: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, transparent 40%),
+                        radial-gradient(circle at bottom left, #312e81, transparent 40%),
+                        linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 100px;
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #a78bfa;
+            margin-bottom: 32px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+        }
+
+        .header h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Objectives Styling */
+        .objectives-container {
+            margin-top: 32px;
+            max-width: 800px;
+        }
+
+        .objectives-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .objective-item:last-child {
+            border-bottom: none;
+        }
+
+        .objective-bullet {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: rgba(139, 92, 246, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #a78bfa;
+            margin-top: 2px;
+        }
+
+        .objective-content {
+            flex: 1;
+        }
+
+        .objective-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.5;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .command-section {
+            margin-bottom: 80px;
+            animation: fadeIn 1s ease 0.15s forwards;
+            opacity: 0;
+        }
+
+        .command-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .command-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .command-card h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* Flow Section */
+        .flow-section {
+            margin: 0 0 100px;
+            animation: fadeIn 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .flow-wrapper {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .flow-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px 32px;
+            text-align: center;
+            width: 220px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+        }
+
+        .flow-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.4);
+        }
+
+        .flow-box:hover::before {
+            opacity: 1;
+        }
+
+        .icon-wrapper {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            position: relative;
+        }
+
+        .flow-box.input .icon-wrapper {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.1));
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .flow-box.api .icon-wrapper {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.1));
+            color: #f472b6;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .flow-box.autocomplete .icon-wrapper {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.1));
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .flow-box.process .icon-wrapper {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.2), rgba(2, 132, 199, 0.1));
+            color: #38bdf8;
+            border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .flow-box.output .icon-wrapper {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .flow-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .flow-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            align-self: center;
+        }
+
+        /* Parameters Grid */
+        .params-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 60px;
+            font-size: 18px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .param-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .param-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .param-flag {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 14px;
+            color: #67e8f9;
+            background: rgba(103, 232, 249, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .param-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .param-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* API Methods Section */
+        .methods-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.35s forwards;
+            opacity: 0;
+        }
+
+        .methods-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .method-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 32px;
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .method-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .method-card.standard {
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .method-card.standard::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #8b5cf6;
+        }
+
+        .method-card.live {
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .method-card.live::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #ec4899;
+        }
+
+        .method-icon {
+            width: 64px;
+            height: 64px;
+            min-width: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .method-card.standard .method-icon {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.1));
+            color: #a78bfa;
+        }
+
+        .method-card.live .method-icon {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.1));
+            color: #f472b6;
+        }
+
+        .method-info h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .method-card.standard .method-info h3 { color: #a78bfa; }
+        .method-card.live .method-info h3 { color: #f472b6; }
+
+        .method-info p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .method-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .recommended-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 100px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Autocomplete Examples */
+        .examples-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .code-window {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .window-header {
+            background: #0f172a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 16px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #22c55e; }
+
+        .file-name {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-content {
+            padding: 24px;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .ln { color: #475569; margin-right: 16px; user-select: none; }
+        .cmt { color: #64748b; font-style: italic; }
+        .step { color: #a78bfa; }
+        .arrow { color: #475569; }
+        .highlight { color: #fbbf24; }
+        .data { color: #86efac; }
+        .keyword { color: #f472b6; }
+
+        /* Expansion Visual */
+        .expansion-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.45s forwards;
+            opacity: 0;
+        }
+
+        .expansion-demo {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .expansion-row {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            margin-bottom: 32px;
+        }
+
+        .expansion-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .seed-keyword {
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            color: #818cf8;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        .expansion-arrow {
+            color: rgba(255,255,255,0.2);
+            font-size: 24px;
+        }
+
+        .suggestions-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .suggestion-tag {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #c4b5fd;
+            transition: all 0.2s;
+        }
+
+        .suggestion-tag:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+
+        .suggestion-tag.new {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.2);
+            color: #6ee7b7;
+        }
+
+        /* Output Structure */
+        .output-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.5s forwards;
+            opacity: 0;
+        }
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .output-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .output-card h4 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tree-view {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .tree-view .folder { color: #fbbf24; }
+        .tree-view .file { color: #86efac; }
+        .tree-view .branch { color: #475569; }
+
+        /* Benefits */
+        .benefits-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.55s forwards;
+            opacity: 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 24px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.3s;
+        }
+
+        .benefit-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-size: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .benefit-text h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .benefit-text p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.6s forwards;
+            opacity: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 20px;
+            padding: 32px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+
+        .stat-value {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #a78bfa 0%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 120px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 60px;
+        }
+
+        .next-phase {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .next-phase:hover {
+            color: var(--primary);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+            .params-grid { grid-template-columns: repeat(2, 1fr); }
+            .methods-grid { grid-template-columns: 1fr; }
+            .output-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .flow-wrapper { flex-direction: column; align-items: center; }
+            .flow-arrow { transform: rotate(90deg); margin: 8px 0; }
+            .expansion-row { flex-direction: column; text-align: center; }
+            .expansion-arrow { transform: rotate(90deg); }
+        }
+
+        @media (max-width: 768px) {
+            .params-grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 42px; }
+            .benefits-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 0;
+            max-width: 650px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 80px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .modal-icon.input { background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(79, 70, 229, 0.2)); color: #818cf8; }
+        .modal-icon.api { background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.2)); color: #f472b6; }
+        .modal-icon.autocomplete { background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(124, 58, 237, 0.2)); color: #a78bfa; }
+        .modal-icon.process { background: linear-gradient(135deg, rgba(14, 165, 233, 0.3), rgba(2, 132, 199, 0.2)); color: #38bdf8; }
+        .modal-icon.output { background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2)); color: #34d399; }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px 28px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sample-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sample-code {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .sample-code .ln { color: #475569; margin-right: 12px; user-select: none; }
+        .sample-code .kw { color: #86efac; }
+        .sample-code .str { color: #fbbf24; }
+        .sample-code .num { color: #f472b6; }
+        .sample-code .cmt { color: #64748b; font-style: italic; }
+        .sample-code .key { color: #67e8f9; }
+        .sample-code .punct { color: #94a3b8; }
+
+        .modal-footer {
+            padding: 16px 28px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-footer i {
+            color: #67e8f9;
+            font-size: 14px;
+        }
+
+        .modal-footer span {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Clickable flow boxes */
+        .flow-box.clickable {
+            cursor: pointer;
+        }
+
+        .flow-box.clickable::after {
+            content: 'Click to view sample';
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .flow-box.clickable:hover::after {
+            opacity: 1;
+        }
+
+        /* Suggestion chips in modal */
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .chip {
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #c4b5fd;
+        }
+
+        .chip.highlight {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.25);
+            color: #6ee7b7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="phase-badge">
+                <i class="fa-solid fa-keyboard"></i>
+                Phase 1.3
+            </div>
+            <h1>Google Autocomplete Expansion</h1>
+            <p>Leverage Google's autocomplete predictions via DataForSEO API to expand seed keywords into comprehensive long-tail variations that users actively search for.</p>
+        </header>
+
+        <!-- Objectives -->
+        <section class="command-section">
+            <div class="command-card">
+                <div class="command-label">
+                    <i class="fa-solid fa-bullseye"></i>
+                    Strategic Direction
+                </div>
+                <h2>Core Objectives</h2>
+                <div class="objectives-container">
+                    <ul class="objectives-list">
+                        <li class="objective-item">
+                            <div class="objective-bullet">1</div>
+                            <div class="objective-content">
+                                <h4><strong>Expand Seed Keywords</strong> using real Google autocomplete suggestions</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">2</div>
+                            <div class="objective-content">
+                                <h4><strong>Discover Long-Tail Queries</strong> that reflect actual user search behavior</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">3</div>
+                            <div class="objective-content">
+                                <h4><strong>Capture Search Intent</strong> variations (questions, comparisons, locations)</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">4</div>
+                            <div class="objective-content">
+                                <h4><strong>Multiply Keyword Coverage</strong> 5-10x from initial seed list</h4>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Flow -->
+        <section class="flow-section">
+            <div class="flow-wrapper">
+                <div class="flow-box input clickable" onclick="openModal('modal-input')">
+                    <div class="icon-wrapper">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </div>
+                    <h3>Seed Keywords</h3>
+                    <p>Initial keywords from master list or Phase 1.1</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box api clickable" onclick="openModal('modal-api')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-server"></i>
+                    </div>
+                    <h3>DataForSEO API</h3>
+                    <p>Google Autocomplete endpoint with Thai locale</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box autocomplete clickable" onclick="openModal('modal-autocomplete')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3>Suggestions</h3>
+                    <p>8-10 autocomplete predictions per keyword</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box process clickable" onclick="openModal('modal-process')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-filter"></i>
+                    </div>
+                    <h3>Deduplication</h3>
+                    <p>Remove duplicates, normalize variants</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box output clickable" onclick="openModal('modal-output')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                    <h3>Expanded List</h3>
+                    <p>5-10x keyword expansion ready for analysis</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parameters -->
+        <section class="params-section">
+            <h2 class="section-title">Configuration Parameters</h2>
+            <p class="section-subtitle">Fine-tune the autocomplete expansion to match your market and content strategy.</p>
+
+            <div class="params-grid">
+                <div class="param-card">
+                    <div class="param-flag">--api-method</div>
+                    <div class="param-value">standard</div>
+                    <div class="param-label">API method for autocomplete retrieval</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--language</div>
+                    <div class="param-value">TH</div>
+                    <div class="param-label">Language code for localized suggestions</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--location</div>
+                    <div class="param-value">2764</div>
+                    <div class="param-label">DataForSEO location ID (Thailand)</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--yes</div>
+                    <div class="param-value"><i class="fa-solid fa-check"></i></div>
+                    <div class="param-label">Auto-confirm execution prompts</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- API Methods -->
+        <section class="methods-section">
+            <h2 class="section-title">API Methods</h2>
+            <p class="section-subtitle">Choose between standard batch processing or real-time live results.</p>
+
+            <div class="methods-grid">
+                <div class="method-card standard">
+                    <span class="recommended-badge">Recommended</span>
+                    <div class="method-icon">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <div class="method-info">
+                        <h3>Standard Method</h3>
+                        <p>Batch processing with task queuing. More cost-effective for large keyword lists with cached results and optimized API credits.</p>
+                        <div class="method-features">
+                            <span class="feature-tag">Cost Optimized</span>
+                            <span class="feature-tag">Batch Processing</span>
+                            <span class="feature-tag">Cached Results</span>
+                            <span class="feature-tag">High Volume</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="method-card live">
+                    <div class="method-icon">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div class="method-info">
+                        <h3>Live Method</h3>
+                        <p>Real-time autocomplete queries with instant results. Best for small keyword sets requiring fresh, up-to-the-minute suggestions.</p>
+                        <div class="method-features">
+                            <span class="feature-tag">Real-time</span>
+                            <span class="feature-tag">Instant Results</span>
+                            <span class="feature-tag">Fresh Data</span>
+                            <span class="feature-tag">Higher Cost</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expansion Demo -->
+        <section class="expansion-section">
+            <h2 class="section-title">Keyword Expansion Example</h2>
+            <p class="section-subtitle">See how a single seed keyword transforms into multiple long-tail opportunities.</p>
+
+            <div class="expansion-demo">
+                <div class="expansion-row">
+                    <div class="seed-keyword">
+                        <i class="fa-solid fa-seedling" style="margin-right: 8px;"></i>
+                        กลูต้าไธโอน
+                    </div>
+                    <div class="expansion-arrow">
+                        <i class="fa-solid fa-angles-right"></i>
+                    </div>
+                    <div class="suggestions-grid">
+                        <span class="suggestion-tag">กลูต้าไธโอน คืออะไร</span>
+                        <span class="suggestion-tag">กลูต้าไธโอน ยี่ห้อไหนดี</span>
+                        <span class="suggestion-tag new">กลูต้าไธโอน กินตอนไหน</span>
+                        <span class="suggestion-tag new">กลูต้าไธโอน ผลข้างเคียง</span>
+                        <span class="suggestion-tag">กลูต้าไธโอน pantip</span>
+                        <span class="suggestion-tag new">กลูต้าไธโอน ราคา</span>
+                        <span class="suggestion-tag">กลูต้าไธโอน วิตามินซี</span>
+                        <span class="suggestion-tag new">กลูต้าไธโอน ฉีด</span>
+                    </div>
+                </div>
+
+                <div class="expansion-row">
+                    <div class="seed-keyword">
+                        <i class="fa-solid fa-seedling" style="margin-right: 8px;"></i>
+                        คอลลาเจน
+                    </div>
+                    <div class="expansion-arrow">
+                        <i class="fa-solid fa-angles-right"></i>
+                    </div>
+                    <div class="suggestions-grid">
+                        <span class="suggestion-tag">คอลลาเจน ยี่ห้อไหนดี 2025</span>
+                        <span class="suggestion-tag new">คอลลาเจน กินตอนไหน</span>
+                        <span class="suggestion-tag">คอลลาเจน ประโยชน์</span>
+                        <span class="suggestion-tag new">คอลลาเจน ผิว</span>
+                        <span class="suggestion-tag">คอลลาเจน watson</span>
+                        <span class="suggestion-tag new">คอลลาเจน ผม</span>
+                        <span class="suggestion-tag">คอลลาเจน ญี่ปุ่น</span>
+                        <span class="suggestion-tag new">คอลลาเจน ข้อเสีย</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Execution Flow -->
+        <section class="examples-section">
+            <h2 class="section-title">Execution Pipeline</h2>
+            <p class="section-subtitle">Step-by-step breakdown of the autocomplete expansion process.</p>
+
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    </div>
+                    <span class="file-name"><i class="fa-solid fa-terminal"></i> autocomplete-pipeline.sh</span>
+                </div>
+                <div class="window-content">
+                    <div><span class="ln"> 1</span><span class="cmt"># Phase 1.3 - Google Autocomplete Expansion Pipeline</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="step">STEP 1: Load Seed Keywords</span> <span class="arrow">────────────────────────</span></div>
+                    <div><span class="ln"> 4</span>    <span class="arrow">│</span> <span class="data">data/keywords/keywords.txt</span></div>
+                    <div><span class="ln"> 5</span>    <span class="arrow">│</span> <span class="cmt">OR merged output from Phase 1.2</span></div>
+                    <div><span class="ln"> 6</span>    <span class="arrow">▼</span></div>
+                    <div><span class="ln"> 7</span><span class="step">STEP 2: DataForSEO API Call</span> <span class="arrow">───────────────────────</span></div>
+                    <div><span class="ln"> 8</span>    <span class="arrow">│</span> <span class="keyword">POST</span> <span class="data">/v3/keywords_data/google/autocomplete/task_post</span></div>
+                    <div><span class="ln"> 9</span>    <span class="arrow">│</span> <span class="cmt">location_code: 2764 (Thailand)</span></div>
+                    <div><span class="ln">10</span>    <span class="arrow">│</span> <span class="cmt">language_code: th</span></div>
+                    <div><span class="ln">11</span>    <span class="arrow">▼</span></div>
+                    <div><span class="ln">12</span><span class="step">STEP 3: Collect Suggestions</span> <span class="arrow">───────────────────────</span></div>
+                    <div><span class="ln">13</span>    <span class="arrow">│</span> <span class="highlight">8-10 suggestions</span> <span class="cmt">per seed keyword</span></div>
+                    <div><span class="ln">14</span>    <span class="arrow">│</span> <span class="data">Includes: questions, comparisons, modifiers</span></div>
+                    <div><span class="ln">15</span>    <span class="arrow">▼</span></div>
+                    <div><span class="ln">16</span><span class="step">STEP 4: Deduplication</span> <span class="arrow">─────────────────────────────</span></div>
+                    <div><span class="ln">17</span>    <span class="arrow">│</span> <span class="cmt">Remove exact duplicates</span></div>
+                    <div><span class="ln">18</span>    <span class="arrow">│</span> <span class="cmt">Normalize whitespace and encoding</span></div>
+                    <div><span class="ln">19</span>    <span class="arrow">▼</span></div>
+                    <div><span class="ln">20</span><span class="step">STEP 5: Export Results</span> <span class="arrow">────────────────────────────</span></div>
+                    <div><span class="ln">21</span>    <span class="arrow">└──▶</span> <span class="data">data/autocomplete/autocomplete_expanded.csv</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="stats-section">
+            <h2 class="section-title">Expected Results</h2>
+            <p class="section-subtitle">Typical expansion metrics when running autocomplete on seed keywords.</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">5-10x</div>
+                    <div class="stat-label">Keyword Multiplication</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">8-10</div>
+                    <div class="stat-label">Suggestions per Seed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">~30%</div>
+                    <div class="stat-label">Long-tail Discoveries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">&lt;5s</div>
+                    <div class="stat-label">Per Keyword Latency</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Structure -->
+        <section class="output-section">
+            <h2 class="section-title">Output Structure</h2>
+            <p class="section-subtitle">Generated files ready for integration with Phase 1.4 merge pipeline.</p>
+
+            <div class="output-grid">
+                <div class="output-card">
+                    <h4><i class="fa-regular fa-folder-open"></i> Directory Structure</h4>
+                    <div class="tree-view">
+                        <div><span class="folder">data/autocomplete/</span></div>
+                        <div><span class="branch">├── </span><span class="file">autocomplete_expanded.csv</span></div>
+                        <div><span class="branch">├── </span><span class="file">autocomplete_raw.json</span></div>
+                        <div><span class="branch">├── </span><span class="file">processing_log.txt</span></div>
+                        <div><span class="branch">└── </span><span class="folder">{session-id}/</span></div>
+                        <div><span class="branch">    ├── </span><span class="file">api_responses/</span></div>
+                        <div><span class="branch">    └── </span><span class="file">checkpoint.json</span></div>
+                    </div>
+                </div>
+
+                <div class="output-card">
+                    <h4><i class="fa-solid fa-table-cells"></i> CSV Output Columns</h4>
+                    <div class="tree-view">
+                        <div><span class="file">seed_keyword</span> <span class="cmt">- Original input keyword</span></div>
+                        <div><span class="file">suggestion</span> <span class="cmt">- Autocomplete prediction</span></div>
+                        <div><span class="file">suggestion_type</span> <span class="cmt">- Category (question, brand, etc.)</span></div>
+                        <div><span class="file">relevance_score</span> <span class="cmt">- API relevance ranking</span></div>
+                        <div><span class="file">search_volume</span> <span class="cmt">- If available from API</span></div>
+                        <div><span class="file">timestamp</span> <span class="cmt">- Collection datetime</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="benefits-section">
+            <h2 class="section-title">Strategic Advantages</h2>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Real User Intent</h4>
+                        <p>Autocomplete suggestions are based on actual search patterns, revealing what users truly want to find.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Long-Tail Discovery</h4>
+                        <p>Uncover valuable long-tail keywords with lower competition and higher conversion potential.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Question Mining</h4>
+                        <p>Automatically extract question-based queries perfect for FAQ sections and featured snippets.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Trend Sensitivity</h4>
+                        <p>Live API method captures trending searches and seasonal variations in real-time.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="3_data-collection-2.html" class="next-phase">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <span>Previous: Competitive Intelligence</span>
+            </a>
+            <span style="margin: 0 24px; color: rgba(255,255,255,0.1);">|</span>
+            <a href="5_autocomplete-merge.html" class="next-phase">
+                <span>Next: Master Query Merge</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <p style="margin-top: 16px; color: rgba(255,255,255,0.2); font-size: 12px;">&copy; 2025 Privato Content AI System</p>
+        </footer>
+    </div>
+
+    <!-- Modal 1: Seed Keywords -->
+    <div class="modal-overlay" id="modal-input" onclick="closeModal(event, 'modal-input')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon input"><i class="fa-regular fa-file-lines"></i></div>
+                    <div>
+                        <h3 class="modal-title">Seed Keywords</h3>
+                        <p class="modal-subtitle">Input from master keyword list</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-input')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-regular fa-file-code"></i> Sample Input</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="kw">กลูต้าไธโอน</span></div>
+                    <div><span class="ln">2</span><span class="kw">คอลลาเจน</span></div>
+                    <div><span class="ln">3</span><span class="kw">วิตามินซี</span></div>
+                    <div><span class="ln">4</span><span class="kw">อาหารเสริม ผิวขาว</span></div>
+                    <div><span class="ln">5</span><span class="kw">เซรั่มหน้าใส</span></div>
+                    <div><span class="ln">6</span><span class="cmt"># Primary seed keywords for expansion</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>Each seed keyword generates 8-10 autocomplete suggestions</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: DataForSEO API -->
+    <div class="modal-overlay" id="modal-api" onclick="closeModal(event, 'modal-api')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon api"><i class="fa-solid fa-server"></i></div>
+                    <div>
+                        <h3 class="modal-title">DataForSEO API</h3>
+                        <p class="modal-subtitle">Google Autocomplete Endpoint</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-api')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-code"></i> API Request</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="punct">{</span></div>
+                    <div><span class="ln"> 2</span>  <span class="key">"keyword"</span><span class="punct">:</span> <span class="str">"กลูต้าไธโอน"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 3</span>  <span class="key">"location_code"</span><span class="punct">:</span> <span class="num">2764</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 4</span>  <span class="key">"language_code"</span><span class="punct">:</span> <span class="str">"th"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 5</span>  <span class="key">"cursor"</span><span class="punct">:</span> <span class="str">""</span></div>
+                    <div><span class="ln"> 6</span><span class="punct">}</span></div>
+                </div>
+                <div style="margin-top: 16px;">
+                    <div class="sample-label"><i class="fa-solid fa-globe"></i> Endpoint</div>
+                    <div style="background: rgba(0,0,0,0.3); padding: 12px 16px; border-radius: 8px; font-family: monospace; font-size: 12px; color: #67e8f9;">
+                        POST /v3/keywords_data/google/autocomplete/task_post
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-info-circle"></i>
+                <span>Location 2764 = Thailand | Language th = Thai</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Autocomplete Suggestions -->
+    <div class="modal-overlay" id="modal-autocomplete" onclick="closeModal(event, 'modal-autocomplete')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon autocomplete"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <div>
+                        <h3 class="modal-title">Autocomplete Suggestions</h3>
+                        <p class="modal-subtitle">Google's predicted search queries</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-autocomplete')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-code"></i> API Response</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="punct">{</span></div>
+                    <div><span class="ln"> 2</span>  <span class="key">"keyword"</span><span class="punct">:</span> <span class="str">"กลูต้าไธโอน"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 3</span>  <span class="key">"items"</span><span class="punct">:</span> <span class="punct">[</span></div>
+                    <div><span class="ln"> 4</span>    <span class="str">"กลูต้าไธโอน คืออะไร"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 5</span>    <span class="str">"กลูต้าไธโอน ยี่ห้อไหนดี"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 6</span>    <span class="str">"กลูต้าไธโอน กินตอนไหน"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 7</span>    <span class="str">"กลูต้าไธโอน ผลข้างเคียง"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 8</span>    <span class="str">"กลูต้าไธโอน pantip"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 9</span>    <span class="str">"กลูต้าไธโอน ราคา"</span><span class="punct">,</span></div>
+                    <div><span class="ln">10</span>    <span class="str">"กลูต้าไธโอน วิตามินซี"</span><span class="punct">,</span></div>
+                    <div><span class="ln">11</span>    <span class="str">"กลูต้าไธโอน ฉีด"</span></div>
+                    <div><span class="ln">12</span>  <span class="punct">]</span></div>
+                    <div><span class="ln">13</span><span class="punct">}</span></div>
+                </div>
+                <div class="suggestion-chips">
+                    <span class="chip">Questions</span>
+                    <span class="chip">Brands</span>
+                    <span class="chip">Timing</span>
+                    <span class="chip highlight">Long-tail</span>
+                    <span class="chip">Reviews</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-sparkles"></i>
+                <span>Suggestions reflect real user search behavior and intent</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Deduplication -->
+    <div class="modal-overlay" id="modal-process" onclick="closeModal(event, 'modal-process')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon process"><i class="fa-solid fa-filter"></i></div>
+                    <div>
+                        <h3 class="modal-title">Deduplication Process</h3>
+                        <p class="modal-subtitle">Clean and normalize expanded keywords</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-process')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-filter"></i> Processing Steps</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="cmt"># Deduplication Pipeline</span></div>
+                    <div><span class="ln">2</span></div>
+                    <div><span class="ln">3</span><span class="kw">1.</span> <span class="str">Remove exact duplicate suggestions</span></div>
+                    <div><span class="ln">4</span><span class="kw">2.</span> <span class="str">Normalize Unicode (NFC normalization)</span></div>
+                    <div><span class="ln">5</span><span class="kw">3.</span> <span class="str">Trim whitespace variations</span></div>
+                    <div><span class="ln">6</span><span class="kw">4.</span> <span class="str">Case-insensitive matching</span></div>
+                    <div><span class="ln">7</span><span class="kw">5.</span> <span class="str">Merge with existing keyword lists</span></div>
+                    <div><span class="ln">8</span></div>
+                    <div><span class="ln">9</span><span class="cmt"># Result: ~15-20% duplicate reduction</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-broom"></i>
+                <span>Clean data ensures accurate downstream analysis</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Expanded Output -->
+    <div class="modal-overlay" id="modal-output" onclick="closeModal(event, 'modal-output')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon output"><i class="fa-solid fa-list-check"></i></div>
+                    <div>
+                        <h3 class="modal-title">Expanded Keyword List</h3>
+                        <p class="modal-subtitle">Final output ready for Phase 1.4</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-output')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-table"></i> Sample CSV Output</div>
+                <div class="sample-code" style="font-size: 11px;">
+                    <div><span class="key">seed_keyword</span>,<span class="key">suggestion</span>,<span class="key">type</span></div>
+                    <div><span class="str">กลูต้าไธโอน</span>,<span class="str">กลูต้าไธโอน คืออะไร</span>,<span class="num">question</span></div>
+                    <div><span class="str">กลูต้าไธโอน</span>,<span class="str">กลูต้าไธโอน ยี่ห้อไหนดี</span>,<span class="num">comparison</span></div>
+                    <div><span class="str">กลูต้าไธโอน</span>,<span class="str">กลูต้าไธโอน กินตอนไหน</span>,<span class="num">timing</span></div>
+                    <div><span class="str">กลูต้าไธโอน</span>,<span class="str">กลูต้าไธโอน ผลข้างเคียง</span>,<span class="num">concern</span></div>
+                    <div><span class="str">คอลลาเจน</span>,<span class="str">คอลลาเจน ยี่ห้อไหนดี 2025</span>,<span class="num">comparison</span></div>
+                    <div><span class="str">คอลลาเจน</span>,<span class="str">คอลลาเจน กินตอนไหน</span>,<span class="num">timing</span></div>
+                    <div><span class="cmt">...</span></div>
+                </div>
+                <div style="margin-top: 16px; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 3px solid #10b981;">
+                    <span style="font-size: 12px; color: #34d399;">
+                        <i class="fa-solid fa-check-circle" style="margin-right: 6px;"></i>
+                        Output: data/autocomplete/autocomplete_expanded.csv
+                    </span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-rocket"></i>
+                <span>Ready for Phase 1.4: Autocomplete + Ahrefs Merge</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event, modalId) {
+            if (event.target === event.currentTarget || event.currentTarget.classList.contains('modal-close')) {
+                document.getElementById(modalId).classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+
+</body>
+</html>

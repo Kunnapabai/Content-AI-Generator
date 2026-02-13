@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 4: Deep Research Prompt Generation | Privato Content</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --grok: #ef4444;
+            --openrouter: #8b5cf6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, transparent 40%),
+                        radial-gradient(circle at bottom left, #312e81, transparent 40%),
+                        linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 100px;
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(239, 68, 68, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #f87171;
+            margin-bottom: 32px;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.1);
+        }
+
+        .header h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Objectives Styling */
+        .objectives-container {
+            margin-top: 32px;
+            max-width: 800px;
+        }
+
+        .objectives-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .objective-item:last-child {
+            border-bottom: none;
+        }
+
+        .objective-bullet {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: rgba(239, 68, 68, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #f87171;
+            margin-top: 2px;
+        }
+
+        .objective-content {
+            flex: 1;
+        }
+
+        .objective-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.5;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .command-section {
+            margin-bottom: 80px;
+            animation: fadeIn 1s ease 0.15s forwards;
+            opacity: 0;
+        }
+
+        .command-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .command-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .command-card h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* Flow Section */
+        .flow-section {
+            margin: 0 0 100px;
+            animation: fadeIn 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .flow-wrapper {
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .flow-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px 32px;
+            text-align: center;
+            width: 220px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+        }
+
+        .flow-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.4);
+        }
+
+        .flow-box:hover::before {
+            opacity: 1;
+        }
+
+        .icon-wrapper {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            position: relative;
+        }
+
+        .flow-box.input .icon-wrapper {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.1));
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .flow-box.outline .icon-wrapper {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .flow-box.grok .icon-wrapper {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.1));
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .flow-box.phases .icon-wrapper {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.1));
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .flow-box.output .icon-wrapper {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.1));
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .flow-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .flow-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .flow-arrow {
+            font-size: 20px;
+            color: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            align-self: center;
+        }
+
+        /* Parameters Grid */
+        .params-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 60px;
+            font-size: 18px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .param-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .param-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .param-flag {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 14px;
+            color: #67e8f9;
+            background: rgba(103, 232, 249, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .param-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .param-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Tool Section */
+        .tools-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.35s forwards;
+            opacity: 0;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 32px;
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .tool-card.grok {
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .tool-card.grok::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #ef4444;
+        }
+
+        .tool-card.openrouter {
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .tool-card.openrouter::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #8b5cf6;
+        }
+
+        .tool-icon {
+            width: 64px;
+            height: 64px;
+            min-width: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .tool-card.grok .tool-icon {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.1));
+            color: #f87171;
+        }
+
+        .tool-card.openrouter .tool-icon {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.1));
+            color: #a78bfa;
+        }
+
+        .tool-info h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .tool-card.grok .tool-info h3 { color: #f87171; }
+        .tool-card.openrouter .tool-info h3 { color: #a78bfa; }
+
+        .tool-info p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .tool-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .feature-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* Data Flow Diagram */
+        .diagram-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .code-window {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .window-header {
+            background: #0f172a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 16px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #22c55e; }
+
+        .file-name {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-content {
+            padding: 24px;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .ln { color: #475569; margin-right: 16px; user-select: none; }
+        .cmt { color: #64748b; font-style: italic; }
+        .step { color: #f87171; }
+        .arrow { color: #475569; }
+        .highlight { color: #fbbf24; }
+        .data { color: #86efac; }
+
+        /* Output Structure */
+        .output-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.45s forwards;
+            opacity: 0;
+        }
+
+        .output-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .output-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+        }
+
+        .output-card h4 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tree-view {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .tree-view .folder { color: #fbbf24; }
+        .tree-view .file { color: #86efac; }
+        .tree-view .branch { color: #475569; }
+
+        /* Phase Cards */
+        .phases-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.42s forwards;
+            opacity: 0;
+        }
+
+        .phases-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .phase-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .phase-card:hover {
+            background: rgba(255, 255, 255, 0.04);
+            transform: translateY(-4px);
+        }
+
+        .phase-number {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.1));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: #f87171;
+            margin-bottom: 16px;
+        }
+
+        .phase-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .phase-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Benefits */
+        .benefits-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.5s forwards;
+            opacity: 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 24px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.3s;
+        }
+
+        .benefit-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-size: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .benefit-text h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .benefit-text p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 120px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 60px;
+        }
+
+        .next-phase {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .next-phase:hover {
+            color: var(--primary);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+            .params-grid { grid-template-columns: repeat(2, 1fr); }
+            .tools-grid { grid-template-columns: 1fr; }
+            .output-grid { grid-template-columns: 1fr; }
+            .phases-grid { grid-template-columns: repeat(2, 1fr); }
+            .flow-wrapper { flex-direction: column; align-items: center; }
+            .flow-arrow { transform: rotate(90deg); margin: 8px 0; }
+            .command-card { padding: 32px 24px; }
+            .objective-content h4 { font-size: 16px; }
+        }
+
+        @media (max-width: 768px) {
+            .params-grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 42px; }
+            .benefits-grid { grid-template-columns: 1fr; }
+            .phases-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 0;
+            max-width: 700px;
+            width: 90%;
+            max-height: 85vh;
+            overflow: hidden;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 80px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .modal-icon.input { background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(79, 70, 229, 0.2)); color: #818cf8; }
+        .modal-icon.outline { background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2)); color: #34d399; }
+        .modal-icon.grok { background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.2)); color: #f87171; }
+        .modal-icon.phases { background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(217, 119, 6, 0.2)); color: #fbbf24; }
+        .modal-icon.output { background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(124, 58, 237, 0.2)); color: #a78bfa; }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px 28px;
+            max-height: 55vh;
+            overflow-y: auto;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sample-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sample-code {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .sample-code .ln { color: #475569; margin-right: 12px; user-select: none; }
+        .sample-code .kw { color: #86efac; }
+        .sample-code .str { color: #fbbf24; }
+        .sample-code .num { color: #f472b6; }
+        .sample-code .cmt { color: #64748b; font-style: italic; }
+        .sample-code .key { color: #67e8f9; }
+        .sample-code .punct { color: #94a3b8; }
+
+        .modal-footer {
+            padding: 16px 28px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-footer i {
+            color: #67e8f9;
+            font-size: 14px;
+        }
+
+        .modal-footer span {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Clickable flow boxes */
+        .flow-box.clickable {
+            cursor: pointer;
+        }
+
+        .flow-box.clickable::after {
+            content: 'Click to view sample';
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .flow-box.clickable:hover::after {
+            opacity: 1;
+        }
+
+        /* Evidence Badge */
+        .evidence-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .evidence-badge.strong {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+        }
+
+        .evidence-badge.moderate {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+        }
+
+        .evidence-badge.preliminary {
+            background: rgba(139, 92, 246, 0.2);
+            color: #a78bfa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="phase-badge">
+                <i class="fa-solid fa-brain"></i>
+                Phase 4
+            </div>
+            <h1>Deep Research Prompt Generation</h1>
+            <p>Transform optimized content outlines into structured, phase-based research prompts using Grok AI via OpenRouter for comprehensive topic coverage.</p>
+        </header>
+
+        <!-- Objectives -->
+        <section class="command-section">
+            <div class="command-card">
+                <div class="command-label">
+                    <i class="fa-solid fa-bullseye"></i>
+                    Strategic Direction
+                </div>
+                <h2>Core Objectives</h2>
+                <div class="objectives-container">
+                    <ul class="objectives-list">
+                        <!-- Objective 1 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">1</div>
+                            <div class="objective-content">
+                                <h4><strong>Convert Outlines to Research Phases</strong> with 3-7 sequential research instructions</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 2 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">2</div>
+                            <div class="objective-content">
+                                <h4><strong>Generate Multilingual Search Queries</strong> covering English, Japanese, and Chinese sources</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 3 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">3</div>
+                            <div class="objective-content">
+                                <h4><strong>Apply Evidence Level Classification</strong> (Strong/Moderate/Preliminary) for source quality</h4>
+                            </div>
+                        </li>
+
+                        <!-- Objective 4 -->
+                        <li class="objective-item">
+                            <div class="objective-bullet">4</div>
+                            <div class="objective-content">
+                                <h4><strong>Enable Sequential Research Flow</strong> from fundamentals to buyer enablement</h4>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Process Flow -->
+        <section class="flow-section">
+            <div class="flow-wrapper">
+                <div class="flow-box input clickable" onclick="openModal('modal-input')">
+                    <div class="icon-wrapper">
+                        <i class="fa-regular fa-file-lines"></i>
+                    </div>
+                    <h3>Keywords File</h3>
+                    <p>Target keywords from keywords.txt seed list.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box outline clickable" onclick="openModal('modal-outline')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-sitemap"></i>
+                    </div>
+                    <h3>Optimized Outline</h3>
+                    <p>H1/H2/H3 hierarchy from Phase 3.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box grok clickable" onclick="openModal('modal-grok')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <h3>Grok LLM</h3>
+                    <p>Process via OpenRouter API.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box phases clickable" onclick="openModal('modal-phases')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-list-ol"></i>
+                    </div>
+                    <h3>Research Phases</h3>
+                    <p>3-7 sequential research instructions.</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </div>
+
+                <div class="flow-box output clickable" onclick="openModal('modal-output')">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-file-export"></i>
+                    </div>
+                    <h3>Research Prompt</h3>
+                    <p>Structured markdown for researchers.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parameters -->
+        <section class="params-section">
+            <h2 class="section-title">Configuration Parameters</h2>
+            <p class="section-subtitle">CLI flags for controlling the deep research generation pipeline.</p>
+
+            <div class="params-grid">
+                <div class="param-card">
+                    <div class="param-flag">--chunk-size</div>
+                    <div class="param-value">200</div>
+                    <div class="param-label">Keywords per checkpoint for resume support</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--max-concurrency</div>
+                    <div class="param-value">8</div>
+                    <div class="param-label">Parallel OpenRouter API requests</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--timeout</div>
+                    <div class="param-value">90s</div>
+                    <div class="param-label">HTTP timeout per request</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">--incremental</div>
+                    <div class="param-value"><i class="fa-solid fa-check"></i></div>
+                    <div class="param-label">Skip keywords with existing outputs</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Integration -->
+        <section class="tools-section">
+            <h2 class="section-title">Integration Stack</h2>
+            <p class="section-subtitle">AI-powered research prompt generation via industry-leading language models.</p>
+
+            <div class="tools-grid">
+                <div class="tool-card grok">
+                    <div class="tool-icon">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3>Grok (x-ai/grok-4-fast)</h3>
+                        <p>xAI's latest model for understanding complex content hierarchies and generating structured research phases with multilingual Boolean queries.</p>
+                        <div class="tool-features">
+                            <span class="feature-tag">Phase Generation</span>
+                            <span class="feature-tag">Search Queries</span>
+                            <span class="feature-tag">Evidence Levels</span>
+                            <span class="feature-tag">Fast Inference</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tool-card openrouter">
+                    <div class="tool-icon">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <div class="tool-info">
+                        <h3>OpenRouter API</h3>
+                        <p>Unified API gateway providing access to multiple AI models with built-in rate limiting, retry logic, and cost tracking.</p>
+                        <div class="tool-features">
+                            <span class="feature-tag">Multi-Model Access</span>
+                            <span class="feature-tag">Rate Limiting</span>
+                            <span class="feature-tag">Cost Tracking</span>
+                            <span class="feature-tag">Retry Logic</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Research Phases -->
+        <section class="phases-section">
+            <h2 class="section-title">Research Phase Structure</h2>
+            <p class="section-subtitle">Sequential phases building from fundamentals to buyer enablement.</p>
+
+            <div class="phases-grid">
+                <div class="phase-card">
+                    <div class="phase-number">1</div>
+                    <h4>Fundamentals</h4>
+                    <p>Core concepts, definitions, and background knowledge required for understanding the topic.</p>
+                </div>
+                <div class="phase-card">
+                    <div class="phase-number">2</div>
+                    <h4>Materials & Types</h4>
+                    <p>Product categories, material options, and classification systems.</p>
+                </div>
+                <div class="phase-card">
+                    <div class="phase-number">3</div>
+                    <h4>Specifications</h4>
+                    <p>Technical specs, standards (JIS/GB/ASTM), and performance metrics.</p>
+                </div>
+                <div class="phase-card">
+                    <div class="phase-number">4</div>
+                    <h4>Selection Criteria</h4>
+                    <p>Decision factors, comparison guides, and evaluation frameworks.</p>
+                </div>
+                <div class="phase-card">
+                    <div class="phase-number">5</div>
+                    <h4>Installation</h4>
+                    <p>Implementation guides, best practices, and maintenance procedures.</p>
+                </div>
+                <div class="phase-card">
+                    <div class="phase-number">6</div>
+                    <h4>Buyer Enablement</h4>
+                    <p>Pricing, warranties, supplier info, and purchase guidance.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Flow Diagram -->
+        <section class="diagram-section">
+            <h2 class="section-title">Execution Flow</h2>
+            <p class="section-subtitle">Step-by-step breakdown of the deep research prompt generation pipeline.</p>
+
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    </div>
+                    <span class="file-name"><i class="fa-solid fa-diagram-project"></i> deepresearch-pipeline.txt</span>
+                </div>
+                <div class="window-content">
+                    <div><span class="ln"> 1</span><span class="cmt"># Privato Content - Deep Research Generation Pipeline</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="step">Keywords File</span> <span class="arrow">────────────────────────────────────────</span></div>
+                    <div><span class="ln"> 4</span>    <span class="arrow">│</span> <span class="data">data/keywords/keywords.txt</span></div>
+                    <div><span class="ln"> 5</span>    <span class="arrow">▼</span></div>
+                    <div><span class="ln"> 6</span><span class="step">Load Checkpoint</span> <span class="arrow">──────────────────────────────────────</span></div>
+                    <div><span class="ln"> 7</span>    <span class="arrow">│</span> <span class="cmt">Resume from checkpoints/deepresearch_checkpoint.json</span></div>
+                    <div><span class="ln"> 8</span>    <span class="arrow">▼</span></div>
+                    <div><span class="ln"> 9</span><span class="step">FOR EACH</span> <span class="highlight">keyword</span> <span class="step">(chunk_size=200):</span></div>
+                    <div><span class="ln">10</span>    <span class="arrow">├──▶</span> <span class="step">Load Outline</span></div>
+                    <div><span class="ln">11</span>    <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">{keyword}/{keyword}-outline-optimized.md</span></div>
+                    <div><span class="ln">12</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">13</span>    <span class="arrow">├──▶</span> <span class="step">Build User Prompt</span></div>
+                    <div><span class="ln">14</span>    <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">KEYWORD + OUTLINE_PATH + OUTLINE_TEXT</span></div>
+                    <div><span class="ln">15</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">16</span>    <span class="arrow">├──▶</span> <span class="step">OpenRouter API</span> <span class="cmt">(x-ai/grok-4-fast)</span></div>
+                    <div><span class="ln">17</span>    <span class="arrow">│</span>       <span class="arrow">├──▶</span> <span class="data">System: deepresearch-script.md</span></div>
+                    <div><span class="ln">18</span>    <span class="arrow">│</span>       <span class="arrow">└──▶</span> <span class="data">Generate 3-7 research phases</span></div>
+                    <div><span class="ln">19</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">20</span>    <span class="arrow">└──▶</span> <span class="step">Write Output</span></div>
+                    <div><span class="ln">21</span>            <span class="arrow">└──▶</span> <span class="data">{keyword}/{keyword}-research-prompt.md</span></div>
+                    <div><span class="ln">22</span></div>
+                    <div><span class="ln">23</span><span class="step">Save Checkpoint</span> <span class="cmt">(per chunk)</span> <span class="arrow">───────────────────────</span></div>
+                    <div><span class="ln">24</span>    <span class="arrow">└──▶</span> <span class="data">Track completed/failed keywords for resume</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Structure -->
+        <section class="output-section">
+            <h2 class="section-title">Output Structure</h2>
+            <p class="section-subtitle">Structured research prompts ready for human researchers or AI processing.</p>
+
+            <div class="output-grid">
+                <div class="output-card">
+                    <h4><i class="fa-regular fa-folder-open"></i> Directory Structure</h4>
+                    <div class="tree-view">
+                        <div><span class="folder">output/</span></div>
+                        <div><span class="branch">├── </span><span class="folder">{keyword-1}/</span></div>
+                        <div><span class="branch">│   ├── </span><span class="file">{keyword-1}-outline-optimized.md</span> <span class="cmt">(input)</span></div>
+                        <div><span class="branch">│   └── </span><span class="file">{keyword-1}-research-prompt.md</span> <span class="cmt">(output)</span></div>
+                        <div><span class="branch">├── </span><span class="folder">{keyword-2}/</span></div>
+                        <div><span class="branch">│   └── </span><span class="cmt">...</span></div>
+                        <div><span class="branch">└── </span><span class="folder">checkpoints/</span></div>
+                        <div><span class="branch">    └── </span><span class="file">deepresearch_checkpoint.json</span></div>
+                    </div>
+                </div>
+
+                <div class="output-card">
+                    <h4><i class="fa-solid fa-list-check"></i> Research Prompt Structure</h4>
+                    <div class="tree-view">
+                        <div><span class="file">Phase N:</span> <span class="cmt">- Phase description</span></div>
+                        <div><span class="branch">├── </span><span class="file">[H2 Title]:</span> <span class="cmt">mapped subtopics</span></div>
+                        <div><span class="branch">├── </span><span class="file">Research Requirements:</span></div>
+                        <div><span class="branch">│   ├── </span><span class="cmt">Geographic Scope</span></div>
+                        <div><span class="branch">│   ├── </span><span class="cmt">Time Frame</span></div>
+                        <div><span class="branch">│   ├── </span><span class="cmt">Source Quality</span></div>
+                        <div><span class="branch">│   └── </span><span class="cmt">Search Queries</span></div>
+                        <div><span class="branch">└── </span><span class="file">Evidence Levels:</span> <span class="cmt">Strong/Moderate/Preliminary</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="benefits-section">
+            <h2 class="section-title">Operational Advantages</h2>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Checkpoint Recovery</h4>
+                        <p>Automatic progress tracking with JSON checkpoints allows interrupted sessions to resume exactly where they left off.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Multilingual Queries</h4>
+                        <p>Generates Boolean search queries in English, Japanese (JIS), and Chinese (GB) for comprehensive source coverage.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Evidence Classification</h4>
+                        <p>Tags all recommendations with evidence levels (Strong/Moderate/Preliminary) for source quality transparency.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Concurrent Processing</h4>
+                        <p>Processes up to 8 keywords simultaneously with intelligent rate limiting to maximize throughput.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="7_meta-seo.html" class="next-phase">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <span>Previous: Meta SEO</span>
+            </a>
+            <span style="margin: 0 24px; color: rgba(255,255,255,0.1);">|</span>
+            <a href="9_deep-research-processing.html" class="next-phase">
+                <span>Next: Deep Research Processing</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <p style="margin-top: 16px; color: rgba(255,255,255,0.2); font-size: 12px;">&copy; 2025 Privato Content AI System</p>
+        </footer>
+    </div>
+
+    <!-- Modal 1: Keywords File -->
+    <div class="modal-overlay" id="modal-input" onclick="closeModal(event, 'modal-input')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon input"><i class="fa-regular fa-file-lines"></i></div>
+                    <div>
+                        <h3 class="modal-title">Keywords File</h3>
+                        <p class="modal-subtitle">data/keywords/keywords.txt</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-input')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-regular fa-file-code"></i> Sample Input</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="kw">หลังคา upvc ราคา</span></div>
+                    <div><span class="ln">2</span><span class="kw">ประตู tostem ราคา</span></div>
+                    <div><span class="ln">3</span><span class="kw">กระจกห้องน้ำ trump glass</span></div>
+                    <div><span class="ln">4</span><span class="kw">หน้าต่างอลูมิเนียม ยี่ห้อไหนดี</span></div>
+                    <div><span class="ln">5</span><span class="kw">มุ้งลวดนิรภัย ราคา</span></div>
+                    <div><span class="ln">6</span><span class="cmt"># One keyword per line</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>Each keyword must have a corresponding optimized outline from Phase 3</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Optimized Outline -->
+    <div class="modal-overlay" id="modal-outline" onclick="closeModal(event, 'modal-outline')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon outline"><i class="fa-solid fa-sitemap"></i></div>
+                    <div>
+                        <h3 class="modal-title">Optimized Outline</h3>
+                        <p class="modal-subtitle">{keyword}-outline-optimized.md</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-outline')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-code"></i> Sample Outline Structure</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="str">&lt;h1&gt;</span><span class="kw">หลังคา UPVC: คู่มือเลือกซื้อฉบับสมบูรณ์</span><span class="str">&lt;/h1&gt;</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="str">&lt;h2&gt;</span><span class="kw">UPVC คืออะไร?</span><span class="str">&lt;/h2&gt;</span></div>
+                    <div><span class="ln"> 4</span>  <span class="str">&lt;h3&gt;</span><span class="punct">คุณสมบัติวัสดุ UPVC</span><span class="str">&lt;/h3&gt;</span></div>
+                    <div><span class="ln"> 5</span>  <span class="str">&lt;h3&gt;</span><span class="punct">ข้อดีเทียบวัสดุอื่น</span><span class="str">&lt;/h3&gt;</span></div>
+                    <div><span class="ln"> 6</span></div>
+                    <div><span class="ln"> 7</span><span class="str">&lt;h2&gt;</span><span class="kw">ประเภทหลังคา UPVC</span><span class="str">&lt;/h2&gt;</span></div>
+                    <div><span class="ln"> 8</span>  <span class="str">&lt;h3&gt;</span><span class="punct">แผ่นลอนคู่</span><span class="str">&lt;/h3&gt;</span></div>
+                    <div><span class="ln"> 9</span>  <span class="str">&lt;h3&gt;</span><span class="punct">แผ่นโปร่งแสง</span><span class="str">&lt;/h3&gt;</span></div>
+                    <div><span class="ln">10</span></div>
+                    <div><span class="ln">11</span><span class="str">&lt;h2&gt;</span><span class="kw">ราคาและการติดตั้ง</span><span class="str">&lt;/h2&gt;</span></div>
+                    <div><span class="ln">12</span>  <span class="str">&lt;h3&gt;</span><span class="punct">ตารางราคาเปรียบเทียบ</span><span class="str">&lt;/h3&gt;</span></div>
+                    <div><span class="ln">13</span>  <span class="str">&lt;h3&gt;</span><span class="punct">ขั้นตอนการติดตั้ง</span><span class="str">&lt;/h3&gt;</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-diagram-project"></i>
+                <span>H1/H2/H3 hierarchy is converted into sequential research phases</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Grok LLM -->
+    <div class="modal-overlay" id="modal-grok" onclick="closeModal(event, 'modal-grok')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon grok"><i class="fa-solid fa-bolt"></i></div>
+                    <div>
+                        <h3 class="modal-title">Grok LLM Processing</h3>
+                        <p class="modal-subtitle">x-ai/grok-4-fast via OpenRouter</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-grok')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-paper-plane"></i> API Request</div>
+                <div class="sample-code">
+                    <div><span class="ln"> 1</span><span class="punct">{</span></div>
+                    <div><span class="ln"> 2</span>  <span class="key">"model"</span><span class="punct">:</span> <span class="str">"x-ai/grok-4-fast"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 3</span>  <span class="key">"messages"</span><span class="punct">:</span> <span class="punct">[</span></div>
+                    <div><span class="ln"> 4</span>    <span class="punct">{</span></div>
+                    <div><span class="ln"> 5</span>      <span class="key">"role"</span><span class="punct">:</span> <span class="str">"system"</span><span class="punct">,</span></div>
+                    <div><span class="ln"> 6</span>      <span class="key">"content"</span><span class="punct">:</span> <span class="str">"[deepresearch-script.md]"</span></div>
+                    <div><span class="ln"> 7</span>    <span class="punct">},</span></div>
+                    <div><span class="ln"> 8</span>    <span class="punct">{</span></div>
+                    <div><span class="ln"> 9</span>      <span class="key">"role"</span><span class="punct">:</span> <span class="str">"user"</span><span class="punct">,</span></div>
+                    <div><span class="ln">10</span>      <span class="key">"content"</span><span class="punct">:</span> <span class="str">"KEYWORD: หลังคา upvc ราคา\nOUTLINE_TEXT: ..."</span></div>
+                    <div><span class="ln">11</span>    <span class="punct">}</span></div>
+                    <div><span class="ln">12</span>  <span class="punct">],</span></div>
+                    <div><span class="ln">13</span>  <span class="key">"temperature"</span><span class="punct">:</span> <span class="num">0.2</span><span class="punct">,</span></div>
+                    <div><span class="ln">14</span>  <span class="key">"max_tokens"</span><span class="punct">:</span> <span class="num">8000</span></div>
+                    <div><span class="ln">15</span><span class="punct">}</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span>Max concurrency: 8 parallel requests with exponential backoff retry</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Research Phases -->
+    <div class="modal-overlay" id="modal-phases" onclick="closeModal(event, 'modal-phases')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon phases"><i class="fa-solid fa-list-ol"></i></div>
+                    <div>
+                        <h3 class="modal-title">Research Phases</h3>
+                        <p class="modal-subtitle">3-7 sequential research instructions</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-phases')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-layer-group"></i> Phase Flow</div>
+                <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(239, 68, 68, 0.1); border-radius: 8px; border-left: 3px solid #ef4444;">
+                        <span style="font-weight: 700; color: #f87171;">Phase 1</span>
+                        <span style="color: #94a3b8;">Fundamentals & Background</span>
+                        <span class="evidence-badge strong">Strong</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(245, 158, 11, 0.1); border-radius: 8px; border-left: 3px solid #f59e0b;">
+                        <span style="font-weight: 700; color: #fbbf24;">Phase 2</span>
+                        <span style="color: #94a3b8;">Materials & Types</span>
+                        <span class="evidence-badge moderate">Moderate</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 3px solid #10b981;">
+                        <span style="font-weight: 700; color: #34d399;">Phase 3</span>
+                        <span style="color: #94a3b8;">Specifications & Standards</span>
+                        <span class="evidence-badge strong">Strong</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(14, 165, 233, 0.1); border-radius: 8px; border-left: 3px solid #0ea5e9;">
+                        <span style="font-weight: 700; color: #38bdf8;">Phase 4</span>
+                        <span style="color: #94a3b8;">Selection Criteria</span>
+                        <span class="evidence-badge moderate">Moderate</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 3px solid #8b5cf6;">
+                        <span style="font-weight: 700; color: #a78bfa;">Phase 5</span>
+                        <span style="color: #94a3b8;">Installation & Pricing</span>
+                        <span class="evidence-badge preliminary">Preliminary</span>
+                    </div>
+                </div>
+                <div class="sample-code" style="font-size: 11px;">
+                    <div><span class="cmt"># Geographic Scope per Phase Type:</span></div>
+                    <div><span class="kw">Technical</span>: Japan, China, US, Australia</div>
+                    <div><span class="kw">Industry</span>: Japan (TOSTEM/LIXIL), China, Singapore</div>
+                    <div><span class="kw">Pricing</span>: Thailand sources permitted</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-globe"></i>
+                <span>Multilingual Boolean queries: English + Japanese + Chinese</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 5: Research Prompt Output -->
+    <div class="modal-overlay" id="modal-output" onclick="closeModal(event, 'modal-output')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon output"><i class="fa-solid fa-file-export"></i></div>
+                    <div>
+                        <h3 class="modal-title">Research Prompt Output</h3>
+                        <p class="modal-subtitle">{keyword}-research-prompt.md</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-output')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-file-lines"></i> Sample Output</div>
+                <div class="sample-code" style="font-size: 11px;">
+                    <div><span class="kw">Phase 1:</span></div>
+                    <div>Please conduct comprehensive research on UPVC roofing fundamentals.</div>
+                    <div></div>
+                    <div><span class="str">[UPVC คืออะไร?]:</span></div>
+                    <div>- Material composition and properties</div>
+                    <div>- Comparison with metal/tile/polycarbonate</div>
+                    <div></div>
+                    <div><span class="punct">Research Requirements:</span></div>
+                    <div>- <span class="key">Geographic Scope</span>: Japan, China, Australia</div>
+                    <div>- <span class="key">Time Frame</span>: 2020-2025 for material science</div>
+                    <div>- <span class="key">Source Quality</span>: JIS, GB, ASTM standards</div>
+                    <div>- <span class="key">Search Queries</span>:</div>
+                    <div>  <span class="str">"UPVC roofing specifications" OR "UPVCルーフィング"</span></div>
+                    <div>  <span class="str">OR "UPVC屋顶材料" site:jisc.go.jp</span></div>
+                    <div>- <span class="key">Evidence Levels</span>: Tag as Strong/Moderate/Preliminary</div>
+                </div>
+                <div style="margin-top: 16px; padding: 12px; background: rgba(139, 92, 246, 0.1); border-radius: 8px; border-left: 3px solid #8b5cf6;">
+                    <span style="font-size: 12px; color: #a78bfa;">Output: output/{keyword}/{keyword}-research-prompt.md</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-rocket"></i>
+                <span>Ready for Phase 4.1: Deep Research Processing via ChatGPT</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event, modalId) {
+            if (event.target === event.currentTarget || event.currentTarget.classList.contains('modal-close')) {
+                document.getElementById(modalId).classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 7.0: Meta SEO Generation | Privato Content</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-start: #0f172a;
+            --bg-end: #1e1b4b;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --card-border: rgba(148, 163, 184, 0.1);
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary: #0ea5e9;
+            --accent: #f59e0b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #10b981;
+            --agent-1: #8b5cf6;
+            --agent-2: #ec4899;
+            --parallel: #06b6d4;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top right, #1e1b4b, transparent 40%),
+                        radial-gradient(circle at bottom left, #312e81, transparent 40%),
+                        linear-gradient(135deg, #0f172a 0%, #020617 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 100px;
+            animation: slideDown 0.8s ease-out;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, transparent 70%);
+            z-index: -1;
+            filter: blur(40px);
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #a78bfa;
+            margin-bottom: 32px;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+        }
+
+        .header h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header p {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            font-weight: 300;
+        }
+
+        /* Parallel Badge */
+        .parallel-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(139, 92, 246, 0.2));
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            padding: 10px 20px;
+            border-radius: 12px;
+            margin-top: 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #22d3ee;
+        }
+
+        .parallel-badge i {
+            font-size: 16px;
+        }
+
+        /* Objectives */
+        .objectives-container {
+            margin-top: 32px;
+            max-width: 800px;
+        }
+
+        .objectives-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .objective-item:last-child {
+            border-bottom: none;
+        }
+
+        .objective-bullet {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: white;
+            margin-top: 2px;
+        }
+
+        .objective-content {
+            flex: 1;
+        }
+
+        .objective-content h4 {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.5;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .command-section {
+            margin-bottom: 80px;
+            animation: fadeIn 1s ease 0.15s forwards;
+            opacity: 0;
+        }
+
+        .command-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 48px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .command-label {
+            color: var(--text-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .command-card h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        /* Flow Section */
+        .flow-section {
+            margin: 0 0 100px;
+            animation: fadeIn 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 60px;
+            font-size: 18px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Parallel Flow Diagram */
+        .parallel-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 32px;
+            position: relative;
+        }
+
+        .flow-start {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .flow-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 40px 32px;
+            text-align: center;
+            width: 280px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+        }
+
+        .flow-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-8px);
+            border-color: rgba(255,255,255,0.2);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.4);
+        }
+
+        .flow-box:hover::before {
+            opacity: 1;
+        }
+
+        .icon-wrapper {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 20px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            position: relative;
+        }
+
+        .flow-box.keywords .icon-wrapper {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.1));
+            color: #818cf8;
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .flow-box.orchestrator .icon-wrapper {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(8, 145, 178, 0.1));
+            color: #22d3ee;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+
+        .flow-box.agent-1 .icon-wrapper {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.1));
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .flow-box.agent-2 .icon-wrapper {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.1));
+            color: #f472b6;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .flow-box.output .icon-wrapper {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.1));
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .flow-box h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .flow-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .flow-arrow {
+            font-size: 24px;
+            color: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Parallel Branches */
+        .parallel-container {
+            display: flex;
+            gap: 80px;
+            position: relative;
+        }
+
+        .parallel-container::before {
+            content: '';
+            position: absolute;
+            top: -32px;
+            left: 50%;
+            width: 2px;
+            height: 32px;
+            background: linear-gradient(to bottom, rgba(6, 182, 212, 0.5), rgba(6, 182, 212, 0.1));
+        }
+
+        .parallel-branch {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+        }
+
+        .parallel-branch::before {
+            content: '';
+            position: absolute;
+            top: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            height: 32px;
+            border-top: 2px solid rgba(6, 182, 212, 0.3);
+        }
+
+        .parallel-branch:first-child::before {
+            border-left: 2px solid rgba(6, 182, 212, 0.3);
+            border-top-left-radius: 12px;
+            left: 50%;
+            right: auto;
+        }
+
+        .parallel-branch:last-child::before {
+            border-right: 2px solid rgba(6, 182, 212, 0.3);
+            border-top-right-radius: 12px;
+            left: auto;
+            right: 50%;
+            transform: none;
+        }
+
+        .branch-label {
+            position: absolute;
+            top: -48px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            padding: 4px 12px;
+            border-radius: 100px;
+        }
+
+        .parallel-branch:first-child .branch-label {
+            background: rgba(139, 92, 246, 0.2);
+            color: #a78bfa;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .parallel-branch:last-child .branch-label {
+            background: rgba(236, 72, 153, 0.2);
+            color: #f472b6;
+            border: 1px solid rgba(236, 72, 153, 0.3);
+        }
+
+        .merge-point {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+        }
+
+        .merge-point::before {
+            content: '';
+            position: absolute;
+            top: -32px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% + 80px);
+            height: 32px;
+            border-bottom: 2px solid rgba(6, 182, 212, 0.3);
+            border-left: 2px solid rgba(6, 182, 212, 0.3);
+            border-right: 2px solid rgba(6, 182, 212, 0.3);
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+        /* Parameters Grid */
+        .params-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .params-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .param-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 28px 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .param-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .param-flag {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 14px;
+            color: #67e8f9;
+            background: rgba(103, 232, 249, 0.1);
+            padding: 6px 12px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+
+        .param-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .param-value code {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 11px;
+            background: rgba(0,0,0,0.3);
+            padding: 8px 12px;
+            border-radius: 8px;
+            display: block;
+            margin-top: 8px;
+            color: #86efac;
+            -webkit-text-fill-color: #86efac;
+        }
+
+        .param-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Agent Cards */
+        .agents-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.35s forwards;
+            opacity: 0;
+        }
+
+        .agents-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .agent-card {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(30, 41, 59, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 32px;
+            display: flex;
+            align-items: flex-start;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .agent-card.first-sentence {
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+
+        .agent-card.first-sentence::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #8b5cf6;
+        }
+
+        .agent-card.meta-desc {
+            border: 1px solid rgba(236, 72, 153, 0.2);
+        }
+
+        .agent-card.meta-desc::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #ec4899;
+        }
+
+        .agent-icon {
+            width: 64px;
+            height: 64px;
+            min-width: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .agent-card.first-sentence .agent-icon {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.1));
+            color: #a78bfa;
+        }
+
+        .agent-card.meta-desc .agent-icon {
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(219, 39, 119, 0.1));
+            color: #f472b6;
+        }
+
+        .agent-info h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .agent-card.first-sentence .agent-info h3 { color: #a78bfa; }
+        .agent-card.meta-desc .agent-info h3 { color: #f472b6; }
+
+        .agent-info p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .agent-command {
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 11px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: #86efac;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            word-break: break-all;
+        }
+
+        .agent-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .feature-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 100px;
+            background: rgba(255,255,255,0.05);
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        /* Code Window */
+        .diagram-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .code-window {
+            background: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .window-header {
+            background: #0f172a;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 8px;
+            margin-right: 16px;
+        }
+
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #f59e0b; }
+        .dot.green { background: #22c55e; }
+
+        .file-name {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-left: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .window-content {
+            padding: 24px;
+            font-size: 13px;
+            line-height: 1.8;
+            overflow-x: auto;
+        }
+
+        .ln { color: #475569; margin-right: 16px; user-select: none; }
+        .cmt { color: #64748b; font-style: italic; }
+        .step { color: #818cf8; }
+        .arrow { color: #475569; }
+        .highlight { color: #fbbf24; }
+        .data { color: #86efac; }
+        .parallel-text { color: #22d3ee; }
+        .agent1-text { color: #a78bfa; }
+        .agent2-text { color: #f472b6; }
+
+        /* Output Section */
+        .output-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.45s forwards;
+            opacity: 0;
+        }
+
+        .output-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .output-card h4 {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .report-preview {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 24px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .report-preview .heading {
+            color: #67e8f9;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .report-preview .subheading {
+            color: #a78bfa;
+            font-weight: 600;
+            margin-top: 16px;
+        }
+
+        .report-preview .subheading.pink {
+            color: #f472b6;
+        }
+
+        .report-preview .metric {
+            color: #86efac;
+        }
+
+        .report-preview .value {
+            color: #fbbf24;
+        }
+
+        /* Benefits */
+        .benefits-section {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease 0.5s forwards;
+            opacity: 0;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 24px;
+            background: rgba(255,255,255,0.02);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: background 0.3s;
+        }
+
+        .benefit-item:hover {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .check-icon {
+            color: var(--success);
+            font-size: 20px;
+            background: rgba(16, 185, 129, 0.1);
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .benefit-text h4 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .benefit-text p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Performance Stats */
+        .stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 48px;
+            padding: 32px;
+            background: rgba(6, 182, 212, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(6, 182, 212, 0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #22d3ee 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 120px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 60px;
+        }
+
+        .next-phase {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color 0.3s;
+            text-decoration: none;
+        }
+
+        .next-phase:hover {
+            color: var(--primary);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 1024px) {
+            .params-grid { grid-template-columns: repeat(2, 1fr); }
+            .agents-grid { grid-template-columns: 1fr; }
+            .parallel-container { flex-direction: column; gap: 32px; }
+            .parallel-container::before { display: none; }
+            .parallel-branch::before { display: none; }
+            .merge-point::before { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .params-grid { grid-template-columns: 1fr; }
+            .header h1 { font-size: 42px; }
+            .benefits-grid { grid-template-columns: 1fr; }
+            .stats-row { flex-direction: column; gap: 24px; }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 0;
+            max-width: 650px;
+            width: 90%;
+            max-height: 80vh;
+            overflow: hidden;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 80px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            padding: 24px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .modal-icon.agent-1 { background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(124, 58, 237, 0.2)); color: #a78bfa; }
+        .modal-icon.agent-2 { background: linear-gradient(135deg, rgba(236, 72, 153, 0.3), rgba(219, 39, 119, 0.2)); color: #f472b6; }
+        .modal-icon.output { background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.2)); color: #34d399; }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .modal-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .modal-body {
+            padding: 24px 28px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+        }
+
+        .sample-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sample-code {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Menlo', 'Monaco', monospace;
+            font-size: 12px;
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .sample-code .ln { color: #475569; margin-right: 12px; user-select: none; }
+        .sample-code .kw { color: #86efac; }
+        .sample-code .str { color: #fbbf24; }
+        .sample-code .num { color: #f472b6; }
+        .sample-code .cmt { color: #64748b; font-style: italic; }
+        .sample-code .key { color: #67e8f9; }
+        .sample-code .punct { color: #94a3b8; }
+
+        .modal-footer {
+            padding: 16px 28px;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-footer i {
+            color: #67e8f9;
+            font-size: 14px;
+        }
+
+        .modal-footer span {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Clickable flow boxes */
+        .flow-box.clickable {
+            cursor: pointer;
+        }
+
+        .flow-box.clickable::after {
+            content: 'Click to view sample';
+            position: absolute;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .flow-box.clickable:hover::after {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="phase-badge">
+                <i class="fa-solid fa-bolt"></i>
+                Phase 7.0
+            </div>
+            <h1>Meta SEO Generation</h1>
+            <p>Parallel execution of SEO first sentences and meta descriptions using dual sub-agents for maximum efficiency and reduced processing time.</p>
+            <div class="parallel-badge">
+                <i class="fa-solid fa-code-branch"></i>
+                Parallel Agent Execution
+            </div>
+        </header>
+
+        <!-- Objectives -->
+        <section class="command-section">
+            <div class="command-card">
+                <div class="command-label">
+                    <i class="fa-solid fa-bullseye"></i>
+                    Strategic Direction
+                </div>
+                <h2>Core Objectives</h2>
+                <div class="objectives-container">
+                    <ul class="objectives-list">
+                        <li class="objective-item">
+                            <div class="objective-bullet">1</div>
+                            <div class="objective-content">
+                                <h4><strong>Generate First Sentences</strong> optimized for search intent and engagement</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">2</div>
+                            <div class="objective-content">
+                                <h4><strong>Create Meta Descriptions</strong> with compelling CTAs for SERP clicks</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">3</div>
+                            <div class="objective-content">
+                                <h4><strong>Execute in Parallel</strong> to minimize total processing time by 50%</h4>
+                            </div>
+                        </li>
+                        <li class="objective-item">
+                            <div class="objective-bullet">4</div>
+                            <div class="objective-content">
+                                <h4><strong>Process All Keywords</strong> with unified reporting and error handling</h4>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parallel Flow Diagram -->
+        <section class="flow-section">
+            <h2 class="section-title">Parallel Execution Flow</h2>
+            <p class="section-subtitle">Two sub-agents spawn simultaneously, processing SEO content in parallel before merging results.</p>
+
+            <div class="parallel-flow">
+                <div class="flow-start">
+                    <div class="flow-box keywords">
+                        <div class="icon-wrapper">
+                            <i class="fa-solid fa-list-check"></i>
+                        </div>
+                        <h3>All Keywords</h3>
+                        <p>Full keyword list from content pipeline</p>
+                    </div>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-arrow-down"></i>
+                </div>
+
+                <div class="flow-box orchestrator">
+                    <div class="icon-wrapper">
+                        <i class="fa-solid fa-network-wired"></i>
+                    </div>
+                    <h3>Task Orchestrator</h3>
+                    <p>Spawns parallel sub-agents in single message</p>
+                </div>
+
+                <div class="flow-arrow">
+                    <i class="fa-solid fa-code-branch" style="color: #22d3ee;"></i>
+                </div>
+
+                <div class="parallel-container">
+                    <div class="parallel-branch">
+                        <span class="branch-label">Agent 1</span>
+                        <div class="flow-box agent-1 clickable" onclick="openModal('modal-agent1')">
+                            <div class="icon-wrapper">
+                                <i class="fa-solid fa-paragraph"></i>
+                            </div>
+                            <h3>First Sentence</h3>
+                            <p>SEO-optimized opening hooks</p>
+                        </div>
+                    </div>
+
+                    <div class="parallel-branch">
+                        <span class="branch-label">Agent 2</span>
+                        <div class="flow-box agent-2 clickable" onclick="openModal('modal-agent2')">
+                            <div class="icon-wrapper">
+                                <i class="fa-solid fa-rectangle-list"></i>
+                            </div>
+                            <h3>Meta Description</h3>
+                            <p>SERP snippet optimization</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-arrow" style="margin-top: 32px;">
+                    <i class="fa-solid fa-code-merge" style="color: #22d3ee;"></i>
+                </div>
+
+                <div class="merge-point">
+                    <div class="flow-box output clickable" onclick="openModal('modal-output')">
+                        <div class="icon-wrapper">
+                            <i class="fa-solid fa-file-lines"></i>
+                        </div>
+                        <h3>Unified Report</h3>
+                        <p>Aggregated results from both agents</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Parameters -->
+        <section class="params-section">
+            <h2 class="section-title">Configuration Variables</h2>
+            <p class="section-subtitle">Key parameters controlling the parallel execution pipeline.</p>
+
+            <div class="params-grid">
+                <div class="param-card">
+                    <div class="param-flag">FIRST_SENTENCE_CMD</div>
+                    <div class="param-value">
+                        <i class="fa-solid fa-terminal" style="font-size: 24px;"></i>
+                        <code>uv run -m bankcontent.meta_seo.first_sentence --all</code>
+                    </div>
+                    <div class="param-label">First sentence generation script command</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">META_DESC_CMD</div>
+                    <div class="param-value">
+                        <i class="fa-solid fa-terminal" style="font-size: 24px;"></i>
+                        <code>uv run -m bankcontent.meta_seo.meta_description --all</code>
+                    </div>
+                    <div class="param-label">Meta description generation script command</div>
+                </div>
+                <div class="param-card">
+                    <div class="param-flag">TIMEOUT</div>
+                    <div class="param-value">300s</div>
+                    <div class="param-label">Maximum execution time per agent (5 minutes)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agent Cards -->
+        <section class="agents-section">
+            <h2 class="section-title">Sub-Agent Configuration</h2>
+            <p class="section-subtitle">Each agent operates independently with its own task context and reporting.</p>
+
+            <div class="agents-grid">
+                <div class="agent-card first-sentence">
+                    <div class="agent-icon">
+                        <i class="fa-solid fa-paragraph"></i>
+                    </div>
+                    <div class="agent-info">
+                        <h3>First Sentence Agent</h3>
+                        <p>Generates compelling opening sentences that capture reader attention while incorporating target keywords naturally for SEO optimization.</p>
+                        <div class="agent-command">
+                            subagent_type: "general-purpose"<br>
+                            run_in_background: true
+                        </div>
+                        <div class="agent-features">
+                            <span class="feature-tag">Keyword Integration</span>
+                            <span class="feature-tag">Hook Generation</span>
+                            <span class="feature-tag">Intent Matching</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="agent-card meta-desc">
+                    <div class="agent-icon">
+                        <i class="fa-solid fa-rectangle-list"></i>
+                    </div>
+                    <div class="agent-info">
+                        <h3>Meta Description Agent</h3>
+                        <p>Creates SERP-optimized meta descriptions with clear value propositions and compelling calls-to-action within the 155-character limit.</p>
+                        <div class="agent-command">
+                            subagent_type: "general-purpose"<br>
+                            run_in_background: true
+                        </div>
+                        <div class="agent-features">
+                            <span class="feature-tag">CTR Optimization</span>
+                            <span class="feature-tag">Character Limits</span>
+                            <span class="feature-tag">CTA Integration</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Execution Flow Diagram -->
+        <section class="diagram-section">
+            <h2 class="section-title">Execution Workflow</h2>
+            <p class="section-subtitle">Step-by-step breakdown of the parallel agent spawning and result aggregation.</p>
+
+            <div class="code-window">
+                <div class="window-header">
+                    <div class="window-controls">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    </div>
+                    <span class="file-name"><i class="fa-solid fa-diagram-project"></i> parallel-workflow.txt</span>
+                </div>
+                <div class="window-content">
+                    <div><span class="ln"> 1</span><span class="cmt"># Phase 7.0 - Meta SEO Parallel Execution</span></div>
+                    <div><span class="ln"> 2</span></div>
+                    <div><span class="ln"> 3</span><span class="step">SPAWN_AGENTS</span> <span class="arrow">─────────────────────────────────────────</span></div>
+                    <div><span class="ln"> 4</span>    <span class="arrow">│</span> <span class="parallel-text">Single message with TWO Task tool calls</span></div>
+                    <div><span class="ln"> 5</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln"> 6</span>    <span class="arrow">├──▶</span> <span class="agent1-text">Task(Agent 1: First Sentence)</span></div>
+                    <div><span class="ln"> 7</span>    <span class="arrow">│</span>       <span class="arrow">├──</span> <span class="data">subagent_type: "general-purpose"</span></div>
+                    <div><span class="ln"> 8</span>    <span class="arrow">│</span>       <span class="arrow">├──</span> <span class="data">run_in_background: true</span></div>
+                    <div><span class="ln"> 9</span>    <span class="arrow">│</span>       <span class="arrow">└──</span> <span class="highlight">Executes: first_sentence --all</span></div>
+                    <div><span class="ln">10</span>    <span class="arrow">│</span></div>
+                    <div><span class="ln">11</span>    <span class="arrow">└──▶</span> <span class="agent2-text">Task(Agent 2: Meta Description)</span></div>
+                    <div><span class="ln">12</span>            <span class="arrow">├──</span> <span class="data">subagent_type: "general-purpose"</span></div>
+                    <div><span class="ln">13</span>            <span class="arrow">├──</span> <span class="data">run_in_background: true</span></div>
+                    <div><span class="ln">14</span>            <span class="arrow">└──</span> <span class="highlight">Executes: meta_description --all</span></div>
+                    <div><span class="ln">15</span></div>
+                    <div><span class="ln">16</span><span class="step">WAIT_FOR_COMPLETION</span> <span class="arrow">─────────────────────────────────</span></div>
+                    <div><span class="ln">17</span>    <span class="arrow">├──▶</span> <span class="parallel-text">TaskOutput(block: true)</span> <span class="cmt">for Agent 1</span></div>
+                    <div><span class="ln">18</span>    <span class="arrow">└──▶</span> <span class="parallel-text">TaskOutput(block: true)</span> <span class="cmt">for Agent 2</span></div>
+                    <div><span class="ln">19</span></div>
+                    <div><span class="ln">20</span><span class="step">AGGREGATE_RESULTS</span> <span class="arrow">───────────────────────────────────</span></div>
+                    <div><span class="ln">21</span>    <span class="arrow">└──▶</span> <span class="data">Combine success/failure counts</span></div>
+                    <div><span class="ln">22</span>    <span class="arrow">└──▶</span> <span class="data">Report keywords processed</span></div>
+                    <div><span class="ln">23</span>    <span class="arrow">└──▶</span> <span class="data">Output unified report format</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Output Section -->
+        <section class="output-section">
+            <h2 class="section-title">Report Format</h2>
+            <p class="section-subtitle">Standardized output combining results from both parallel agents.</p>
+
+            <div class="output-card">
+                <h4><i class="fa-solid fa-file-alt"></i> Unified Report Structure</h4>
+                <div class="report-preview">
+                    <div class="heading">## Meta SEO Generation Complete</div>
+                    <div class="subheading">### First Sentence Generation</div>
+                    <div>- <span class="metric">Keywords processed:</span> <span class="value">25</span></div>
+                    <div>- <span class="metric">Success:</span> <span class="value">24</span> | <span class="metric">Failed:</span> <span class="value">1</span></div>
+                    <div class="subheading pink">### Meta Description Generation</div>
+                    <div>- <span class="metric">Keywords processed:</span> <span class="value">25</span></div>
+                    <div>- <span class="metric">Success:</span> <span class="value">25</span> | <span class="metric">Failed:</span> <span class="value">0</span></div>
+                    <div class="subheading">### Summary</div>
+                    <div>- <span class="metric">Total tasks:</span> <span class="value">2</span></div>
+                    <div>- <span class="metric">Completed:</span> <span class="value">2/2</span></div>
+                    <div>- <span class="metric">Combined execution time:</span> <span class="value">45s</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="benefits-section">
+            <h2 class="section-title">Operational Advantages</h2>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>50% Time Reduction</h4>
+                        <p>Parallel execution cuts total processing time in half compared to sequential runs.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Independent Failure Handling</h4>
+                        <p>If one agent fails, the other continues and results are still reported.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Background Processing</h4>
+                        <p>Agents run in background mode, freeing up resources for monitoring.</p>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="check-icon"><i class="fa-solid fa-check"></i></div>
+                    <div class="benefit-text">
+                        <h4>Unified Reporting</h4>
+                        <p>Results from both agents are aggregated into a single comprehensive report.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-item">
+                    <div class="stat-value">2x</div>
+                    <div class="stat-label">Faster Processing</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Parallel Agents</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">5min</div>
+                    <div class="stat-label">Max Timeout</div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <a href="6_title-analysis.html" class="next-phase">
+                <i class="fa-solid fa-arrow-left-long"></i>
+                <span>Previous: SERP Analysis</span>
+            </a>
+            <span style="margin: 0 24px; color: rgba(255,255,255,0.1);">|</span>
+            <a href="8_deep-research-requirement.html" class="next-phase">
+                <span>Next: Deep Research Prompt</span>
+                <i class="fa-solid fa-arrow-right-long"></i>
+            </a>
+            <p style="margin-top: 16px; color: rgba(255,255,255,0.2); font-size: 12px;">&copy; 2025 Privato Content AI System</p>
+        </footer>
+    </div>
+
+    <!-- Modal 1: First Sentence Agent -->
+    <div class="modal-overlay" id="modal-agent1" onclick="closeModal(event, 'modal-agent1')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon agent-1"><i class="fa-solid fa-paragraph"></i></div>
+                    <div>
+                        <h3 class="modal-title">First Sentence Agent</h3>
+                        <p class="modal-subtitle">SEO-optimized opening hooks</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-agent1')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-code"></i> Agent Configuration</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="punct">Task(</span></div>
+                    <div><span class="ln">2</span>  <span class="key">subagent_type</span><span class="punct">:</span> <span class="str">"general-purpose"</span><span class="punct">,</span></div>
+                    <div><span class="ln">3</span>  <span class="key">description</span><span class="punct">:</span> <span class="str">"Generate first sentences"</span><span class="punct">,</span></div>
+                    <div><span class="ln">4</span>  <span class="key">prompt</span><span class="punct">:</span> <span class="str">"Run `uv run -m bankcontent</span></div>
+                    <div><span class="ln">5</span>    <span class="str">.meta_seo.first_sentence --all`</span></div>
+                    <div><span class="ln">6</span>    <span class="str">and report the results..."</span><span class="punct">,</span></div>
+                    <div><span class="ln">7</span>  <span class="key">run_in_background</span><span class="punct">:</span> <span class="kw">true</span></div>
+                    <div><span class="ln">8</span><span class="punct">)</span></div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <div class="sample-label"><i class="fa-solid fa-file-lines"></i> Sample Output</div>
+                    <div class="sample-code">
+                        <div><span class="cmt"># Keyword: กลูต้าไธโอน คืออะไร</span></div>
+                        <div><span class="kw">กลูต้าไธโอนเป็นสารต้านอนุมูลอิสระที่ร่างกาย</span></div>
+                        <div><span class="kw">ผลิตขึ้นเองตามธรรมชาติ มีบทบาทสำคัญในการ</span></div>
+                        <div><span class="kw">ปกป้องเซลล์และช่วยให้ผิวพรรณสดใส</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span>First sentences are optimized for featured snippets and voice search</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Meta Description Agent -->
+    <div class="modal-overlay" id="modal-agent2" onclick="closeModal(event, 'modal-agent2')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon agent-2"><i class="fa-solid fa-rectangle-list"></i></div>
+                    <div>
+                        <h3 class="modal-title">Meta Description Agent</h3>
+                        <p class="modal-subtitle">SERP snippet optimization</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-agent2')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-code"></i> Agent Configuration</div>
+                <div class="sample-code">
+                    <div><span class="ln">1</span><span class="punct">Task(</span></div>
+                    <div><span class="ln">2</span>  <span class="key">subagent_type</span><span class="punct">:</span> <span class="str">"general-purpose"</span><span class="punct">,</span></div>
+                    <div><span class="ln">3</span>  <span class="key">description</span><span class="punct">:</span> <span class="str">"Generate meta descriptions"</span><span class="punct">,</span></div>
+                    <div><span class="ln">4</span>  <span class="key">prompt</span><span class="punct">:</span> <span class="str">"Run `uv run -m bankcontent</span></div>
+                    <div><span class="ln">5</span>    <span class="str">.meta_seo.meta_description --all`</span></div>
+                    <div><span class="ln">6</span>    <span class="str">and report the results..."</span><span class="punct">,</span></div>
+                    <div><span class="ln">7</span>  <span class="key">run_in_background</span><span class="punct">:</span> <span class="kw">true</span></div>
+                    <div><span class="ln">8</span><span class="punct">)</span></div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <div class="sample-label"><i class="fa-solid fa-file-lines"></i> Sample Output</div>
+                    <div class="sample-code">
+                        <div><span class="cmt"># Meta: กลูต้าไธโอน คืออะไร</span></div>
+                        <div><span class="kw">เรียนรู้ทุกอย่างเกี่ยวกับกลูต้าไธโอน สารต้าน</span></div>
+                        <div><span class="kw">อนุมูลอิสระที่ช่วยผิวขาวกระจ่างใส พร้อมวิธี</span></div>
+                        <div><span class="kw">เลือกและข้อควรระวัง คลิกอ่านเลย!</span></div>
+                        <div style="margin-top: 8px;"><span class="num">Characters: 142/155</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Meta descriptions target 150-155 characters for optimal SERP display</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Unified Report Output -->
+    <div class="modal-overlay" id="modal-output" onclick="closeModal(event, 'modal-output')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <div class="modal-header-left">
+                    <div class="modal-icon output"><i class="fa-solid fa-file-lines"></i></div>
+                    <div>
+                        <h3 class="modal-title">Unified Report</h3>
+                        <p class="modal-subtitle">Aggregated results from both agents</p>
+                    </div>
+                </div>
+                <button class="modal-close" onclick="closeModal(event, 'modal-output')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="sample-label"><i class="fa-solid fa-file-alt"></i> Final Report Format</div>
+                <div class="sample-code">
+                    <div><span class="key">## Meta SEO Generation Complete</span></div>
+                    <div></div>
+                    <div><span class="str">### First Sentence Generation</span></div>
+                    <div>- [Results summary from first sentence agent]</div>
+                    <div>- Keywords processed: <span class="num">25</span></div>
+                    <div>- Success: <span class="kw">24</span> | Failed: <span class="num">1</span></div>
+                    <div></div>
+                    <div><span class="str">### Meta Description Generation</span></div>
+                    <div>- [Results summary from meta description agent]</div>
+                    <div>- Keywords processed: <span class="num">25</span></div>
+                    <div>- Success: <span class="kw">25</span> | Failed: <span class="num">0</span></div>
+                    <div></div>
+                    <div><span class="str">### Summary</span></div>
+                    <div>- Total tasks: <span class="num">2</span></div>
+                    <div>- Completed: <span class="kw">2/2</span></div>
+                    <div>- Combined execution time: <span class="num">45s</span></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <i class="fa-solid fa-rocket"></i>
+                <span>Ready for Phase 8: Image Generation Pipeline</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event, modalId) {
+            if (event.target === event.currentTarget || event.currentTarget.classList.contains('modal-close')) {
+                document.getElementById(modalId).classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+</html>
