@@ -10,13 +10,19 @@ import aiohttp
 from bs4 import BeautifulSoup
 
 # ==========================================
-# CONFIGURATION
+# CONFIGURATION (loaded from config.yaml)
 # ==========================================
-AI_MODEL_NAME = "x-ai/grok-4"
-OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
-OPENROUTER_API_KEY = (
-    "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"
-)
+from config_loader import get_openrouter_config, get_model_config, load_prompt
+
+_or_cfg = get_openrouter_config()
+_model_cfg = get_model_config("pick_author")
+
+AI_MODEL_NAME = _model_cfg["model"]
+OPENROUTER_URL = _or_cfg["api_url"]
+OPENROUTER_API_KEY = _or_cfg["api_key"]
+HTTP_REFERER = _or_cfg["http_referer"]
+PA_TEMPERATURE = _model_cfg.get("temperature", 0.2)
+PA_X_TITLE = _model_cfg.get("x_title", "Privato Author Picker")
 
 # WordPress Configuration
 WP_API_URL = os.getenv("WP_API_URL")  # e.g., "https://your-site.com/wp-json/wp/v2"
@@ -25,19 +31,8 @@ WP_APP_PASSWORD = os.getenv(
     "WP_APP_PASSWORD"
 )  # Application Password, NOT login password
 
-# System Prompt สำหรับเลือกผู้เขียน
-AUTHOR_SELECT_PROMPT = """
-You are an Editor-in-Chief. analyze the provided article summary and the list of available authors.
-Select the MOST SUITABLE author based on:
-1. Topic Expertise (Does the author specialize in this field?)
-2. Writing Tone (Does the author's style match the article?)
-
-Output JSON ONLY:
-{
-  "selected_author_id": 123,
-  "rationale": "Reason for selection..."
-}
-"""
+# System Prompt (loaded from PROMPTS/)
+AUTHOR_SELECT_PROMPT = load_prompt("pick_author_system.md")
 
 
 class WordPressPublisher:
@@ -63,8 +58,8 @@ class WordPressPublisher:
         headers = {
             "Authorization": f"Bearer {OPENROUTER_API_KEY}",
             "Content-Type": "application/json",
-            "HTTP-Referer": "https://privatocontent.com",
-            "X-Title": "Privato Author Picker",
+            "HTTP-Referer": HTTP_REFERER,
+            "X-Title": PA_X_TITLE,
         }
 
         # ตัดเนื้อหาบางส่วนเพื่อประหยัด Token
@@ -101,7 +96,7 @@ class WordPressPublisher:
                 {"role": "user", "content": user_content},
             ],
             "response_format": {"type": "json_object"},
-            "temperature": 0.2,
+            "temperature": PA_TEMPERATURE,
         }
 
         async with aiohttp.ClientSession() as session:

@@ -2,7 +2,6 @@ import asyncio
 import aiohttp
 import yaml
 import json
-import os
 import re
 import argparse
 import logging
@@ -11,17 +10,26 @@ from pathlib import Path
 from datetime import datetime
 from typing import List, Dict, Optional, Any, Tuple
 
-# --- Configuration & Constants (from HTML spec) ---
-OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
-API_KEY = "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"
+from config_loader import get_openrouter_config, get_model_config, load_prompt
 
-# Default Parameters (matching HTML specification)
-DEFAULT_MAX_CONCURRENCY = 10
-DEFAULT_CHUNK_SIZE = 500
-DEFAULT_TIMEOUT = 90
-DEFAULT_MODEL = "google/gemini-3-flash-preview"
-DEFAULT_TEMPERATURE = 0.3
-DEFAULT_MAX_TOKENS = 4000
+# --- Configuration & Constants (loaded from config.yaml) ---
+_or_cfg = get_openrouter_config()
+_gen_cfg = get_model_config("outline_generation")
+_ana_cfg = get_model_config("outline_analysis")
+
+OPENROUTER_API_URL = _or_cfg["api_url"]
+API_KEY = _or_cfg["api_key"]
+HTTP_REFERER = _or_cfg["http_referer"]
+
+# Default Parameters (from config.yaml)
+DEFAULT_MAX_CONCURRENCY = _gen_cfg.get("max_concurrency", 10)
+DEFAULT_CHUNK_SIZE = _gen_cfg.get("chunk_size", 500)
+DEFAULT_TIMEOUT = _gen_cfg.get("timeout", 90)
+DEFAULT_MODEL = _gen_cfg["model"]
+DEFAULT_TEMPERATURE = _gen_cfg.get("temperature", 0.3)
+DEFAULT_MAX_TOKENS = _gen_cfg.get("max_tokens", 4000)
+GEN_X_TITLE = _gen_cfg.get("x_title", "Privato Outline Generator")
+ANA_X_TITLE = _ana_cfg.get("x_title", "Privato Outline Analyzer")
 
 # Paths
 OUTPUT_DIR = Path("output/research")
@@ -32,7 +40,7 @@ LOG_FILE = "outline_generation.log"
 KEYWORDS_FILE = "data/keywords/keywords.txt"
 
 # Rate Limiting
-RATE_LIMIT_RPM = 60
+RATE_LIMIT_RPM = _gen_cfg.get("rate_limit_rpm", 60)
 
 # Cost Estimation (per 1K tokens - Gemini Flash pricing)
 COST_PER_1K_INPUT = 0.000075
@@ -43,132 +51,11 @@ EST_OUTPUT_TOKENS = 1200
 # Source Context (hardcoded per HTML spec)
 SOURCE_CONTEXT = "Home solution center specializing in roofing, doors, windows, bathroom fixtures with installation services."
 
-# --- Koray Framework System Prompt ---
-SYSTEM_PROMPT = """You are a Semantic SEO expert specializing in Koray Tugberk GUBUR's methodology for content structure optimization.
-
-## Koray SEO Framework - Three Pillars
-
-### 1. MACRO CONTEXT (Critical)
-- Exactly ONE <h1> tag establishing the single central topic
-- All other headings MUST support this macro context without topic drift
-- The H1 is the root node of the semantic content network
-
-### 2. CONTEXTUAL BRIDGE (Required)
-- Exactly ONE <h2> that transitions from informational to decision/action intent
-- Examples: "ติดตั้งเองได้ไหม หรือควรใช้ช่าง", "DIY vs Professional", "When to Hire an Expert"
-- Connects educational content to monetization opportunities
-
-### 3. ANTONYM CONTEXT (Required for E-E-A-T)
-- At least ONE <h2> presenting the opposite perspective
-- Examples: "ข้อเสียและข้อจำกัด", "Drawbacks and Limitations", "Common Problems"
-- Demonstrates balanced, trustworthy coverage
-
-## Output Structure Requirements
-
-1. **Early Answer Zone**: First H2 = direct question mirroring H1's core intent
-2. **Core Content (High Prominence)**: Main H2s covering key aspects with H3 subtopics
-3. **Contextual Bridge**: One H2 for info→decision transition (mark with <!-- Contextual Bridge -->)
-4. **Supplementary (Antonym Context)**: One H2 for drawbacks/limitations (mark with <!-- Antonym Context -->)
-5. **Price/Cost Section**: Include if relevant to the query
-6. **FAQ Section**: H2 with H3 questions (don't duplicate earlier H2 text)
-
-## Output Rules
-
-- Output ONLY HTML heading tags: <h1>, <h2>, <h3>, <h4>
-- Include section marker comments: <!-- Early Answer Zone -->, <!-- Contextual Bridge -->, <!-- Antonym Context -->, <!-- FAQ Section -->
-- Minimum 5 H2 tags for comprehensive coverage
-- NO prose, NO JSON, NO markdown
-- NO duplicate heading strings across any level
-- Match the detected SERP language for ALL headings"""
-
-USER_PROMPT_TEMPLATE = """Generate a Koray-aligned SEO outline for keyword #{keyword_index}: "{keyword}"
-
-## Source Context
-{source_context}
-
-## SERP Analysis Data
-```yaml
-{serp_analysis_yaml}
-```
-
-## Related Queries (from master-queries.csv)
-{query_csv}
-
-## Key Decision Factors
-- Entity salience ranking: {top_entities}
-- Primary intent: {primary_intent}
-- Micro intents: {micro_intents}
-- Dominant title patterns: {dominant_patterns}
-- Title generation signals: {title_signals}
-- Knowledge graph edges: {kg_edges}
-- Opportunity gaps: {opportunity_gaps}
-
-## Requirements Checklist
-✓ Single H1 (macro context) - root node
-✓ First H2 as answer-first question
-✓ Contextual bridge H2 (info → decision)
-✓ Antonym context H2 (drawbacks/limitations)
-✓ 5+ H2 minimum
-✓ No duplicate headings
-✓ Language: {language}
-✓ FAQ H3s don't repeat H2 text
-
-Output HTML heading tags only (h1-h4) with section comments:"""
-
-# --- Outline Analysis Prompt (from outline-analysis-script.md) ---
-ANALYSIS_SYSTEM_PROMPT = """You are an **outline editor** evaluating headings. For each keyword, you receive the entire outline as HTML (`<h1>-<h4>`). Grade every sub-headline, decide whether to keep/modify/remove it, and emit a YAML array that matches the schema below. Never add new headings beyond rewrites for `modify`. If the outline is missing or invalid, respond with `Data unavailable — outline missing required headings.`
-
-## Parsing
-1. Extract a single `<h1>` (macro context). If absent, treat as critical failure.
-2. Capture every `<h2>/<h3>/<h4>` in reading order.
-3. Assign `position` as 1-based among sub-headlines (exclude H1).
-
-## Evaluation Principles
-- **Macro alignment**: headings must serve the H1 + inferred intent (AI education, prompts, tooling).
-- **Attribute prioritization**: emphasize high-signal attributes (tool selection, prompt frameworks, ethics, pricing) aligned with monetization (courses, eBooks, sponsorships).
-- **Question quality**: phrase interrogatives concisely; they must invite exact answers.
-- **Answerability**: ensure each heading leads to an actionable paragraph (e.g., "How to …" → first sentence starts "To …").
-- **Hierarchy/flow**: maintain logical H2 > H3 > H4 structure; boolean questions belong deeper.
-- **Duplication**: reject overlapping scopes or redundant headings.
-- **Micro semantics**: keep tone consistent with H1; enforce parallel structure and numeric specificity.
-- **YMYL/E-E-A-T**: avoid unsupported claims about compliance, legality, or guaranteed outcomes.
-- **Clarity**: no fluff, synonym stacking, or vague terminology.
-
-Critical flags: `duplicate_scope`, `off_topic`, `howto_definition_mismatch`, `high_YMYL_liability`, `brand_endorsement_without_criteria`, `format_mismatch`, `no_h1`.
-
-## Scoring & Decisions
-- Score per heading: 0–100.
-- `not_change` (code 1): score ≥ 85, no critical flags.
-- `modify` (code 2): score 60–84 or non-fatal issue → provide reason + rewritten heading in `final_decision` (same level, same language).
-- `remove` (code 3): score < 60 or fatal flag → give concise reason; no rewrite.
-
-## YAML Output Schema
-Return only a YAML array; each entry must include:
-- level: "H2|H3|H4"
-  text: "original heading text"
-  position: 1
-  score: 0
-  critical_flags: ["optional_flag"]
-  decision_code: 1
-  decision: "not_change|modify|remove"
-  reason: "required when decision != not_change"
-  final_decision: "required only when decision = modify"
-
-Rules:
-- `critical_flags`: list (empty if none).
-- `reason`: omit for `not_change`; mandatory otherwise.
-- `final_decision`: only for `modify`; omit for other decisions.
-- No extra fields or prose.
-
-If `<h1>` missing or no headings detected, output `Data unavailable — outline missing required headings.`
-
-Emit only the YAML array (UTF-8). No Markdown fences, logs, or commentary."""
-
-ANALYSIS_USER_PROMPT_TEMPLATE = """Analyze the following outline for keyword: "{keyword}"
-
-KEYWORD: {keyword}
-RAW_OUTLINE:
-{raw_outline}"""
+# --- Prompts (loaded from PROMPTS/) ---
+SYSTEM_PROMPT = load_prompt("outline_generation_system.md")
+USER_PROMPT_TEMPLATE = load_prompt("outline_generation_user.md")
+ANALYSIS_SYSTEM_PROMPT = load_prompt("outline_analysis_system.md")
+ANALYSIS_USER_PROMPT_TEMPLATE = load_prompt("outline_analysis_user.md")
 
 
 def setup_logging() -> logging.Logger:
@@ -241,6 +128,7 @@ class OutlineGenerator:
             "skipped": 0,
             "tokens_used": 0,
             "validation_warnings": 0,
+            "structural_failures": 0,
             "analysis_success": 0,
             "analysis_failed": 0
         }
@@ -363,13 +251,34 @@ class OutlineGenerator:
 
         return yaml.dump(relevant, allow_unicode=True, default_flow_style=False)
 
-    def _validate_outline(self, content: str) -> Tuple[bool, List[str]]:
-        """Validate outline against Koray framework."""
+    def _validate_outline(self, content: str) -> Tuple[bool, List[str], bool]:
+        """Validate outline against Koray framework.
+
+        Returns:
+            (is_valid, issues, is_structural_failure)
+            - is_valid: True if no issues at all.
+            - issues: list of human-readable issue strings.
+            - is_structural_failure: True if total headings outside 25-30
+              (hard reject — outline must NOT be saved).
+        """
         issues = []
+        is_structural_failure = False
 
         # Count headings
         h1_count = len(re.findall(r'<h1[^>]*>', content, re.IGNORECASE))
         h2_count = len(re.findall(r'<h2[^>]*>', content, re.IGNORECASE))
+        h3_count = len(re.findall(r'<h3[^>]*>', content, re.IGNORECASE))
+        h4_count = len(re.findall(r'<h4[^>]*>', content, re.IGNORECASE))
+        total_headings = h1_count + h2_count + h3_count + h4_count
+
+        # Total headline count check — strict structural failure
+        if total_headings < 25 or total_headings > 30:
+            issues.append(
+                f"STRUCTURAL FAILURE: total headings {total_headings} "
+                f"(H1={h1_count} H2={h2_count} H3={h3_count} H4={h4_count}, "
+                f"required 25-30)"
+            )
+            is_structural_failure = True
 
         # Single H1 check
         if h1_count != 1:
@@ -400,7 +309,7 @@ class OutlineGenerator:
         if non_html > 2:
             issues.append(f"Contains {non_html} non-HTML lines")
 
-        return len(issues) == 0, issues
+        return len(issues) == 0, issues, is_structural_failure
 
     def _clean_outline(self, content: str) -> str:
         """Clean LLM output to pure HTML headings."""
@@ -434,8 +343,8 @@ class OutlineGenerator:
         headers = {
             "Authorization": f"Bearer {API_KEY}",
             "Content-Type": "application/json",
-            "HTTP-Referer": "https://privato-content.com",
-            "X-Title": "Privato Outline Analyzer"
+            "HTTP-Referer": HTTP_REFERER,
+            "X-Title": ANA_X_TITLE
         }
 
         payload = {
@@ -598,8 +507,8 @@ class OutlineGenerator:
         headers = {
             "Authorization": f"Bearer {API_KEY}",
             "Content-Type": "application/json",
-            "HTTP-Referer": "https://privato-content.com",
-            "X-Title": "Privato Outline Generator"
+            "HTTP-Referer": HTTP_REFERER,
+            "X-Title": GEN_X_TITLE
         }
 
         payload = {
@@ -690,10 +599,11 @@ class OutlineGenerator:
                 if self.verbose:
                     print(f"\n[{keyword_index}] Processing: {keyword}")
 
-                # Skip if completed
-                if keyword in self.checkpoint["completed"]:
-                    if self.verbose:
-                        print(f"  [SKIP] Already in checkpoint completed list")
+                force = getattr(self.args, 'force', False)
+
+                # Skip if completed (unless --force)
+                if keyword in self.checkpoint["completed"] and not force:
+                    print(f"  [SKIP] {keyword}: already in checkpoint completed list")
                     self.stats["skipped"] += 1
                     return True
 
@@ -704,10 +614,9 @@ class OutlineGenerator:
                 if self.verbose:
                     print(f"  [OUTPUT] Target: {output_path}")
 
-                # Skip if output exists (incremental mode)
-                if self.args.incremental and output_path.exists():
-                    if self.verbose:
-                        print(f"  [SKIP] Output exists (incremental mode)")
+                # Skip if output exists (incremental mode, unless --force)
+                if self.args.incremental and output_path.exists() and not force:
+                    print(f"  [SKIP] {keyword}: output file already exists ({output_path})")
                     self.stats["skipped"] += 1
                     return True
 
@@ -717,7 +626,7 @@ class OutlineGenerator:
                 # Load SERP analysis (input)
                 serp_data = self._load_serp_analysis(keyword)
                 if not serp_data:
-                    print(f"  [SKIP] No SERP analysis found for: {keyword}")
+                    print(f"  [SKIP] {keyword}: no SERP analysis file found")
                     log_json(self.logger, "skipped", {
                         "keyword": keyword, "reason": "no_serp_analysis"
                     })
@@ -762,14 +671,27 @@ class OutlineGenerator:
 
                 # Clean and validate output
                 outline = self._clean_outline(result["content"])
-                is_valid, issues = self._validate_outline(outline)
+                is_valid, issues, is_structural_failure = self._validate_outline(outline)
 
                 if issues:
                     print(f"  [WARN] Validation issues: {', '.join(issues)}")
                     log_json(self.logger, "validation", {
-                        "keyword": keyword, "issues": issues, "valid": is_valid
+                        "keyword": keyword, "issues": issues, "valid": is_valid,
+                        "structural_failure": is_structural_failure
                     })
                     self.stats["validation_warnings"] += len(issues)
+
+                # Structural failure = hard reject, do not save
+                if is_structural_failure:
+                    print(f"  [REJECTED] {keyword}: headline count outside 25-30 range")
+                    log_json(self.logger, "structural_failure", {
+                        "keyword": keyword, "issues": issues
+                    })
+                    self.stats["structural_failures"] += 1
+                    if keyword not in self.checkpoint["failed"]:
+                        self.checkpoint["failed"].append(keyword)
+                    self.stats["failed"] += 1
+                    return False
 
                 # Save output
                 try:
@@ -939,6 +861,7 @@ class OutlineGenerator:
         print(f"  Concurrency: {self.args.max_concurrency}")
         print(f"  Model: {self.args.model}")
         print(f"  Mode: {'DRY RUN' if self.args.dry_run else 'LIVE'}")
+        print(f"  Force: {'YES' if getattr(self.args, 'force', False) else 'NO'}")
         print(f"  Analysis: {'SKIP' if getattr(self.args, 'skip_analysis', False) else 'ENABLED'}")
         print(f"  Output: {self.output_dir.absolute()}")
         print(f"{'='*55}\n")
@@ -979,6 +902,7 @@ class OutlineGenerator:
         print(f"  Total:      {self.stats['total']}")
         print(f"  Success:    {self.stats['success']}")
         print(f"  Failed:     {self.stats['failed']}")
+        print(f"  Structural: {self.stats['structural_failures']}")
         print(f"  Skipped:    {self.stats['skipped']}")
         print(f"  Tokens:     {self.stats['tokens_used']:,}")
         print(f"  Warnings:   {self.stats['validation_warnings']}")
@@ -1033,6 +957,8 @@ Examples:
                         help="Continue from last checkpoint index")
     parser.add_argument("--skip-analysis", action="store_true",
                         help="Skip outline analysis phase (generate only)")
+    parser.add_argument("--force", action="store_true",
+                        help="Overwrite existing outputs and ignore checkpoint completed list")
     parser.add_argument("--verbose", "-v", action="store_true",
                         help="Enable verbose output for debugging")
 

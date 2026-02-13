@@ -8,35 +8,22 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 
 # ==========================================
-# CONFIGURATION
+# CONFIGURATION (loaded from config.yaml)
 # ==========================================
-MODEL_NAME = "google/gemini-3-flash-preview"
-OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
-OPENROUTER_API_KEY = "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"
+from config_loader import get_openrouter_config, get_model_config, load_prompt
 
-# System Prompt: ถอดแบบจาก Prompt Engineering Panel ในไฟล์ HTML
-SYSTEM_PROMPT = """
-You are a Senior SEO Strategist and Content Marketer.
-Analyze the provided article content and generate optimized metadata in JSON format.
+_or_cfg = get_openrouter_config()
+_model_cfg = get_model_config("meta_description")
 
-## REQUIREMENTS:
-1.  **meta_title**: Catchy, includes the main keyword, 50-60 characters max.
-2.  **meta_description**: High CTR, summarizes value, includes keyword, under 160 characters.
-3.  **slug**: URL-friendly, English translation of keyword if needed, lowercase, hyphens only.
-4.  **tags**: Array of 5-8 relevant tags (comma-separated logic in JSON array).
-5.  **excerpt**: A short summary (2-3 sentences) for blog preview cards.
+MODEL_NAME = _model_cfg["model"]
+OPENROUTER_URL = _or_cfg["api_url"]
+OPENROUTER_API_KEY = _or_cfg["api_key"]
+HTTP_REFERER = _or_cfg["http_referer"]
+MD_TEMPERATURE = _model_cfg.get("temperature", 0.5)
+MD_X_TITLE = _model_cfg.get("x_title", "Privato SEO Meta Gen")
 
-## OUTPUT FORMAT:
-Return ONLY valid JSON. No markdown formatting (no ```json ... ```).
-Example:
-{
-  "meta_title": "...",
-  "meta_description": "...",
-  "slug": "...",
-  "tags": ["...", "..."],
-  "excerpt": "..."
-}
-"""
+# System Prompt (loaded from PROMPTS/)
+SYSTEM_PROMPT = load_prompt("meta_description_system.md")
 
 class MetaGenerator:
     def __init__(self, args):
@@ -50,8 +37,8 @@ class MetaGenerator:
         headers = {
             "Authorization": f"Bearer {OPENROUTER_API_KEY}",
             "Content-Type": "application/json",
-            "HTTP-Referer": "https://privatocontent.com",
-            "X-Title": "Privato SEO Meta Gen"
+            "HTTP-Referer": HTTP_REFERER,
+            "X-Title": MD_X_TITLE
         }
         
         user_prompt = f"""
@@ -71,8 +58,8 @@ class MetaGenerator:
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": user_prompt}
             ],
-            "temperature": 0.5, # สมดุลระหว่างความคิดสร้างสรรค์และความถูกต้อง
-            "response_format": { "type": "json_object" } # บังคับ JSON Mode
+            "temperature": MD_TEMPERATURE,
+            "response_format": { "type": "json_object" }
         }
 
         async with aiohttp.ClientSession() as session:
